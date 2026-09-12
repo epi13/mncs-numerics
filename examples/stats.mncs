@@ -7,16 +7,25 @@ mncs 0.16;
 module mncs.numerics.examples.stats.v1;
 
 use mncs.numerics.vec_float_reduce;
+use mncs.numerics.vec_float_mask;
 
 fn report4(xs: [f64; 4]) -> (result: [f64; 4]) {
     // [mean, variance, min, max] of the window.
-    return [mean<4>(xs), variance<4>(xs), min<4>(xs), max<4>(xs)];
+    return [mean(xs), variance(xs), min(xs), max(xs)];
 }
 
 fn report8(xs: [f64; 8]) -> (result: [f64; 4]) {
-    return [mean<8>(xs), variance<8>(xs), min<8>(xs), max<8>(xs)];
+    return [mean(xs), variance(xs), min(xs), max(xs)];
 }
 
 fn l1_linf4(xs: [f64; 4]) -> (result: [f64; 2]) {
-    return [l1<4>(xs), linf<4>(xs)];
+    return [l1(xs), linf(xs)];
+}
+
+// Masked window report: [live-lane sum, live count, reciprocal sum]
+// over the lanes the mask keeps. A consumer-integration test for
+// mncs.numerics.vec_float_mask.v1: dead lanes may hold zeros without
+// disturbing the reciprocal arm.
+fn report_masked4(xs: [f64; 4], m: [bool; 4]) -> (result: [f64; 3]) {
+    return [masked_sum(xs, m), (count_live(m) as f64), recip_sum(xs, m)];
 }

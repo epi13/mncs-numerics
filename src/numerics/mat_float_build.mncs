@@ -11,12 +11,11 @@ mncs 0.16;
 // contributes shape only; every lane is written before it is read.
 // See pressure P-003.
 //
-// Backend envelope: reference bytecode, C11, and Cranelift. Portable
-// WASM refuses float-`replace` per entrypoint; LLVM miscompiles it
-// (pressure P-001). Multi-parameter generics additionally go through
-// in-language driver wrappers in tests/drivers, because host-side
-// seeding of multi-argument instantiations drops spellings when two
-// arguments coincide (pressure P-002).
+// Backend envelope: all five backends (pressures P-001 and P-002,
+// both repaired). Multi-parameter generics are seeded directly from
+// the corpus with `type_arguments`: host spelling addresses are
+// positional, so `(2, 2)` and `(3, 2)` resolve without the retired
+// in-language driver wrappers.
 
 module mncs.numerics.mat_float_build.v1;
 
@@ -65,7 +64,7 @@ fn matmul_into<M: Nat, K: Nat, N: Nat>(
 ) -> (result: [[f64; N]; M]) {
     iterate i over a carrying acc: [[f64; N]; M] = out {
         iterate j over out[i] carrying row: [f64; N] = out[i] {
-            next row = replace(row, j, row_col_dot<K, N>(a[i], b, j));
+            next row = replace(row, j, row_col_dot(a[i], b, j));
         }
         next acc = replace(acc, i, row);
     }

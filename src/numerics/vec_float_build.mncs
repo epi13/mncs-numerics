@@ -7,15 +7,14 @@ mncs 0.16;
 // the carried accumulator and every lane is overwritten, so the seed
 // contributes shape, never values.
 //
-// Backend envelope: reference bytecode, C11, and Cranelift realize
-// these kernels. Portable WASM refuses float-`replace` entrypoints
-// honestly (per-entrypoint CGN302); LLVM miscompiles the same
-// operation (`store i64` of a `double`, whole-artifact poisoning) and
-// is therefore excluded until the lowering is repaired. See pressure
-// P-001. The corpus runner pins exactly this matrix: construction is
-// correct where it runs, refused-or-broken where it does not, and the
-// split between this module and vec_float_reduce exists so one
-// lowering bug cannot take down the reductions.
+// Backend envelope: all five backends realize these kernels,
+// bit-exactly (pressure P-001, repaired: LLVM bitcasts the float
+// replacement lane, WASM carries float lanes as I64 words). The
+// corpus runner executes every suite on every backend with no
+// refusal pins. The split between this module and
+// vec_float_reduce is file organization by construction-vs-
+// reduction shape, retained from the P-001 era when one lowering
+// bug could poison a whole artifact.
 
 module mncs.numerics.vec_float_build.v1;
 
@@ -108,6 +107,22 @@ fn reversed<N: Nat>(xs: [f64; N]) -> (result: [f64; N]) {
     return out;
 }
 
+// Left rotation by k positions: out[i] = xs[(i + k) % N].
+// Contract: N >= 1 (k % N must not divide by zero); k is reduced mod
+// N, so full and overflowing rotations are total. Spelled as one
+// replace-traversal with modular index arithmetic: the bulk
+// `copy_span` form is inexpressible for symbolic N (pressure P-015 —
+// copy_span refuses symbolic-bound destinations), so the lane loop is
+// the honest implementation until that lands.
+fn rotate_left<N: Nat>(xs: [f64; N], k: u64) -> (result: [f64; N]) {
+    let n: u64 = xs.len;
+    let k2: u64 = k % n;
+    iterate i over xs carrying out: [f64; N] = xs {
+        next out = replace(out, i, xs[(i + k2) % n]);
+    }
+    return out;
+}
+
 // Fill-like construction from an exemplar: out[i] = x for every lane.
 // The exemplar supplies the shape the language cannot spell: there is
 // no `[x; N]` for symbolic N (repeat counts must be literals), so a
@@ -122,11 +137,11 @@ fn broadcast_like<N: Nat>(xs: [f64; N], x: f64) -> (result: [f64; N]) {
 
 // Zeros and ones shaped like the exemplar.
 fn zeros_like<N: Nat>(xs: [f64; N]) -> (result: [f64; N]) {
-    return broadcast_like<N>(xs, 0.0);
+    return broadcast_like(xs, 0.0);
 }
 
 fn ones_like<N: Nat>(xs: [f64; N]) -> (result: [f64; N]) {
-    return broadcast_like<N>(xs, 1.0);
+    return broadcast_like(xs, 1.0);
 }
 
 // Unit vector in the direction of xs: out[i] = xs[i] / |xs|.
@@ -136,7 +151,7 @@ fn ones_like<N: Nat>(xs: [f64; N]) -> (result: [f64; N]) {
 // degenerate case fails closed and loudly. Callers that must survive
 // zero check `norm2` first.
 fn normalized<N: Nat>(xs: [f64; N]) -> (result: [f64; N]) {
-    let n: f64 = sqrt_value(norm2<N>(xs));
+    let n: f64 = sqrt_value(norm2(xs));
     iterate i over xs carrying out: [f64; N] = xs {
         next out = replace(out, i, xs[i] / n);
     }

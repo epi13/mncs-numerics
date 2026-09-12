@@ -6,8 +6,10 @@ mncs 0.16;
 // [m00, m01, m10, m11]; Vec2 is [f64; 2]; Mat3 is [f64; 9] row-major;
 // Vec3 is [f64; 3]. Flat literals construct these values on every
 // backend, which is why small matrices use flat sequences rather
-// than records (whose cross-boundary envelope is narrower) or nested
-// sequences (whose construction needs `replace`).
+// than records (records cross function boundaries on all five
+// backends — the committed `quadratic` record cases prove it — but
+// flat lanes keep every kernel branch-free and literal-constructible)
+// or nested sequences (whose construction needs `replace`).
 //
 // All kernels in this module lower on all five executable backends.
 // Generic MxN matrices live in mncs.numerics.mat_float.v1 (reductions)

@@ -8,10 +8,10 @@ mncs 0.16;
 // first use under the float rule; these kernels neither create nor
 // propagate NaN — they fail closed.
 //
-// This module constructs no sequences, so it lowers on all five
-// executable backends. Constructive kernels live in
-// mncs.numerics.vec_float_build.v1, which documents why construction
-// is a narrower envelope.
+// This module constructs no sequences. Constructive kernels live in
+// mncs.numerics.vec_float_build.v1; since the P-001 repair both
+// modules lower on all five executable backends, and the split is
+// file organization by construction-vs-reduction shape.
 //
 // Contract: N >= 1 for the exact-sequence kernels. Empty data is
 // handled by the view-typed kernels, which observe a zero length.
@@ -48,7 +48,7 @@ fn norm2<N: Nat>(xs: [f64; N]) -> (result: f64) {
 // Arithmetic mean. N >= 1, so the divisor (xs.len as f64) is >= 1.0
 // and the division cannot trap on its own.
 fn mean<N: Nat>(xs: [f64; N]) -> (result: f64) {
-    return sum<N>(xs) / (xs.len as f64);
+    return sum(xs) / (xs.len as f64);
 }
 
 // Comparison-only extrema. No arithmetic, no new trap. N >= 1.
@@ -127,7 +127,7 @@ fn neumaier_sum<N: Nat>(xs: [f64; N]) -> (result: f64) {
 // traversal and avoid the catastrophic cancellation of the
 // sum-of-squares shortcut on shifted data.
 fn variance<N: Nat>(xs: [f64; N]) -> (result: f64) {
-    let m: f64 = mean<N>(xs);
+    let m: f64 = mean(xs);
     iterate i over xs carrying acc: f64 = 0.0 {
         let d: f64 = xs[i] - m;
         next acc = acc + d * d;
@@ -138,7 +138,7 @@ fn variance<N: Nat>(xs: [f64; N]) -> (result: f64) {
 // Euclidean norm via the imported Newton square root. Inherits the
 // norm2 overflow trap; norm(0) == 0.0 exactly.
 fn norm<N: Nat>(xs: [f64; N]) -> (result: f64) {
-    return sqrt_value(norm2<N>(xs));
+    return sqrt_value(norm2(xs));
 }
 
 // Cosine similarity outcome: the cosine, or an explicit refusal when
@@ -146,8 +146,8 @@ fn norm<N: Nat>(xs: [f64; N]) -> (result: f64) {
 enum CosOutcome { Value { value: f64 }, ZeroNorm }
 
 fn cosine<N: Nat>(xs: [f64; N], ys: [f64; N]) -> (result: CosOutcome) {
-    let nx: f64 = norm<N>(xs);
-    let ny: f64 = norm<N>(ys);
+    let nx: f64 = norm(xs);
+    let ny: f64 = norm(ys);
     let denom: f64 = nx * ny;
     if denom == 0.0 {
         return CosOutcome.ZeroNorm;
@@ -157,7 +157,7 @@ fn cosine<N: Nat>(xs: [f64; N], ys: [f64; N]) -> (result: CosOutcome) {
     // Rounding note: dot and the two norms round independently, so
     // |cosine| can exceed 1.0 by an epsilon on nearly-parallel
     // inputs. Clamp before acos; this module provides no acos.
-    return CosOutcome.Value { value: dot<N>(xs, ys) / denom };
+    return CosOutcome.Value { value: dot(xs, ys) / denom };
 }
 
 // Polynomial evaluation by Horner's rule, leading coefficient
@@ -180,6 +180,21 @@ fn sum_view<N: Nat>(view: [f64; up_to N]) -> (result: f64) {
     return acc;
 }
 
+// Sum of the first k lanes via a dynamic subslice. k <= N returns
+// the prefix sum (k == 0 is the empty prefix, summing to 0.0); k > N
+// fails closed at the view construction ("view range end exceeds the
+// source length"), never silently clamps. The slice derives capacity
+// `up_to 1024` (the model ceiling), so the view reduces at
+// `sum_view<1024>`: narrowing to the symbolic `up_to N` is refused
+// (MNE188), and inference does not cross view bounds anyway (MNE220,
+// pressure P-018) — both explicit spellings are load-bearing. The
+// capacity is only a static upper bound: every N satisfies
+// N <= 1024, and `sum_view` iterates the live span, so the value is
+// the exact prefix sum for every width.
+fn take_sum<N: Nat>(xs: [f64; N], k: u64) -> (result: f64) {
+    return sum_view<1024>(xs[0..k]);
+}
+
 // Mean outcome over a view: the mean, or Empty for a zero-length
 // view, whose mean is undefined (0/0 would trap).
 enum FMean { Value { value: f64 }, Empty }
@@ -188,5 +203,8 @@ fn mean_view<N: Nat>(view: [f64; up_to N]) -> (result: FMean) {
     if view.len == 0 {
         return FMean.Empty;
     }
+    // Explicit `<N>` is load-bearing here: generic-argument inference
+    // does not flow constraints through `up_to` view bounds (MNE220
+    // "cannot infer N"), so view-typed callees keep explicit args.
     return FMean.Value { value: sum_view<N>(view) / (view.len as f64) };
 }

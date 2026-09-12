@@ -1,8 +1,8 @@
 mncs 0.16;
 
-// Property-style drivers over reductions only: no construction, so
-// every case runs on all five backends. See prop_drivers_build.mncs
-// for the constructive properties (narrower envelope, P-001).
+// Property-style drivers over reductions only (no construction).
+// See prop_drivers_build.mncs for the constructive properties; since
+// the P-001 repair both drivers run on all five backends.
 //
 // Tooling note (see docs/LANGUAGE_PRESSURES.md): the toolchain offers
 // no generative/shrinking property framework, so these pin fixed
@@ -19,7 +19,7 @@ use mncs.numerics.mat_float_small;
 fn prop_dot_sym() -> (result: bool) {
     let a: [f64; 4] = [1.0, 2.0, 3.0, 4.0];
     let b: [f64; 4] = [5.0, -6.0, 7.5, 8.0];
-    return dot<4>(a, b) == dot<4>(b, a);
+    return dot(a, b) == dot(b, a);
 }
 
 // Squared norms are never negative, even on wide-dynamic-range
@@ -30,32 +30,32 @@ fn prop_norm_nonneg() -> (result: bool) {
     let tiny: f64 = 1.0 / 1e20;
     let big: f64 = 1e20 * 1e20 * 1e20 * 1e20 * 1e20;
     let xs: [f64; 4] = [tiny, -0.0, big, -3.25];
-    return norm2<4>(xs) >= 0.0;
+    return norm2(xs) >= 0.0;
 }
 
 // Neumaier strictly improves on the plain sum for the trio:
 // plain is 0.0, compensated is 1.0.
 fn prop_neumaier_improves() -> (result: bool) {
     let xs: [f64; 3] = [1e16, 1.0, -1e16];
-    return sum<3>(xs) == 0.0 && neumaier_sum<3>(xs) == 1.0;
+    return sum(xs) == 0.0 && neumaier_sum(xs) == 1.0;
 }
 
 // Mean of a constant window is the constant.
 fn prop_mean_const() -> (result: bool) {
     let xs: [f64; 4] = [3.25, 3.25, 3.25, 3.25];
-    return mean<4>(xs) == 3.25;
+    return mean(xs) == 3.25;
 }
 
 // Variance of a constant window is exactly zero.
 fn prop_variance_const() -> (result: bool) {
     let xs: [f64; 4] = [3.25, 3.25, 3.25, 3.25];
-    return variance<4>(xs) == 0.0;
+    return variance(xs) == 0.0;
 }
 
 // Distance of a window to itself is exactly zero.
 fn prop_dist_self() -> (result: bool) {
     let xs: [f64; 4] = [1.0, -2.0, 3.5, -4.5];
-    return dist2<4>(xs, xs) == 0.0;
+    return dist2(xs, xs) == 0.0;
 }
 
 // Absolute lane differences through the scalar primitive (literal
@@ -73,14 +73,14 @@ fn sub4(a: [f64; 4], b: [f64; 4]) -> (result: [f64; 4]) {
 fn prop_transpose_inv2() -> (result: bool) {
     let m: [f64; 4] = [1.0, 2.0, 3.0, 4.0];
     let back: [f64; 4] = transpose2(transpose2(m));
-    return sum<4>(abs4(sub4(m, back))) == 0.0;
+    return sum(abs4(sub4(m, back))) == 0.0;
 }
 
 // Right-identity law: m * I == m at 2x2, zero residual.
 fn prop_matmul_ident2() -> (result: bool) {
     let m: [f64; 4] = [1.0, 2.0, 3.0, 4.0];
     let back: [f64; 4] = matmul2(m, identity2());
-    return sum<4>(abs4(sub4(back, m))) == 0.0;
+    return sum(abs4(sub4(back, m))) == 0.0;
 }
 
 // Left-identity law: I * m == m at 3x3, diagonal spot-check (a full

@@ -1,0 +1,79 @@
+mncs 0.16;
+
+// mncs.numerics.vec_float_mask — guarded (masked) float reductions.
+//
+// Masks are exact-bound bool sequences parallel to the data. The guard
+// idiom is the Profile 0.13 lazy `match`:
+// `next acc = match m[i] { true => update, false => acc }` evaluates
+// exactly one arm, so an update that would trap on a dead lane (a
+// division by a zero lane, a square root of a negative lane) is
+// skipped rather than fired. `select` cannot spell these kernels: it
+// evaluates both arms eagerly, and the dead lane would trap there.
+// Statement-level `if` cannot help either: the traversal step is one
+// `next` expression, not a statement sequence.
+//
+// Contract: N >= 1 for the exact-sequence kernels. Dead lanes are
+// fully inert: the untaken arm never evaluates, so a dead lane is
+// never even loaded — NaN on a dead lane does NOT trap (pinned in
+// the corpus), while NaN on a live lane traps on first use under the
+// float rule like everywhere else.
+
+module mncs.numerics.vec_float_mask.v1;
+
+use mncs.numerics.vec_float_reduce;
+
+// Sum of the live lanes; dead lanes contribute nothing.
+fn masked_sum<N: Nat>(xs: [f64; N], m: [bool; N]) -> (result: f64) {
+    iterate i over xs carrying acc: f64 = 0.0 {
+        next acc = match m[i] { true => acc + xs[i], false => acc };
+    }
+    return acc;
+}
+
+// Dot product over the live lanes, program order.
+fn masked_dot<N: Nat>(
+    xs: [f64; N],
+    ys: [f64; N],
+    m: [bool; N]
+) -> (result: f64) {
+    iterate i over xs carrying acc: f64 = 0.0 {
+        next acc = match m[i] { true => acc + xs[i] * ys[i], false => acc };
+    }
+    return acc;
+}
+
+// Reciprocal sum over the live lanes: the taken-trap escape that
+// motivates this module. Dead lanes may hold zeros (or any finite
+// value): `1.0 / xs[i]` never evaluates for them, so no trap fires.
+// With `select` this kernel would be inexpressible — the dead-lane
+// division would trap in the discarded arm.
+fn recip_sum<N: Nat>(xs: [f64; N], m: [bool; N]) -> (result: f64) {
+    iterate i over xs carrying acc: f64 = 0.0 {
+        next acc = match m[i] { true => acc + 1.0 / xs[i], false => acc };
+    }
+    return acc;
+}
+
+// Count of live lanes. Total.
+fn count_live<N: Nat>(m: [bool; N]) -> (result: u64) {
+    iterate i over m carrying acc: u64 = 0 {
+        next acc = match m[i] { true => acc + 1, false => acc };
+    }
+    return acc;
+}
+
+// Masked-mean outcome: the mean of the live lanes, or Empty when no
+// lane is live (whose mean is undefined, as with mean_view).
+enum FMaskedMean { Value { value: f64 }, Empty }
+
+fn masked_mean<N: Nat>(
+    xs: [f64; N],
+    m: [bool; N]
+) -> (result: FMaskedMean) {
+    if count_live(m) == 0 {
+        return FMaskedMean.Empty;
+    }
+    return FMaskedMean.Value {
+        value: masked_sum(xs, m) / (count_live(m) as f64)
+    };
+}

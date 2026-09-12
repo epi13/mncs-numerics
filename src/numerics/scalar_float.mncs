@@ -10,9 +10,11 @@ mncs 0.16;
 // survive non-finite data have to classify it before calling; the trap
 // keeps silent-NaN bugs out of scientific code.
 //
-// Integer literals never adapt to f64: every constant below spells its
-// `.0`. Mixed int/float arithmetic without `as` is refused by the
-// compiler; conversions are always explicit at the call site.
+// Integer literals adapt to f64 targets exactly at |v| <= 2^53
+// (pressure P-008, repaired), so whole-number constants below use the
+// adapted spelling where load-bearing (`2 * a`, `-1`/`1` signs).
+// Genuinely mixed non-literal widths without `as` stay refused
+// (MNE119); non-literal conversions are always explicit.
 //
 // Trap cases are pinned in tests/corpora/scalar_float.json with
 // `"expected_status": "runtime_failure"`.
@@ -255,7 +257,9 @@ fn quadratic(a: f64, b: f64, c: f64) -> (result: QuadRoots) {
         FSqrt.Value { value } => value,
         DomainError => 0.0,
     };
-    let sb: f64 = select(b < 0.0, -1.0, 1.0);
+    // `-1`/`1` adapt to f64 exactly (pressure P-008); bit-identical
+    // to `-1.0`/`1.0`, pinned by the quadratic corpus cases.
+    let sb: f64 = select(b < 0.0, -1, 1);
     let q: f64 = -0.5 * (b + sb * s);
     let lo: f64 = fmin(q / a, c / q);
     let hi: f64 = fmax(q / a, c / q);

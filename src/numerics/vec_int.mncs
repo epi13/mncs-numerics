@@ -64,7 +64,7 @@ fn max<N: Nat>(xs: [i64; N]) -> (result: i64) {
 // Truncating mean toward zero: checked sum, then checked division by
 // the static length. N >= 1, so the divisor is never zero.
 fn mean_checked<N: Nat>(xs: [i64; N]) -> (result: i64) {
-    let s: i64 = sum_checked<N>(xs);
+    let s: i64 = sum_checked(xs);
     return s / (xs.len as i64);
 }
 

@@ -3,16 +3,17 @@ mncs 0.16;
 // mncs.numerics.mat_float — generic MxN float matrix reductions.
 //
 // Representation: nested row-major `[[f64; N]; M]`, M rows of N lanes.
-// This module constructs nothing, so every kernel lowers on all five
-// executable backends. Constructive kernels (transpose, matvec,
-// matmul, diagonal extraction) live in
-// mncs.numerics.mat_float_build.v1 under the narrower construction
-// envelope.
+// This module constructs nothing. Constructive kernels (transpose,
+// matvec, matmul, diagonal extraction) live in
+// mncs.numerics.mat_float_build.v1; since the P-001 repair both
+// modules lower on all five executable backends.
 //
 // Squareness note: trace_g below takes a single Nat parameter N
 // naming both dimensions, so squareness is structural (pressure
 // P-005, resolved): a two-argument seed cannot elaborate.
 module mncs.numerics.mat_float.v1;
+
+use mncs.numerics.scalar_float;
 
 // Trace of a square matrix: sum of m[i][i] over the row traversal.
 // Squareness is structural: the single parameter N names both
@@ -58,4 +59,47 @@ fn max_g<M: Nat, N: Nat>(m: [[f64; N]; M]) -> (result: f64) {
         next best = select(row > best, row, best);
     }
     return best;
+}
+
+// Minimum lane over any MxN shape: the max_g mirror.
+// Precondition: M >= 1 and N >= 1.
+fn min_g<M: Nat, N: Nat>(m: [[f64; N]; M]) -> (result: f64) {
+    iterate i over m carrying best: f64 = m[0][0] {
+        iterate j over m[i] carrying row: f64 = best {
+            next row = select(m[i][j] < row, m[i][j], row);
+        }
+        next best = select(row < best, row, best);
+    }
+    return best;
+}
+
+// Frobenius norm via the imported Newton square root: sqrt of the
+// squared-lane sum. Inherits the norm2 overflow trap.
+fn frobenius_g<M: Nat, N: Nat>(m: [[f64; N]; M]) -> (result: f64) {
+    return sqrt_value(frobenius2_g(m));
+}
+
+// Carried state for the one-pass mean: the running sum plus the lane
+// count as a float. A single traversal carries exactly one state
+// value, so the pair travels in a (concrete, non-generic) record —
+// no Nat-dimension arithmetic needed: the count accumulates 1.0 per
+// lane instead of spelling M * N, which the language cannot express
+// (pressure P-005, general half). Exact for M * N <= 2^53.
+record MeanAcc { sum: f64, count: f64 }
+
+fn mean_step(st: MeanAcc, x: f64) -> (result: MeanAcc) {
+    return MeanAcc { sum: st.sum + x, count: st.count + 1.0 };
+}
+
+// Arithmetic mean over any MxN shape, one pass, program order.
+// Precondition: M >= 1 and N >= 1 (the divisor is >= 1.0, so the
+// division cannot trap on its own).
+fn mean_g<M: Nat, N: Nat>(m: [[f64; N]; M]) -> (result: f64) {
+    iterate i over m carrying st: MeanAcc = MeanAcc { sum: 0.0, count: 0.0 } {
+        iterate j over m[i] carrying inner: MeanAcc = st {
+            next inner = mean_step(inner, m[i][j]);
+        }
+        next st = inner;
+    }
+    return st.sum / st.count;
 }

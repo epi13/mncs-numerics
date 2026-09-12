@@ -1,27 +1,38 @@
 mncs 0.16;
 
 // Reduction benchmark kernels: every entry lowers on all five
-// backends. Constructive kernels live in bench_build.mncs: one
-// `replace` anywhere in the file poisons LLVM for the whole artifact
-// (pressure P-001), so the envelopes must not share a file. See
-// docs/BENCHMARKS.md and scripts/bench.py.
+// backends. Constructive kernels live in bench_build.mncs: the files
+// are split by construction-vs-reduction shape, retained from the
+// P-001 era when one `replace` anywhere in the file poisoned LLVM
+// for the whole artifact (repaired; the split is now organization).
+// See docs/BENCHMARKS.md and scripts/bench.py.
 
 module mncs.numerics.bench_reduce.v1;
 
 use mncs.numerics.vec_float_reduce;
+use mncs.numerics.vec_float_mask;
 
 fn bench_sum_256() -> (result: f64) {
     let xs: [f64; 256] = [1.0; 256];
-    return sum<256>(xs);
+    return sum(xs);
 }
 
 fn bench_sum_1024() -> (result: f64) {
     let xs: [f64; 1024] = [1.0; 1024];
-    return sum<1024>(xs);
+    return sum(xs);
 }
 
 fn bench_dot_256() -> (result: f64) {
     let xs: [f64; 256] = [1.0; 256];
     let ys: [f64; 256] = [2.0; 256];
-    return dot<256>(xs, ys);
+    return dot(xs, ys);
+}
+
+// Guarded dot over an all-live mask: exercises the lazy-match lane
+// body at benchmark width (all 256 updates taken).
+fn bench_masked_dot_256() -> (result: f64) {
+    let xs: [f64; 256] = [1.0; 256];
+    let ys: [f64; 256] = [2.0; 256];
+    let m: [bool; 256] = [true; 256];
+    return masked_dot(xs, ys, m);
 }
