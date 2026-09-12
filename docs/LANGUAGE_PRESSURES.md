@@ -406,10 +406,11 @@ disposition after re-running against the current toolchain:
   there was NO exponent notation at all: `1.5e3`, `1.5e-3`, and
   `1e16` all failed at parse time (MNP016/MNP017/MNP007 cascade).
 - **Repair (mncs-language 2026-09-12):** integer literals adapt to
-  `f64` targets symmetrically with the int-width rule — exact below
-  2^53, refused beyond — and `digits[.digits]e[+-]digits` spellings
-  parse with correct rounding. Genuinely mixed non-literal widths
-  still refuse (MNE119), so the fail-closed boundary did not move.
+  `f64` targets symmetrically with the int-width rule — exact at
+  |v| <= 2^53, refused beyond — and `digits[.digits]e[+-]digits`
+  spellings parse with correct rounding. Genuinely mixed non-literal
+  widths still refuse (MNE119), so the fail-closed boundary did not
+  move.
 - **Why it mattered:** numerical code is dense with 2/0/1 constants
   and lives on extreme magnitudes (`1e-12`, `1e16`): forcing `.0`
   plus zero-counting invited transcription bugs in exactly the
