@@ -22,20 +22,29 @@ recorded.
   within one backend column.
 - Machine: Linux x86_64, `mncs-language` debug build at `68492c0`.
 
-## Baseline 2026-09-12 (`target/bench-20260912T061431Z.json`)
+## Baseline 2026-09-12 (`target/bench-20260912T061431Z.json` historical; `target/bench-20260912T185322Z.json` current)
 
 Wall seconds per kernel (compile + run); bytecode steps in parentheses.
+Historical cells are debug-build at `68492c0`; current cells are
+debug-build at `a7a8c05` (same machine class, same harness — wall
+comparisons across the two runs still measure the round-trip, not
+the kernel).
 
 | kernel | bytecode | wasm | c11 | llvm | cranelift |
 |---|---|---|---|---|---|
-| sum_256 | 15.1 (2315) | 7.3 (683353) | 8.3 (1) | 10.8 (1) | 18.8 (1) |
-| sum_1024 | 15.3 (9227) | 10.8 (10597465) | 8.6 (1) | 10.9 (1) | 18.9 (1) |
-| dot_256 | 15.1 (2829) | 7.6 (1348957) | 8.5 (1) | 10.7 (1) | 18.8 (1) |
-| axpy_256 | 22.4 (5397) | — (P-001) | 11.4 (1) | — (P-001) | 27.1 (1) |
-| matvec_8 | 22.4 (983) | — (P-001) | 11.4 (1) | — (P-001) | 27.1 (1) |
-| matmul_8 | 22.7 (8135) | — (P-001) | 11.5 (1) | — (P-001) | 27.1 (1) |
+| sum_256 | 17.2 (2315) | 8.4 (683353) | 9.6 (1) | 12.7 (1) | 21.4 (1) |
+| sum_1024 | 17.2 (9227) | 11.6 (10597465) | 9.8 (1) | 12.7 (1) | 21.2 (1) |
+| dot_256 | 17.0 (2829) | 8.6 (1348957) | 9.7 (1) | 12.7 (1) | 21.5 (1) |
+| masked_dot_256 | 17.4 (3599) | 8.9 (2155105) | 9.8 (1) | 12.9 (1) | 21.5 (1) |
+| axpy_256 | 22.8 (5397) | 11.7 (3212203) | 11.8 (1) | 14.8 (1) | 28.0 (1) |
+| rotate_256 | 23.0 (5141) | 11.6 (2546101) | 11.9 (1) | 14.5 (1) | 28.1 (1) |
+| matvec_8 | 23.1 (983) | 11.0 (80063) | 12.2 (1) | 15.1 (1) | 32.1 (1) |
+| matmul_8 | 28.4 (8135) | 13.8 (801815) | 14.4 (1) | 16.9 (1) | 33.6 (1) |
 
-All 24 runnable cells correct (`ok=True`).
+All 40 cells correct (`ok=True`). The old table's `— (P-001)`
+cells are gone: axpy/matvec/matmul now run on WASM and LLVM, so
+the construction envelope is unified in the numbers, not just in
+prose.
 
 ## Findings
 
@@ -68,6 +77,14 @@ All 24 runnable cells correct (`ok=True`).
    split files pass LLVM on all reductions. This is the second
    independent confirmation of P-001's whole-artifact poisoning
    (the first: `probe9` ident-vs-replace).
+6. **New-kernel costs (bytecode steps, the only commensurable
+   column):** `masked_dot_256` costs 3599 steps vs 2829 for
+   `dot_256` (1.27× — the lazy-match branch chain per lane vs
+   straight accumulation); `rotate_256` costs 5141, at the
+   `axpy_256` scale (5397) as expected for a replace-traversal
+   construction kernel. WASM steps for the P-001-era kernels now
+   exist (axpy 3.2M, matvec 80K, matmul 802K); the superlinear
+   WASM accounting note above still stands uninvestigated.
 
 ## Workflow
 

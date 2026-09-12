@@ -82,6 +82,15 @@ shortcut, which cancels on shifted data (pinned shifted case).
 `|cos|` can exceed 1.0 by an epsilon (independent roundings) and
 provides no `acos` to misuse it with.
 
+Masked kernels (`vec_float_mask`) accumulate over live lanes only,
+in program order, skipping dead lanes exactly (no zero-fill, no
+reweighting). Dead lanes are fully inert under lazy `match`: the
+untaken arm never evaluates, so a dead lane is never loaded and NaN
+there does not trap (pinned); a live-lane NaN traps on first use
+like everywhere else. `masked_mean` divides by the live count, so
+an all-dead mask returns `Empty` rather than trapping on 0/0 —
+mirroring `mean_view` on the empty view.
+
 `sqrt_newton` accuracy is guaranteed only on `1e-12 <= x <= 1e24`
 (hand-rolled range reduction: start at `min(max(x, 1.0), 1e12)`, 32
 Newton steps; the generator asserts < 1e-12 relative error against

@@ -4,11 +4,15 @@ Reports from building real numerical software in MNCS. Each entry has a
 reproducer under `repros/P-XXX-*/` (or a committed corpus case) that a
 future `mncs-language` agent can run without rediscovering the problem.
 
-**Toolchain under test:** `mncs-language` at `68492c0` (2026-09-11),
-`mncs-cli` debug build, rustc 1.97.1, Linux x86_64. Source profile
-`0.16` (current) unless a repro says otherwise. All five executable
-backends: `mncs-research-bytecode`, `mncs-portable-wasm-mvp`,
-`mncs-c11`, `mncs-llvm-ir`, `mncs-cranelift`.
+**Toolchain under test:** `mncs-language` at `a7a8c05` (2026-09-12;
+revalidated from the `68492c0` baseline — every pressure below was
+re-run, see the 2026-09-12 notes), `mncs-cli` debug build,
+Linux x86_64. Source profile `0.16` (current) unless a repro says
+otherwise. All five executable backends:
+`mncs-research-bytecode`, `mncs-portable-wasm-mvp`, `mncs-c11`,
+`mncs-llvm-ir`, `mncs-cranelift`. Library baseline at revalidation:
+407 committed cases green on all five backends (2035 cells), no
+refusal pins.
 
 **How to run a repro** (from this repository root; `LANG` is an
 `mncs-language` checkout at the revision above):
@@ -41,7 +45,11 @@ the workspace there).
 | P-011 | Stale profile docs over-claim float-sequence/record limits | tooling/docs | confirmed |
 | P-012 | No correctly-rounded FMA | accuracy note | confirmed |
 | P-013 | No callable values/closures for elementwise kernels | expressiveness | acknowledged constraint |
-| P-014 | Loop lowering is vectorization-hostile (C11 state machine, per-lane fail edges) | performance | confirmed |
+| P-014 | Loop lowering is vectorization-hostile (C11 state machine, per-lane fail edges) | performance | confirmed (C11 exhibit re-emitted byte-identical at `a7a8c05`) |
+| P-015 | `copy_span` refuses symbolic-bound destinations | expressiveness blocker | confirmed, worked around (lane-loop `rotate_left`) |
+| P-016 | Generic `checked_index` panics four backends (`unreachable`) | correctness blocker (compiler crash) | confirmed, no workaround (gather kernels withheld) |
+| P-017 | No `exp`/`log`/real-power intrinsics | expressiveness blocker (family) | confirmed |
+| P-018 | Inference does not flow through `up_to` view bounds (MNE220) | ergonomics | confirmed, worked around (one explicit `<N>`) |
 
 Severity scale: correctness blocker > expressiveness blocker >
 safety issue > diagnostics issue > ergonomics > accuracy note >
@@ -293,6 +301,11 @@ disposition after re-running against the current toolchain:
   signatures).
 - **Regression test:** committed `prefix4`/`normalized` cases + the
   P-004 compile repros.
+- **Revalidation 2026-09-12 (`a7a8c05`):** `MNP213`/`MNP214` still
+  fire once at the `<`; the cascade now also contains `MNP064`
+  ("expected expression" at the `Box<N> {` construction site — the
+  0.13 negative-atom grammar shifted cascade composition, not the
+  refusal). Feature still open.
 - **Depends on:** none.
 
 ## P-005 — No dimension-equality constraints
@@ -324,6 +337,16 @@ disposition after re-running against the current toolchain:
   via `source-study`; the positive path is pinned by
   `g-trace-2x2`/`g-trace-3x3` in `tests/corpora/mat_float.json`
   (single-argument seeds, green on all five backends).
+- **Revalidation 2026-09-12 (`a7a8c05`):** MNE221 still refuses the
+  two-argument seed with the same message. The general half (Nat
+  dimension arithmetic) met a concrete instance this campaign:
+  `mean_g<M, N>` needs the lane count M * N, which is inexpressible
+  — and was routed around without language change by accumulating
+  the count as `1.0` per lane in a concrete `MeanAcc` record
+  (committed, all backends). The workaround is honest but
+  second-best: a float count where a Nat product belongs (exact
+  only for M * N <= 2^53). `diag_into` still documents squareness
+  as a precondition.
 - **Depends on:** none.
 
 ## P-006 — Cranelift SIGSEGV on arity-mismatched execution request
@@ -484,6 +507,12 @@ disposition after re-running against the current toolchain:
 - **Direction:** admit float element types in `vec<T, N>` with lane-wise
   trap-rule semantics matching scalar floats.
 - **Regression test:** the P-010 compile repro.
+- **Revalidation 2026-09-12 (`a7a8c05`):** still refused
+  (`MNE105` twice — declaration and use site — plus downstream
+  `MNE206`). Related new coverage: `[bool; N]` sequences and bool
+  lane traversal DO elaborate and run on all five backends (new
+  `vec_float_mask` module, 17 corpus cases) — the missing piece is
+  float lanes specifically, not non-integer lanes in general.
 - **Depends on:** none. Related to P-001 (float lane storage).
 
 ## P-011 — Stale profile docs over-claim limits
@@ -517,6 +546,18 @@ disposition after re-running against the current toolchain:
   hand-editing; mark 0.12-era float paragraphs superseded.
 - **Regression test:** this repository's suites ARE the regression
   tests for the lifted limits.
+- **Revalidation 2026-09-12 (`a7a8c05`):** both stale claims
+  re-confirmed stale. `source-profile-0.12.md` still says "Mixed
+  int/float arithmetic, float sequences/vectors, and checked float
+  arithmetic stay refused" — int→f64 adaptation now works
+  (P-008, exercised in `quadratic`) and float sequences execute on
+  all five backends (407 committed cases). The 0.5 record matrix
+  still claims WASM-intra-function-only and
+  LLVM/C11/Cranelift-UNSUPPORTED — while record-typed results
+  (`QuadRoots`, `FMaskedMean`, `CosOutcome`) return across modules
+  on all five backends in this repository's suites. The
+  `c343549` doc pass updated 0.3/0.5/0.7/0.12 paragraphs but left
+  these two claims standing.
 - **Depends on:** none.
 
 ## P-012 — No correctly-rounded FMA
@@ -603,5 +644,182 @@ disposition after re-running against the current toolchain:
 - **Regression test:** re-emit the P-014 exhibits after backend work
   and diff the lane body; benchmark steps/wall for `dot_256`
   (committed harness) should move, not just the IR text.
+- **Revalidation 2026-09-12 (`a7a8c05`):** the C11 exhibit
+  re-emitted byte-identical (`diff -q` clean against the committed
+  `dot4.c11.c`; 3 `mncs_slot_load64` sites, state-machine shape
+  unchanged). No backend movement since `68492c0`.
 - **Depends on:** none. Related to P-001 (which backend can even run
   the loop) and P-010 (no lane vocabulary to bypass scalar loops).
+
+---
+
+## P-015 — `copy_span` refuses symbolic-bound destinations
+
+- **Severity:** expressiveness blocker. **Status:** confirmed, worked around.
+- **Affects:** every generic bulk-copy kernel (rotation, splice,
+  block moves) — the new `rotate_left` in
+  `src/numerics/vec_float_build.mncs`.
+- **Repro:** `repros/P-015-generic-span-copy/` (`repro.mncs` +
+  `corpus.json`).
+- **Invocation:** `experiment run repro.mncs --backend <be> --corpus corpus.json`
+  (expects `rot_sym<4>` = `[2.0, 3.0, 4.0, 1.0]`).
+- **Expected:** `[f64; N]` destinations copy like `[f64; 4]` ones, or
+  an honest capacity diagnostic.
+- **Actual:** elaboration fails with `MNB142` (functional span copy
+  requires an exact-bound destination; views refuse) plus `MNB146`/
+  `MNB147`/`MNB148` on the instantiation. The `[f64; N]` destination
+  counts as a view while `N` is symbolic — although the identical
+  value accepts `replace` in the identical position, and although
+  the concrete-bound spelling (`[f64; 4]`, same dynamic positions,
+  same self-copy shape, chained the same way) compiles and runs
+  bit-exact on all five backends (verified by reduction during this
+  campaign).
+- **Why it matters:** the per-lane primitive (`replace`) works
+  generically but the bulk primitive (`copy_span`) does not, so
+  exactly the efficient path is closed and only the slow path is
+  open. Rotation/splice/windowed moves over `[T; N]` must be lane
+  loops; P-014's per-lane check density then applies to code whose
+  whole point was to avoid per-lane traffic.
+- **Attempted approaches:** dynamic positions alone are fine
+  (`xs.len`, `%`, `-` elaborate and run); parameter destinations
+  are fine; self-copy is fine; chaining is fine — each reduced to a
+  passing probe. Only symbolic-bound destinations fail, concrete or
+  generic context alike once `N` is symbolic.
+- **Workaround:** `rotate_left` spells the rotation as a
+  `replace`-traversal with modular index arithmetic (committed, all
+  backends, 6 corpus cases). Cost: O(N) lane checks where one bulk
+  move belongs; the source comment names P-015 as the migration
+  trigger.
+- **Desired behavior:** admit symbolic-bound exact destinations (the
+  bound is static at every instantiation; the runtime window check
+  already exists for dynamic positions), or refuse with a diagnostic
+  naming symbolicity rather than mislabeling the value a view.
+- **Acceptance criteria:** the P-015 repro compiles and returns the
+  rotated sequence bit-exact on all five backends; `rotate_left`
+  migrates to the two-`copy_span` form with identical corpus bits.
+- **Regression test:** the P-015 compile repro + the committed
+  `rotate_left` corpus cases (which pin the bits the migration must
+  preserve).
+- **Depends on:** none. Possibly shares a root with P-016 (0.14
+  intrinsics meeting unspecialized generic bounds); filed
+  separately because the symptom (honest refusal vs compiler panic)
+  and the owner (elaboration rule vs lowering crash) differ.
+
+## P-016 — Generic `checked_index` panics four backends
+
+- **Severity:** correctness blocker (compiler crash). **Status:**
+  confirmed, no workaround.
+- **Affects:** any gather/permute/index-table kernel over generic
+  sequences — the withheld `permute`/`gather_sum` family.
+- **Repro:** `repros/P-016-generic-checked-index-crash/`
+  (`repro.mncs` + `corpus.json`).
+- **Invocation:** `experiment run repro.mncs --backend <be> --corpus corpus.json`
+  (expects `gather_sum<3>` = `60.0`).
+- **Expected:** `60.0` (what bytecode returns), or an honest
+  per-entrypoint refusal.
+- **Actual:** the CLI process dies with `internal error: entered
+  unreachable code: generic SequenceBound must be specialized before
+  backend lowering` — at `crates/mncs-codegen/src/c11.rs:1692`
+  (C11), `lower.rs:2927` (WASM), `llvm.rs:1979` (LLVM),
+  `cranelift_backend.rs:1414` (Cranelift). Only
+  `mncs-research-bytecode` lowers the operation. P-006-class: a
+  fuzzer, a REPL typo, or a stale corpus kills the compiler process
+  instead of receiving a refusal. Reduced to a pure read
+  (`acc + xs[c]`, no `replace` through the checked value) — the
+  `checked_index` over a symbolic bound alone is sufficient.
+- **Why it matters:** bounds-checked dynamic indexing is THE safe
+  indexing story for data-dependent access (permutations, sparse
+  gathers, table lookups). The 0.14 feature works at concrete
+  bounds; the language's own `pressure-checked-index` example has
+  zero generic (`Nat`) coverage, which is why the crash survived —
+  and generic code is the only place a numerical library can use
+  it.
+- **Workaround:** none that keeps the discharge. Any
+  `checked_index` over a symbolic-bound sequence crashes the four
+  backends, so gather/permute kernels stay out of `src/` entirely
+  (not even pinned as refusals: a panic produces no result envelope
+  for the harness to pin). Unchecked dynamic indexing
+  (`xs[(i + k2) % n]` in `rotate_left`) still works — the
+  runtime-checked obligation fires per projection instead.
+- **Desired behavior:** specialize the bound before lowering (the
+  panic message names the missing step), or refuse the generic
+  shape honestly at elaboration. Never panic the driver process.
+- **Acceptance criteria:** the P-016 repro returns `60.0` on all
+  five backends, or refuses identically on the four without killing
+  the process; a `permute` kernel lands in `src/` with corpus
+  coverage.
+- **Regression test:** the P-016 repro (process survival + value).
+- **Depends on:** none. Cross-link P-015 (possibly shared
+  specialization root).
+
+## P-017 — No `exp`/`log`/real-power intrinsics
+
+- **Severity:** expressiveness blocker (family). **Status:**
+  confirmed.
+- **Affects:** every exponential-family kernel: softmax,
+  log-sum-exp, cross-entropy, Gaussian densities, geometric means,
+  likelihoods — and the statistics/logistic examples, which stop
+  exactly where exponentiation starts.
+- **Repro:** `repros/P-017-exp-log-absence/repro.mncs` (softplus
+  `log(1.0 + exp(x))`).
+- **Invocation:** `source-study repro.mncs --node-id repro`.
+- **Expected:** `exp`/`log` intrinsics under the float trap rule, or
+  a roadmap diagnostic.
+- **Actual:** `MNE131` (call target does not resolve) on both
+  calls. The float intrinsic inventory is `sin`/`cos`/`neg` only
+  (verified in `mncs-syntax/src/source.rs` at `a7a8c05`); no `exp`,
+  no `log`, no real `pow`, no spelling for any of them.
+- **Why it matters:** transcendental coverage decides whether the
+  library can grow past polynomials-and-trigonometry. `sqrt_newton`
+  proves hand-rolled approximation is sometimes viable — but a
+  Taylor-series `exp` was considered and rejected: without
+  `ldexp`/`frexp` the range reduction is crude, and the error
+  analysis for a correctly-rounded reduction needs exactly the
+  error-free transformations that are also absent (P-012). The
+  workaround would pretend a rigor the language cannot back.
+  `log` is harder still (no bit-level decomposition vocabulary).
+- **Workaround:** none offered. The gap stays visible rather than
+  hidden behind an unvalidated polynomial.
+- **Desired behavior:** `exp(x)`/`log(x)` intrinsics with the trap
+  rule (overflow of `exp` traps like every computed infinity;
+  `log` of non-positive refuses/traps per the domain-enum
+  convention), lowered via the shared libm path that already makes
+  `sin`/`cos` bit-exact across backends.
+- **Acceptance criteria:** the P-017 repro elaborates; softmax and
+  log-sum-exp kernels land in `src/` with oracle-pinned corpus
+  cases; `sin`/`cos`-style cross-backend bit agreement holds.
+- **Regression test:** the P-017 compile repro.
+- **Depends on:** none. Adjacent to P-012 (EFT primitives would
+  underwrite a hand-roll, but intrinsics are the direct fix).
+
+## P-018 — Inference does not flow through `up_to` view bounds
+
+- **Severity:** ergonomics. **Status:** confirmed, worked around.
+- **Affects:** one call site (`mean_view` → `sum_view<N>`); every
+  other generic call in the library now infers.
+- **Repro:** `repros/P-018-inference-view-bounds/repro.mncs`
+  (`vsum<N>` over `[f64; up_to N]`, called bare from `vmean<N>`).
+- **Invocation:** `source-study repro.mncs --node-id repro`.
+- **Expected:** `N` inferred (it is in scope and the argument
+  carries it), or a diagnostic naming the view-bound limit.
+- **Actual:** `MNE220` (requires 1 generic argument; cannot infer
+  N; supply explicit `<...>`). Constraints flow through exact
+  sequence structure and direct generic positions (this campaign
+  migrated ~35 call sites, including 3-parameter
+  `matmul_into(a, b, seed)` and caller-parameter forwarding, all
+  green on all backends) but not through `up_to` capacity bounds.
+- **Why it matters (bounded):** view-typed callees are the
+  empty-safe kernel family (`sum_view`, `mean_view`, and their
+  future siblings); each keeps one explicit `<N>` of noise. Small
+  cost, precisely bounded — filed so the inference story has its
+  boundary written down rather than rediscovered.
+- **Workaround:** the single affected site keeps explicit `<N>`,
+  labeled in-source in `vec_float_reduce.mncs`.
+- **Desired behavior:** flow constraints through `up_to N`
+  capacities the way exact `[T; N]` structure already flows, or
+  extend MNE220's message for view-bound failures.
+- **Acceptance criteria:** the P-018 repro elaborates cleanly;
+  `sum_view(view)` infers in `mean_view`.
+- **Regression test:** the P-018 compile repro + the committed
+  `mean_view` corpus cases.
+- **Depends on:** none.
