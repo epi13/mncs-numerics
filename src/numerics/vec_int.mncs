@@ -1,0 +1,129 @@
+mncs 0.16;
+
+// mncs.numerics.vec_int — generic bounded reductions over i64 windows.
+//
+// All kernels traverse once, left to right, so results are independent
+// of scheduling: the same source gives the same value on every backend.
+// Overflow policy is per-kernel and explicit: `_checked` kernels trap,
+// `_wrap` kernels reduce modulo 2^64.
+//
+// Contract: N >= 1. Empty exact sequences are outside every contract
+// here (min/max/mean have no value on them); empty *views* are handled
+// by the view-typed float kernels, which can observe a zero length.
+
+module mncs.numerics.vec_int.v1;
+
+// Checked sum: traps on overflow. The trap is the contract.
+fn sum_checked<N: Nat>(xs: [i64; N]) -> (result: i64) {
+    iterate i over xs carrying acc: i64 = 0 {
+        next acc = acc + xs[i];
+    }
+    return acc;
+}
+
+// Wrapping sum: total on every input.
+fn sum_wrap<N: Nat>(xs: [i64; N]) -> (result: i64) {
+    iterate i over xs carrying acc: i64 = 0 {
+        next acc = acc +% xs[i];
+    }
+    return acc;
+}
+
+// Wrapping dot product: sum of lane products, each step wrapping.
+fn dot_wrap<N: Nat>(xs: [i64; N], ys: [i64; N]) -> (result: i64) {
+    iterate i over xs carrying acc: i64 = 0 {
+        next acc = acc +% xs[i] *% ys[i];
+    }
+    return acc;
+}
+
+// Checked dot product: traps if any product or the running sum
+// overflows. Both traversals advance together; the bound N is shared.
+fn dot_checked<N: Nat>(xs: [i64; N], ys: [i64; N]) -> (result: i64) {
+    iterate i over xs carrying acc: i64 = 0 {
+        next acc = acc + xs[i] * ys[i];
+    }
+    return acc;
+}
+
+// Comparison-only extrema. No arithmetic, no trap, N >= 1.
+fn min<N: Nat>(xs: [i64; N]) -> (result: i64) {
+    iterate i over xs carrying acc: i64 = xs[0] {
+        next acc = select(xs[i] < acc, xs[i], acc);
+    }
+    return acc;
+}
+
+fn max<N: Nat>(xs: [i64; N]) -> (result: i64) {
+    iterate i over xs carrying acc: i64 = xs[0] {
+        next acc = select(xs[i] > acc, xs[i], acc);
+    }
+    return acc;
+}
+
+// Truncating mean toward zero: checked sum, then checked division by
+// the static length. N >= 1, so the divisor is never zero.
+fn mean_checked<N: Nat>(xs: [i64; N]) -> (result: i64) {
+    let s: i64 = sum_checked<N>(xs);
+    return s / (xs.len as i64);
+}
+
+// Squared Euclidean distance with wrapping lane arithmetic.
+fn dist2_wrap<N: Nat>(xs: [i64; N], ys: [i64; N]) -> (result: i64) {
+    iterate i over xs carrying acc: i64 = 0 {
+        let d: i64 = xs[i] -% ys[i];
+        next acc = acc +% d *% d;
+    }
+    return acc;
+}
+
+// L1 norm with wrapping accumulation of wrapping absolute values.
+fn l1_wrap<N: Nat>(xs: [i64; N]) -> (result: i64) {
+    iterate i over xs carrying acc: i64 = 0 {
+        let v: i64 = xs[i];
+        next acc = acc +% select(v < 0, 0 -% v, v);
+    }
+    return acc;
+}
+
+// Count of lanes equal to the needle. Total.
+fn count_eq<N: Nat>(xs: [i64; N], needle: i64) -> (result: i64) {
+    iterate i over xs carrying hits: i64 = 0 {
+        next hits = hits + ((xs[i] == needle) as i64);
+    }
+    return hits;
+}
+
+// True when every lane is non-negative. Total, N >= 1.
+fn all_nonneg<N: Nat>(xs: [i64; N]) -> (result: bool) {
+    iterate i over xs carrying ok: bool = true {
+        next ok = ok && xs[i] >= 0;
+    }
+    return ok;
+}
+
+// True when some lane is zero. Total.
+fn any_zero<N: Nat>(xs: [i64; N]) -> (result: bool) {
+    iterate i over xs carrying hit: bool = false {
+        next hit = hit || xs[i] == 0;
+    }
+    return hit;
+}
+
+// i32 duplications. The language has no numeric traits, so one width
+// cannot serve another: these bodies are line-for-line copies of the
+// i64 kernels above with the type changed. They exist to measure that
+// duplication cost honestly, not because the algorithm differs.
+fn sum_i32<N: Nat>(xs: [i32; N]) -> (result: i32) {
+    iterate i over xs carrying acc: i32 = 0 {
+        next acc = acc + xs[i];
+    }
+    return acc;
+}
+
+fn dot_i32<N: Nat>(xs: [i32; N], ys: [i32; N]) -> (result: i32) {
+    iterate i over xs carrying acc: i32 = 0 {
+        next acc = acc + xs[i] * ys[i];
+    }
+    return acc;
+}

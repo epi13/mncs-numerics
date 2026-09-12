@@ -1,0 +1,22 @@
+mncs 0.16;
+
+// Dataset statistics over one window: a consumer-integration test for
+// mncs.numerics.vec_float_reduce.v1. All vocabulary comes through
+// `use`; nothing is re-implemented here.
+
+module mncs.numerics.examples.stats.v1;
+
+use mncs.numerics.vec_float_reduce;
+
+fn report4(xs: [f64; 4]) -> (result: [f64; 4]) {
+    // [mean, variance, min, max] of the window.
+    return [mean<4>(xs), variance<4>(xs), min<4>(xs), max<4>(xs)];
+}
+
+fn report8(xs: [f64; 8]) -> (result: [f64; 4]) {
+    return [mean<8>(xs), variance<8>(xs), min<8>(xs), max<8>(xs)];
+}
+
+fn l1_linf4(xs: [f64; 4]) -> (result: [f64; 2]) {
+    return [l1<4>(xs), linf<4>(xs)];
+}

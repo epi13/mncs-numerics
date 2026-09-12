@@ -1,0 +1,2412 @@
+{
+ "schema_version": "0.2",
+ "name": "mncs-numerics-vec-int",
+ "cases": [
+  {
+   "id": "v-sum_checked-0",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "sum_checked"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 3,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 4,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 10,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-sum_wrap-1",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "sum_wrap"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 3,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 4,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 10,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-dot_wrap-2",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "dot_wrap"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 3,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 4,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 5,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 6,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 7,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 8,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 70,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-dot_checked-3",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "dot_checked"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 3,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 4,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 5,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 6,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 7,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 8,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 70,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-min-4",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "min"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 9,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 4,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -2,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-max-5",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "max"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 9,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 4,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 9,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-mean_checked-6",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "mean_checked"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 3,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 4,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 2,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-mean_checked-7",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "mean_checked"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": -1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -3,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -4,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -2,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-dist2_wrap-8",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "dist2_wrap"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 3,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 4,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 5,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 6,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 7,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 8,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 64,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-l1_wrap-9",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "l1_wrap"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": -3,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 4,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 8,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-count_eq-10",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "count_eq"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 5,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 5,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "integer": {
+       "value": 5,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 2,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-all_nonneg-11",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "all_nonneg"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 3,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 4,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "boolean": {
+      "value": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-all_nonneg-12",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "all_nonneg"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 3,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "boolean": {
+      "value": false
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-any_zero-13",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "any_zero"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 3,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 4,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "boolean": {
+      "value": false
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-any_zero-14",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "any_zero"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 3,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "boolean": {
+      "value": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-sum_checked-15",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "sum_checked"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 42,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 1
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 42,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-min-16",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "min"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": -7,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 1
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -7,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-mean_checked-17",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "mean_checked"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": -7,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 1
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -7,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-dot_wrap-18",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "dot_wrap"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 6,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 7,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 1
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 42,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-sum_wrap-19",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "sum_wrap"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 3,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -4,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 5,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -6,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 7,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -8,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 8
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -4,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-min-20",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "min"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 3,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -4,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 5,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -6,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 7,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -8,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 8
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -8,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-max-21",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "max"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 3,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -4,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 5,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -6,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 7,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": -8,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 8
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 7,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-sum_checked-22",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "sum_checked"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 9223372036854775807,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "runtime_failure"
+  },
+  {
+   "id": "v-sum_wrap-23",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "sum_wrap"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 9223372036854775807,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -9223372036854775808,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-dot_checked-24",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "dot_checked"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 9223372036854775807,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "runtime_failure"
+  },
+  {
+   "id": "v-dot_wrap-25",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "dot_wrap"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 9223372036854775807,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 2,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -2,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-mean-sum-overflow-trap",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "mean_checked"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 9223372036854775807,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "runtime_failure"
+  },
+  {
+   "id": "v-sum_i32",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "sum_i32"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 32,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 2,
+          "type": {
+           "bits": 32,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 3,
+          "type": {
+           "bits": 32,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 4,
+          "type": {
+           "bits": 32,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 10,
+      "type": {
+       "bits": 32,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-dot_i32",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "dot_i32"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 32,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 2,
+          "type": {
+           "bits": 32,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 3,
+          "type": {
+           "bits": 32,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 4,
+          "type": {
+           "bits": 32,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 5,
+          "type": {
+           "bits": 32,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 6,
+          "type": {
+           "bits": 32,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 7,
+          "type": {
+           "bits": 32,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 8,
+          "type": {
+           "bits": 32,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 70,
+      "type": {
+       "bits": 32,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "v-sum_i32-overflow-trap",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_int.v1",
+     "function": "sum_i32"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 2147483647,
+          "type": {
+           "bits": 32,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 32,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 32,
+           "signed": true
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 32,
+           "signed": true
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "runtime_failure"
+  }
+ ]
+}

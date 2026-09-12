@@ -1,0 +1,129 @@
+mncs 0.16;
+
+// mncs.numerics.vec_float_build — generic constructive float kernels.
+//
+// These kernels RETURN new sequences, built lane by lane with the
+// functional `replace` inside one traversal. The input sequence seeds
+// the carried accumulator and every lane is overwritten, so the seed
+// contributes shape, never values.
+//
+// Backend envelope: reference bytecode, C11, and Cranelift realize
+// these kernels. Portable WASM refuses float-`replace` entrypoints
+// honestly (per-entrypoint CGN302); LLVM miscompiles the same
+// operation (`store i64` of a `double`, whole-artifact poisoning) and
+// is therefore excluded until the lowering is repaired. See pressure
+// P-001. The corpus runner pins exactly this matrix: construction is
+// correct where it runs, refused-or-broken where it does not, and the
+// split between this module and vec_float_reduce exists so one
+// lowering bug cannot take down the reductions.
+
+module mncs.numerics.vec_float_build.v1;
+
+use mncs.numerics.scalar_float;
+
+// Elementwise scale: out[i] = xs[i] * s.
+fn scaled<N: Nat>(xs: [f64; N], s: f64) -> (result: [f64; N]) {
+    iterate i over xs carrying out: [f64; N] = xs {
+        next out = replace(out, i, xs[i] * s);
+    }
+    return out;
+}
+
+// Elementwise add: out[i] = xs[i] + ys[i].
+fn add<N: Nat>(xs: [f64; N], ys: [f64; N]) -> (result: [f64; N]) {
+    iterate i over xs carrying out: [f64; N] = xs {
+        next out = replace(out, i, xs[i] + ys[i]);
+    }
+    return out;
+}
+
+// Elementwise subtract: out[i] = xs[i] - ys[i].
+fn sub<N: Nat>(xs: [f64; N], ys: [f64; N]) -> (result: [f64; N]) {
+    iterate i over xs carrying out: [f64; N] = xs {
+        next out = replace(out, i, xs[i] - ys[i]);
+    }
+    return out;
+}
+
+// Elementwise multiply: out[i] = xs[i] * ys[i].
+fn mul_elem<N: Nat>(xs: [f64; N], ys: [f64; N]) -> (result: [f64; N]) {
+    iterate i over xs carrying out: [f64; N] = xs {
+        next out = replace(out, i, xs[i] * ys[i]);
+    }
+    return out;
+}
+
+// AXPY: out[i] = a * xs[i] + ys[i]. The fused kernel behind
+// scaled-addition loops; written as one traversal, not add(scaled()).
+fn axpy<N: Nat>(a: f64, xs: [f64; N], ys: [f64; N]) -> (result: [f64; N]) {
+    iterate i over xs carrying out: [f64; N] = xs {
+        next out = replace(out, i, a * xs[i] + ys[i]);
+    }
+    return out;
+}
+
+// Elementwise absolute value via the scalar primitive.
+fn abs_elem<N: Nat>(xs: [f64; N]) -> (result: [f64; N]) {
+    iterate i over xs carrying out: [f64; N] = xs {
+        next out = replace(out, i, fabs(xs[i]));
+    }
+    return out;
+}
+
+// Elementwise clamp into [lo, hi] via the scalar primitive.
+fn clamped_elem<N: Nat>(xs: [f64; N], lo: f64, hi: f64) -> (result: [f64; N]) {
+    iterate i over xs carrying out: [f64; N] = xs {
+        next out = replace(out, i, fclamp(xs[i], lo, hi));
+    }
+    return out;
+}
+
+// Carried state for the prefix scan.
+record Pref { out_set: [f64; 4], run: f64 }
+
+// Prefix sums over exactly four lanes. A fully generic prefix would
+// need a generic carried record (`Pref<N>`), which the language does
+// not offer (no generic record declarations): the carried state would
+// have to be the sequence itself plus a second scalar, and a
+// traversal carries exactly one state value. So prefix ships for the
+// concrete width where the record can be spelled, and the generic
+// case is pressure P-004, not a silent gap.
+fn prefix4(xs: [f64; 4]) -> (result: [f64; 4]) {
+    let seed: Pref = Pref { out_set: xs, run: 0.0 };
+    iterate i over xs carrying st: Pref = seed {
+        let run2: f64 = st.run + xs[i];
+        next st = Pref { out_set: replace(st.out_set, i, run2), run: run2 };
+    }
+    return st.out_set;
+}
+
+// Reversal: out[len-1-i] = xs[i]. Index arithmetic on the traversal
+// index against the static length; the checked operators trap rather
+// than wrap if the contract N >= 1 ever fails to hold.
+fn reversed<N: Nat>(xs: [f64; N]) -> (result: [f64; N]) {
+    iterate i over xs carrying out: [f64; N] = xs {
+        next out = replace(out, xs.len - 1 - i, xs[i]);
+    }
+    return out;
+}
+
+// Fill-like construction from an exemplar: out[i] = x for every lane.
+// The exemplar supplies the shape the language cannot spell: there is
+// no `[x; N]` for symbolic N (repeat counts must be literals), so a
+// bare `broadcast<N>(x)` is inexpressible and every fill threads an
+// exemplar through. See pressure P-003.
+fn broadcast_like<N: Nat>(xs: [f64; N], x: f64) -> (result: [f64; N]) {
+    iterate i over xs carrying out: [f64; N] = xs {
+        next out = replace(out, i, x);
+    }
+    return out;
+}
+
+// Zeros and ones shaped like the exemplar.
+fn zeros_like<N: Nat>(xs: [f64; N]) -> (result: [f64; N]) {
+    return broadcast_like<N>(xs, 0.0);
+}
+
+fn ones_like<N: Nat>(xs: [f64; N]) -> (result: [f64; N]) {
+    return broadcast_like<N>(xs, 1.0);
+}

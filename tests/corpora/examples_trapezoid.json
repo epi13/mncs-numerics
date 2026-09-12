@@ -1,0 +1,29 @@
+{
+ "schema_version": "0.2",
+ "name": "mncs-numerics-examples-trapezoid",
+ "cases": [
+  {
+   "id": "x-sin_integral_64",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.examples.trapezoid.v1",
+     "function": "sin_integral_64"
+    },
+    "arguments": [],
+    "step_budget": 32768
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4611684209730616829,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

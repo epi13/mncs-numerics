@@ -1,0 +1,298 @@
+{
+ "schema_version": "0.2",
+ "name": "mncs-numerics-examples-stats",
+ "cases": [
+  {
+   "id": "x-report4",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.examples.stats.v1",
+     "function": "report4"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4617315517961601024,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4619567317775286272,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4616189618054758400,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4617315517961601024,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4607182418800017408,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4619567317775286272,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "x-report8",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.examples.stats.v1",
+     "function": "report8"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4617315517961601024,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4617315517961601024,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4619567317775286272,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4620693217682128896,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4617174780473245696,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4614184108845694976,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4611686018427387904,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4620693217682128896,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "x-l1_linf4",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.examples.stats.v1",
+     "function": "l1_linf4"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 13837309855095848960,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4602678819172646912,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 13840124604862955520,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4622945017495814144,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 13840124604862955520,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}

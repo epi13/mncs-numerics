@@ -1,0 +1,261 @@
+mncs 0.16;
+
+// mncs.numerics.scalar_float — total scalar binary64 primitives.
+//
+// The float trap rule governs everything here: any non-finite input or
+// result (NaN, infinities, division by zero, overflow to infinity) is a
+// deterministic runtime failure, never a value. In particular there is
+// NO NaN-propagating minimum/maximum in this module: fmin(NaN, 1.0)
+// traps on the comparison instead of returning 1.0. Callers that must
+// survive non-finite data have to classify it before calling; the trap
+// keeps silent-NaN bugs out of scientific code.
+//
+// Integer literals never adapt to f64: every constant below spells its
+// `.0`. Mixed int/float arithmetic without `as` is refused by the
+// compiler; conversions are always explicit at the call site.
+//
+// Trap cases are pinned in tests/corpora/scalar_float.json with
+// `"expected_status": "runtime_failure"`.
+
+module mncs.numerics.scalar_float.v1;
+
+// Absolute value by branch. Total on every finite input. The
+// comparison is `<=`, not `<`: `-0.0 < 0.0` is false, so `<` would
+// pass -0.0 through unchanged, while `0.0 - -0.0 == 0.0` normalizes
+// it. fabs(-0.0) == 0.0, matching IEEE-754 abs.
+fn fabs(x: f64) -> (result: f64) {
+    if x <= 0.0 {
+        return 0.0 - x;
+    }
+    return x;
+}
+
+// General negation, spelled against zero: there is no unary `-x`
+// in the language outside literal atoms. Exact on every finite
+// input EXCEPT +0.0: `0.0 - 0.0 == +0.0` while IEEE `- (+0.0)` is
+// `-0.0`, and no available operation produces -0.0 from +0.0 without
+// trapping. So fneg(+0.0) == +0.0, a pinned one-bit deviation from
+// IEEE negation (pressure P-007). fneg(-0.0) == +0.0 is exact.
+fn fneg(x: f64) -> (result: f64) {
+    return 0.0 - x;
+}
+
+// Minimum by comparison. Traps on non-finite inputs via the trap
+// rule; this is NaN-intolerant by design (see module header).
+fn fmin(a: f64, b: f64) -> (result: f64) {
+    if a <= b {
+        return a;
+    }
+    return b;
+}
+
+fn fmax(a: f64, b: f64) -> (result: f64) {
+    if a >= b {
+        return a;
+    }
+    return b;
+}
+
+// Total clamp into [lo, hi]. Precondition: lo <= hi. Non-finite
+// inputs trap on the comparisons.
+fn fclamp(value: f64, lo: f64, hi: f64) -> (result: f64) {
+    if value < lo {
+        return lo;
+    }
+    if value > hi {
+        return hi;
+    }
+    return value;
+}
+
+// Signum as -1.0, 0.0, or 1.0. Both signed zeros map to 0.0;
+// non-finite inputs trap on the comparisons.
+fn fsign(x: f64) -> (result: f64) {
+    if x < 0.0 {
+        return -1.0;
+    }
+    if x > 0.0 {
+        return 1.0;
+    }
+    return 0.0;
+}
+
+// Absolute-tolerance comparison: |a - b| <= tol. A negative tol
+// never matches. Exact equality is the tol == 0.0 special case, which
+// still traps on non-finite inputs rather than comparing bits.
+fn approx_abs(a: f64, b: f64, tol: f64) -> (result: bool) {
+    return fabs(a - b) <= tol;
+}
+
+// Relative-tolerance comparison against the larger magnitude:
+// |a - b| <= tol * max(|a|, |b|). Degenerate at zero (both zero
+// compares equal only when tol >= 0.0); prefer approx below.
+fn approx_rel(a: f64, b: f64, tol: f64) -> (result: bool) {
+    return fabs(a - b) <= tol * fmax(fabs(a), fabs(b));
+}
+
+// Combined comparison: |a - b| <= max(abs_tol, rel_tol * max(|a|,|b|)).
+// The absolute arm covers near-zero; the relative arm covers large
+// magnitudes. This is the default equality for test oracles here.
+fn approx(a: f64, b: f64, abs_tol: f64, rel_tol: f64) -> (result: bool) {
+    let scale: f64 = fmax(fabs(a), fabs(b));
+    let bound: f64 = fmax(abs_tol, rel_tol * scale);
+    return fabs(a - b) <= bound;
+}
+
+// Division outcome: either the quotient or an explicit refusal.
+// Unlike `/`, safe_div never traps on a zero divisor; it still traps
+// on non-finite inputs and on overflow of the quotient itself.
+enum FDiv { Value { value: f64 }, DivByZero }
+
+fn safe_div(n: f64, d: f64) -> (result: FDiv) {
+    if d == 0.0 {
+        return FDiv.DivByZero;
+    }
+    return FDiv.Value { value: n / d };
+}
+
+// Truncation toward zero via the converting cast. Domain: |x| < 2^63;
+// out-of-range inputs trap in the cast, which is the contract.
+fn ftrunc(x: f64) -> (result: f64) {
+    let t: i64 = (x as i64);
+    return (t as f64);
+}
+
+// Floor: the greatest representable float <= x that is an integer
+// value. Same domain as ftrunc; exact on the whole domain because
+// every f64 with |x| >= 2^52 is already integral.
+fn ffloor(x: f64) -> (result: f64) {
+    let t: f64 = ftrunc(x);
+    if t > x {
+        return t - 1.0;
+    }
+    return t;
+}
+
+// Ceiling: the least representable float >= x that is an integer
+// value. Same domain as ftrunc.
+fn fceil(x: f64) -> (result: f64) {
+    let t: f64 = ftrunc(x);
+    if t < x {
+        return t + 1.0;
+    }
+    return t;
+}
+
+// Fractional part with the sign of x: x - trunc(x). Same domain.
+fn ffrac(x: f64) -> (result: f64) {
+    return x - ftrunc(x);
+}
+
+// Round half away from zero: 2.5 -> 3.0, -2.5 -> -3.0. Same domain.
+fn fround(x: f64) -> (result: f64) {
+    if x >= 0.0 {
+        return ffloor(x + 0.5);
+    }
+    return fceil(x - 0.5);
+}
+
+// Carried state for the bounded power loop.
+record FAcc { acc: f64, left: u64 }
+
+// Outcome of a float power with a bounded exponent.
+enum FPow { Value { value: f64 }, ExpTooLarge }
+
+fn fpow_step(st: FAcc, base: f64) -> (result: FAcc) {
+    if st.left == 0 {
+        return st;
+    }
+    return FAcc { acc: st.acc * base, left: st.left - 1 };
+}
+
+// base^exp by repeated multiplication, exp <= 1024. 0^0 == 1 by the
+// empty-product convention. Overflow of the value traps under the
+// float rule instead of returning infinity.
+fn pow_int(base: f64, exp: u64) -> (result: FPow) {
+    if exp > 1024 {
+        return FPow.ExpTooLarge;
+    }
+    let seed: FAcc = FAcc { acc: 1.0, left: exp };
+    iterate step up_to 1024 carrying st: FAcc = seed {
+        next st = fpow_step(st, base);
+    }
+    return FPow.Value { value: st.acc };
+}
+
+// Square-root outcome: either the root or an explicit domain refusal
+// for negative inputs (including a negative nonzero; -0.0 compares
+// equal to 0.0 and yields 0.0).
+enum FSqrt { Value { value: f64 }, DomainError }
+
+// Principal square root by Newton's method with a hand-rolled range
+// reduction (the language offers no frexp/scalbn, so the initial
+// guess is bucketed by comparison: values above 1e12 start at 1e12,
+// values below 1.0 start at 1.0). Accuracy is guaranteed only on the
+// documented domain 1e-12 <= x <= 1e24, verified against an
+// independent oracle; outside it the iteration still terminates but
+// may not have converged. 32 iterations always run: there is no early
+// exit from a bounded iteration.
+fn sqrt_newton(x: f64) -> (result: FSqrt) {
+    if x < 0.0 {
+        return FSqrt.DomainError;
+    }
+    if x == 0.0 {
+        return FSqrt.Value { value: 0.0 };
+    }
+    let guess: f64 = select(x > 1.0, x, 1.0);
+    let start: f64 = select(guess > 1000000000000.0, 1000000000000.0, guess);
+    iterate step up_to 32 carrying y: f64 = start {
+        next y = 0.5 * (y + x / y);
+    }
+    return FSqrt.Value { value: y };
+}
+
+// Checked square root: the Newton value, or a deliberate 0.0/0.0 trap
+// on negative inputs. This is the escape hatch for hot loops and for
+// cross-module callers, which cannot match a foreign enum as cheaply
+// as a local one: one branch, one trap, no payload to destructure.
+fn sqrt_value(x: f64) -> (result: f64) {
+    return match sqrt_newton(x) {
+        FSqrt.Value { value } => value,
+        DomainError => 0.0 / 0.0,
+    };
+}
+
+// Roots of a*x^2 + b*x + c = 0 in ascending order. n counts the real
+// roots: 2, 1 (double root or linear), 0 (no real roots), or -1 for
+// the degenerate 0 == 0 input, which constrains nothing. r1 is
+// meaningless unless n == 2. The quadratic formula is evaluated in
+// the cancellation-stable form q = -0.5*(b + sign(b)*sqrt(disc)),
+// r0 = q/a, r1 = c/q, so the small root of x^2 - 1e8*x + 1 keeps
+// full precision where the naive (-b - sqrt(disc)) / 2a loses it.
+// Domain: no intermediate may overflow (b*b, 4*a*c trap instead of
+// producing infinity); a != 0 or the linear path applies.
+record QuadRoots { n: i64, r0: f64, r1: f64 }
+
+fn quadratic(a: f64, b: f64, c: f64) -> (result: QuadRoots) {
+    if a == 0.0 {
+        if b == 0.0 {
+            return QuadRoots { n: -1, r0: 0.0, r1: 0.0 };
+        }
+        return QuadRoots { n: 1, r0: (0.0 - c) / b, r1: 0.0 };
+    }
+    let disc: f64 = b * b - 4.0 * a * c;
+    if disc < 0.0 {
+        return QuadRoots { n: 0, r0: 0.0, r1: 0.0 };
+    }
+    if disc == 0.0 {
+        return QuadRoots { n: 1, r0: (0.0 - b) / (2.0 * a), r1: 0.0 };
+    }
+    // disc > 0 here, so the DomainError arm is unreachable; it exists
+    // only because match arms must be exhaustive.
+    let s: f64 = match sqrt_newton(disc) {
+        FSqrt.Value { value } => value,
+        DomainError => 0.0,
+    };
+    let sb: f64 = select(b < 0.0, -1.0, 1.0);
+    let q: f64 = (0.0 - 0.5) * (b + sb * s);
+    let lo: f64 = fmin(q / a, c / q);
+    let hi: f64 = fmax(q / a, c / q);
+    return QuadRoots { n: 2, r0: lo, r1: hi };
+}

@@ -1,0 +1,62 @@
+mncs 0.16;
+
+// mncs.numerics.mat_float — generic MxN float matrix reductions.
+//
+// Representation: nested row-major `[[f64; N]; M]`, M rows of N lanes.
+// This module constructs nothing, so every kernel lowers on all five
+// executable backends. Constructive kernels (transpose, matvec,
+// matmul, diagonal extraction) live in
+// mncs.numerics.mat_float_build.v1 under the narrower construction
+// envelope.
+//
+// Squareness caveat: the language has no dimension-equality
+// constraints (pressure P-005), so squareness is a documented
+// precondition, not a type fact. trace_g on a tall matrix traps
+// fail-closed when a row index exceeds the column bound; on a wide
+// matrix it silently sums only the first M diagonal lanes. Callers
+// must pass square matrices; the corpus pins square inputs.
+
+module mncs.numerics.mat_float.v1;
+
+// Trace of a square matrix: sum of m[i][i] over the row traversal.
+// Precondition: M == N.
+fn trace_g<M: Nat, N: Nat>(m: [[f64; N]; M]) -> (result: f64) {
+    iterate i over m carrying acc: f64 = 0.0 {
+        next acc = acc + m[i][i];
+    }
+    return acc;
+}
+
+// Sum of squared lanes over any MxN shape: the squared Frobenius
+// norm. No squareness needed; program order, both levels.
+fn frobenius2_g<M: Nat, N: Nat>(m: [[f64; N]; M]) -> (result: f64) {
+    iterate i over m carrying acc: f64 = 0.0 {
+        iterate j over m[i] carrying inner: f64 = 0.0 {
+            next inner = inner + m[i][j] * m[i][j];
+        }
+        next acc = acc + inner;
+    }
+    return acc;
+}
+
+// Sum of all lanes over any MxN shape, program order.
+fn sum_g<M: Nat, N: Nat>(m: [[f64; N]; M]) -> (result: f64) {
+    iterate i over m carrying acc: f64 = 0.0 {
+        iterate j over m[i] carrying inner: f64 = 0.0 {
+            next inner = inner + m[i][j];
+        }
+        next acc = acc + inner;
+    }
+    return acc;
+}
+
+// Maximum lane over any MxN shape. Precondition: M >= 1 and N >= 1.
+fn max_g<M: Nat, N: Nat>(m: [[f64; N]; M]) -> (result: f64) {
+    iterate i over m carrying best: f64 = m[0][0] {
+        iterate j over m[i] carrying row: f64 = best {
+            next row = select(m[i][j] > row, m[i][j], row);
+        }
+        next best = select(row > best, row, best);
+    }
+    return best;
+}

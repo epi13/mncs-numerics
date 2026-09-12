@@ -1,0 +1,126 @@
+{
+ "schema_version": "0.2",
+ "name": "mncs-numerics-examples-logistic",
+ "cases": [
+  {
+   "id": "x-stable",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.examples.logistic.v1",
+     "function": "trajectory"
+    },
+    "arguments": [
+     {
+      "float": {
+       "bits": 4612811918334230528,
+       "type": {
+        "bits": 64
+       }
+      }
+     },
+     {
+      "float": {
+       "bits": 4596373779694328218,
+       "type": {
+        "bits": 64
+       }
+      }
+     }
+    ],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4603579539098121011,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "x-chaotic37",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.examples.logistic.v1",
+     "function": "trajectory"
+    },
+    "arguments": [
+     {
+      "float": {
+       "bits": 4615514078110652826,
+       "type": {
+        "bits": 64
+       }
+      }
+     },
+     {
+      "float": {
+       "bits": 4596373779694328218,
+       "type": {
+        "bits": 64
+       }
+      }
+     }
+    ],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4603442312452448955,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "x-chaotic40",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.examples.logistic.v1",
+     "function": "trajectory"
+    },
+    "arguments": [
+     {
+      "float": {
+       "bits": 4616189618054758400,
+       "type": {
+        "bits": 64
+       }
+      }
+     },
+     {
+      "float": {
+       "bits": 4599075939470750515,
+       "type": {
+        "bits": 64
+       }
+      }
+     }
+    ],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4606491678505225156,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

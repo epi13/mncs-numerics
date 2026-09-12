@@ -1,0 +1,27 @@
+mncs 0.16;
+
+// Solve-and-verify demo: solves a 2x2 system with
+// mncs.numerics.mat_float_small.v1, then checks the residual with the
+// same module's matvec2. The residual check is the usability test:
+// a solve API that cannot be verified from its own vocabulary is
+// incomplete.
+
+module mncs.numerics.examples.solve_demo.v1;
+
+use mncs.numerics.mat_float_small;
+
+fn solve_and_residual(
+    m: [f64; 4],
+    b: [f64; 2]
+) -> (result: [f64; 2]) {
+    // Returns r = A x - b at the solved x, or b itself when the
+    // system is singular (so the failure is visible, not a trap).
+    return match solve2(m, b) {
+        Solve2.Value { value } => sub2(matvec2(m, value), b),
+        Singular => b,
+    };
+}
+
+fn sub2(a: [f64; 2], b: [f64; 2]) -> (result: [f64; 2]) {
+    return [a[0] - b[0], a[1] - b[1]];
+}

@@ -1,0 +1,103 @@
+mncs 0.16;
+
+// mncs.numerics.mat_float_build — generic MxN constructive kernels.
+//
+// Representation: nested row-major `[[f64; N]; M]`. Every kernel
+// threads an exemplar `out`/`seed` value that supplies the result
+// shape and is overwritten lane by lane: the language cannot spell a
+// fill for symbolic bounds (no `[x; N]` with symbolic N, no generic
+// record constructors), so bare `matmul<M, K, N>(a, b)` is
+// inexpressible and the seeded form is the honest API. The seed
+// contributes shape only; every lane is written before it is read.
+// See pressure P-003.
+//
+// Backend envelope: reference bytecode, C11, and Cranelift. Portable
+// WASM refuses float-`replace` per entrypoint; LLVM miscompiles it
+// (pressure P-001). Multi-parameter generics additionally go through
+// in-language driver wrappers in tests/drivers, because host-side
+// seeding of multi-argument instantiations drops spellings when two
+// arguments coincide (pressure P-002).
+
+module mncs.numerics.mat_float_build.v1;
+
+// Matrix-vector product into the exemplar: out[i] = dot(m[i], x).
+// The inner traversal computes the row dot directly; calling the
+// vector dot primitive per row would also elaborate, but the inline
+// form keeps one loop nest instead of two.
+fn matvec_into<M: Nat, N: Nat>(
+    m: [[f64; N]; M],
+    x: [f64; N],
+    out: [f64; M]
+) -> (result: [f64; M]) {
+    iterate i over m carrying acc: [f64; M] = out {
+        iterate j over m[i] carrying dot: f64 = 0.0 {
+            next dot = dot + m[i][j] * x[j];
+        }
+        next acc = replace(acc, i, dot);
+    }
+    return acc;
+}
+
+// One row-column dot for the matrix product: a_row[*] . b[*][j].
+// Split out because bounded iteration nests at most two levels: the
+// (i, j) positions live in matmul_into's nest and the k-reduction
+// lives here, reached by call. j is a plain u64 lane position;
+// indexing the column through it keeps a runtime-checked obligation.
+fn row_col_dot<K: Nat, N: Nat>(
+    a_row: [f64; K],
+    b: [[f64; N]; K],
+    j: u64
+) -> (result: f64) {
+    iterate k over a_row carrying acc: f64 = 0.0 {
+        next acc = acc + a_row[k] * b[k][j];
+    }
+    return acc;
+}
+
+// Matrix product into the exemplar: out[i][j] =
+// sum_k a[i][k] * b[k][j]. Two loop levels hold the (i, j) positions
+// and thread the rows; the k-reduction is a call per cell. The
+// (2, 2, 2) corpus case pins the value; the benchmark scales it.
+fn matmul_into<M: Nat, K: Nat, N: Nat>(
+    a: [[f64; K]; M],
+    b: [[f64; N]; K],
+    out: [[f64; N]; M]
+) -> (result: [[f64; N]; M]) {
+    iterate i over a carrying acc: [[f64; N]; M] = out {
+        iterate j over out[i] carrying row: [f64; N] = out[i] {
+            next row = replace(row, j, row_col_dot<K, N>(a[i], b, j));
+        }
+        next acc = replace(acc, i, row);
+    }
+    return acc;
+}
+
+// Transpose into the exemplar: out[j][i] = m[i][j]. The inner nest
+// carries the whole output matrix and rewrites one lane of one row
+// per step, so only two loop levels are needed. Precondition: out
+// has the transposed shape [[f64; M]; N].
+fn transpose_into<M: Nat, N: Nat>(
+    m: [[f64; N]; M],
+    out: [[f64; M]; N]
+) -> (result: [[f64; M]; N]) {
+    iterate i over m carrying acc: [[f64; M]; N] = out {
+        iterate j over m[i] carrying acc2: [[f64; M]; N] = acc {
+            next acc2 = replace(acc2, j, replace(acc2[j], i, m[i][j]));
+        }
+        next acc = acc2;
+    }
+    return acc;
+}
+
+// Diagonal extraction into the exemplar: out[i] = m[i][i].
+// Precondition: square input (M == N); see the squareness caveat in
+// mncs.numerics.mat_float.v1.
+fn diag_into<M: Nat, N: Nat>(
+    m: [[f64; N]; M],
+    seed: [f64; M]
+) -> (result: [f64; M]) {
+    iterate i over m carrying acc: [f64; M] = seed {
+        next acc = replace(acc, i, m[i][i]);
+    }
+    return acc;
+}

@@ -1,0 +1,194 @@
+mncs 0.16;
+
+// mncs.numerics.scalar_int — total scalar integer primitives.
+//
+// Every arithmetic intent is explicit. Checked operators (`+ - * / %`)
+// trap on overflow, on `MIN / -1`, and on division by zero; wrapping
+// operators (`+% -% *%`) reduce modulo 2^N; saturating operators
+// (`+| -| *|`) clamp at the representable bound. Comparison-only
+// helpers carry no overflow obligation at all.
+//
+// All functions are total except where a trap is documented. Trap cases
+// are pinned in tests/corpora/scalar_int.json with
+// `"expected_status": "runtime_failure"`.
+
+module mncs.numerics.scalar_int.v1;
+
+// Absolute value with checked negation: traps on i64::MIN, whose
+// negation is unrepresentable. The trap is the contract, not an
+// accident: callers that must survive MIN use abs_wrap/abs_sat.
+fn abs_checked(x: i64) -> (result: i64) {
+    if x < 0 {
+        return 0 - x;
+    }
+    return x;
+}
+
+// Wrapping absolute value: abs(MIN) == MIN (the value wraps back to
+// itself, matching two's-complement `0 -% MIN`). Total.
+fn abs_wrap(x: i64) -> (result: i64) {
+    if x < 0 {
+        return 0 -% x;
+    }
+    return x;
+}
+
+// Saturating absolute value: abs(MIN) == MAX. Total.
+fn abs_sat(x: i64) -> (result: i64) {
+    if x < -9223372036854775807 {
+        return 9223372036854775807;
+    }
+    if x < 0 {
+        return 0 - x;
+    }
+    return x;
+}
+
+// Comparison-only extrema. No arithmetic, hence no overflow
+// obligation and no trap on any input.
+fn min_i64(a: i64, b: i64) -> (result: i64) {
+    if a <= b {
+        return a;
+    }
+    return b;
+}
+
+fn max_i64(a: i64, b: i64) -> (result: i64) {
+    if a >= b {
+        return a;
+    }
+    return b;
+}
+
+// Total clamp into [lo, hi]. Precondition: lo <= hi. Violating the
+// precondition yields lo-or-hi selection, never a trap; callers that
+// cannot establish the order must not call.
+fn clamp_i64(value: i64, lo: i64, hi: i64) -> (result: i64) {
+    if value < lo {
+        return lo;
+    }
+    if value > hi {
+        return hi;
+    }
+    return value;
+}
+
+// Signum: -1, 0, or 1. Total on every input including MIN/MAX.
+fn sign_i64(x: i64) -> (result: i64) {
+    if x < 0 {
+        return -1;
+    }
+    if x > 0 {
+        return 1;
+    }
+    return 0;
+}
+
+// Carried state for the bounded power loop: the accumulator plus the
+// number of multiplications still to perform.
+record Pow { acc: i64, left: u64 }
+
+// Outcome of an integer power: either the value or an explicit
+// domain refusal when the exponent exceeds the static loop bound.
+// Overflow of the value itself stays a checked-arithmetic trap.
+enum PowOutcome { Value { value: i64 }, ExpTooLarge }
+
+fn pow_step(st: Pow, base: i64) -> (result: Pow) {
+    if st.left == 0 {
+        return st;
+    }
+    return Pow { acc: st.acc * base, left: st.left - 1 };
+}
+
+// base^exp by repeated checked multiplication. exp <= 64; larger
+// exponents return ExpTooLarge instead of silently computing a prefix.
+// 0^0 == 1 by the empty-product convention, documented here.
+fn pow_checked(base: i64, exp: u64) -> (result: PowOutcome) {
+    if exp > 64 {
+        return PowOutcome.ExpTooLarge;
+    }
+    let seed: Pow = Pow { acc: 1, left: exp };
+    iterate step up_to 64 carrying st: Pow = seed {
+        next st = pow_step(st, base);
+    }
+    return PowOutcome.Value { value: st.acc };
+}
+
+// Carried state for Euclid's algorithm.
+record Gcd { x: i64, y: i64 }
+
+fn gcd_step(st: Gcd) -> (result: Gcd) {
+    if st.y == 0 {
+        return st;
+    }
+    return Gcd { x: st.y, y: st.x % st.y };
+}
+
+// Greatest common divisor by Euclid's algorithm, 64 bounded steps.
+// Contract: inputs are non-negative; gcd(0, 0) == 0 by convention.
+// Negative inputs are outside the contract (the remainder sign would
+// leak into the result); use abs_* first.
+fn gcd(x: i64, y: i64) -> (result: i64) {
+    let seed: Gcd = Gcd { x: x, y: y };
+    iterate step up_to 64 carrying st: Gcd = seed {
+        next st = gcd_step(st);
+    }
+    return st.x;
+}
+
+// i32 absolute value, checked: traps on i32::MIN.
+fn abs_checked_i32(x: i32) -> (result: i32) {
+    if x < 0 {
+        return 0 - x;
+    }
+    return x;
+}
+
+fn min_i32(a: i32, b: i32) -> (result: i32) {
+    if a <= b {
+        return a;
+    }
+    return b;
+}
+
+fn max_i32(a: i32, b: i32) -> (result: i32) {
+    if a >= b {
+        return a;
+    }
+    return b;
+}
+
+fn clamp_i32(value: i32, lo: i32, hi: i32) -> (result: i32) {
+    if value < lo {
+        return lo;
+    }
+    if value > hi {
+        return hi;
+    }
+    return value;
+}
+
+// u64 comparison-only extrema. Unsigned order; no arithmetic.
+fn min_u64(a: u64, b: u64) -> (result: u64) {
+    if a <= b {
+        return a;
+    }
+    return b;
+}
+
+fn max_u64(a: u64, b: u64) -> (result: u64) {
+    if a >= b {
+        return a;
+    }
+    return b;
+}
+
+fn clamp_u64(value: u64, lo: u64, hi: u64) -> (result: u64) {
+    if value < lo {
+        return lo;
+    }
+    if value > hi {
+        return hi;
+    }
+    return value;
+}

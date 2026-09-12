@@ -1,0 +1,43 @@
+mncs 0.16;
+
+// Test drivers for mncs.numerics.mat_float_build.v1.
+//
+// Same rationale as mat_float_drivers: multi-argument instantiations
+// cannot be named from a corpus while pressure P-002 stands, so each
+// tested shape gets an exact in-language wrapper. The exemplar seeds
+// below are all-zero values of the result shape; they contribute
+// shape only, since every kernel overwrites every lane.
+
+module mncs.numerics.test.mat_float_build_drivers.v1;
+
+use mncs.numerics.mat_float_build;
+
+fn d_matvec_2x2(m: [[f64; 2]; 2], x: [f64; 2]) -> (result: [f64; 2]) {
+    let seed: [f64; 2] = [0.0, 0.0];
+    return matvec_into<2, 2>(m, x, seed);
+}
+
+fn d_matvec_3x2(m: [[f64; 2]; 3], x: [f64; 2]) -> (result: [f64; 3]) {
+    let seed: [f64; 3] = [0.0, 0.0, 0.0];
+    return matvec_into<3, 2>(m, x, seed);
+}
+
+fn d_matmul_2x2x2(a: [[f64; 2]; 2], b: [[f64; 2]; 2]) -> (result: [[f64; 2]; 2]) {
+    let seed: [[f64; 2]; 2] = [[0.0, 0.0], [0.0, 0.0]];
+    return matmul_into<2, 2, 2>(a, b, seed);
+}
+
+fn d_matmul_2x3x2(a: [[f64; 3]; 2], b: [[f64; 2]; 3]) -> (result: [[f64; 2]; 2]) {
+    let seed: [[f64; 2]; 2] = [[0.0, 0.0], [0.0, 0.0]];
+    return matmul_into<2, 3, 2>(a, b, seed);
+}
+
+fn d_transpose_2x3(m: [[f64; 3]; 2]) -> (result: [[f64; 2]; 3]) {
+    let seed: [[f64; 2]; 3] = [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0]];
+    return transpose_into<2, 3>(m, seed);
+}
+
+fn d_diag_3x3(m: [[f64; 3]; 3]) -> (result: [f64; 3]) {
+    let seed: [f64; 3] = [0.0, 0.0, 0.0];
+    return diag_into<3, 3>(m, seed);
+}

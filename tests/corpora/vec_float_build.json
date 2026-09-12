@@ -1,0 +1,2198 @@
+{
+ "schema_version": "0.2",
+ "name": "mncs-numerics-vec-float-build",
+ "cases": [
+  {
+   "id": "b-scaled-0",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "scaled"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "float": {
+       "bits": 4611686018427387904,
+       "type": {
+        "bits": 64
+       }
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4611686018427387904,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4616189618054758400,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4618441417868443648,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4620693217682128896,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-scaled-1",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "scaled"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "float": {
+       "bits": 0,
+       "type": {
+        "bits": 64
+       }
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 0,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 0,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 0,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 0,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-scaled-2",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "scaled"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "float": {
+       "bits": 13830554455654793216,
+       "type": {
+        "bits": 64
+       }
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 13830554455654793216,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 13835058055282163712,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 13837309855095848960,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 13839561654909534208,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-add-3",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "add"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4617315517961601024,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4618441417868443648,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4619567317775286272,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4620693217682128896,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4618441417868443648,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4620693217682128896,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4621819117588971520,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4622945017495814144,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-sub-4",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "sub"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4617315517961601024,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4618441417868443648,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4619567317775286272,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4620693217682128896,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 13839561654909534208,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 13839561654909534208,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 13839561654909534208,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 13839561654909534208,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-mul_elem-5",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "mul_elem"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4617315517961601024,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4618441417868443648,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4619567317775286272,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4620693217682128896,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4617315517961601024,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4622945017495814144,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4626604192193052672,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4629700416936869888,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-axpy-6",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "axpy"
+    },
+    "arguments": [
+     {
+      "float": {
+       "bits": 4611686018427387904,
+       "type": {
+        "bits": 64
+       }
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4617315517961601024,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4618441417868443648,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4619567317775286272,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4620693217682128896,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4619567317775286272,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4621819117588971520,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4623507967449235456,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4625196817309499392,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-axpy-7",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "axpy"
+    },
+    "arguments": [
+     {
+      "float": {
+       "bits": 0,
+       "type": {
+        "bits": 64
+       }
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4617315517961601024,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4618441417868443648,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4619567317775286272,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4620693217682128896,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4617315517961601024,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4618441417868443648,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4619567317775286272,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4620693217682128896,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-abs_elem-8",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "abs_elem"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 13832806255468478464,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4612811918334230528,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 9223372036854775808,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4609434218613702656,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4612811918334230528,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 0,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 0,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-clamped_elem-9",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "clamped_elem"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 13830554455654793216,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4602678819172646912,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "float": {
+       "bits": 0,
+       "type": {
+        "bits": 64
+       }
+      }
+     },
+     {
+      "float": {
+       "bits": 4607182418800017408,
+       "type": {
+        "bits": 64
+       }
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 0,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4602678819172646912,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4607182418800017408,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4607182418800017408,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-prefix4-0",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "prefix4"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4607182418800017408,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4613937818241073152,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4618441417868443648,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4621819117588971520,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-prefix4-1",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "prefix4"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 13835058055282163712,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 13835058055282163712,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4611686018427387904,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 0,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4611686018427387904,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 0,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-reversed-12",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "reversed"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4616189618054758400,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4613937818241073152,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4611686018427387904,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4607182418800017408,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-reversed-13",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "reversed"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4621256167635550208,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 1
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4621256167635550208,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-broadcast_like-14",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "broadcast_like"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "float": {
+       "bits": 4619567317775286272,
+       "type": {
+        "bits": 64
+       }
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4619567317775286272,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4619567317775286272,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4619567317775286272,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4619567317775286272,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-zeros_like-15",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "zeros_like"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 0,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 0,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 0,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 0,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-ones_like-16",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "ones_like"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4607182418800017408,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4607182418800017408,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4607182418800017408,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4607182418800017408,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-scaled-17",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "scaled"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 13835058055282163712,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 13839561654909534208,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4617315517961601024,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 13841813454723219456,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4619567317775286272,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 13844065254536904704,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "float": {
+       "bits": 4602678819172646912,
+       "type": {
+        "bits": 64
+       }
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 8
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4602678819172646912,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 13830554455654793216,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4609434218613702656,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 13835058055282163712,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4612811918334230528,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 13837309855095848960,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4615063718147915776,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 13839561654909534208,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "b-reversed-18",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_build.v1",
+     "function": "reversed"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 13835058055282163712,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 13839561654909534208,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4617315517961601024,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 13841813454723219456,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4619567317775286272,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 13844065254536904704,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 8
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 13844065254536904704,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4619567317775286272,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 13841813454723219456,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4617315517961601024,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 13839561654909534208,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4613937818241073152,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 13835058055282163712,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4607182418800017408,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}

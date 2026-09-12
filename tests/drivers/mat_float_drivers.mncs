@@ -1,0 +1,43 @@
+mncs 0.16;
+
+// Test drivers for mncs.numerics.mat_float.v1.
+//
+// These thin non-generic wrappers exist for one reason: host-side
+// seeding of a multi-argument generic instantiation drops spellings
+// when two arguments coincide (pressure P-002), so a corpus cannot
+// name `trace_g<2, 2>` directly. In-language `<2, 2>` instantiation
+// is exact, so each driver pins one tested shape. If P-002 is ever
+// repaired, these wrappers become redundant and the corpora can name
+// the instantiations directly.
+
+module mncs.numerics.test.mat_float_drivers.v1;
+
+use mncs.numerics.mat_float;
+
+fn d_trace_2x2(m: [[f64; 2]; 2]) -> (result: f64) {
+    return trace_g<2, 2>(m);
+}
+
+fn d_trace_3x3(m: [[f64; 3]; 3]) -> (result: f64) {
+    return trace_g<3, 3>(m);
+}
+
+fn d_frob_2x2(m: [[f64; 2]; 2]) -> (result: f64) {
+    return frobenius2_g<2, 2>(m);
+}
+
+fn d_frob_2x3(m: [[f64; 3]; 2]) -> (result: f64) {
+    return frobenius2_g<2, 3>(m);
+}
+
+fn d_sum_2x3(m: [[f64; 3]; 2]) -> (result: f64) {
+    return sum_g<2, 3>(m);
+}
+
+fn d_max_3x2(m: [[f64; 2]; 3]) -> (result: f64) {
+    return max_g<3, 2>(m);
+}
+
+fn d_max_2x2(m: [[f64; 2]; 2]) -> (result: f64) {
+    return max_g<2, 2>(m);
+}

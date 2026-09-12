@@ -1,0 +1,147 @@
+mncs 0.16;
+
+// mncs.numerics.mat_float_small — concrete 2x2/3x3 float matrices.
+//
+// Representation: flat row-major sequences. Mat2 is [f64; 4] as
+// [m00, m01, m10, m11]; Vec2 is [f64; 2]; Mat3 is [f64; 9] row-major;
+// Vec3 is [f64; 3]. Flat literals construct these values on every
+// backend, which is why small matrices use flat sequences rather
+// than records (whose cross-boundary envelope is narrower) or nested
+// sequences (whose construction needs `replace`).
+//
+// All kernels in this module lower on all five executable backends.
+// Generic MxN matrices live in mncs.numerics.mat_float.v1 (reductions)
+// and mncs.numerics.mat_float_build.v1 (construction).
+
+module mncs.numerics.mat_float_small.v1;
+
+// Constructors document the row-major layout at the call site.
+fn mat2(m00: f64, m01: f64, m10: f64, m11: f64) -> (result: [f64; 4]) {
+    return [m00, m01, m10, m11];
+}
+
+fn vec2(x: f64, y: f64) -> (result: [f64; 2]) {
+    return [x, y];
+}
+
+fn identity2() -> (result: [f64; 4]) {
+    return [1.0, 0.0, 0.0, 1.0];
+}
+
+// Rotation by theta radians: uses the sin/cos intrinsics, which agree
+// bit-exactly across backends through the shared host libm.
+fn rot2(theta: f64) -> (result: [f64; 4]) {
+    let c: f64 = cos(theta);
+    let s: f64 = sin(theta);
+    return [c, 0.0 - s, s, c];
+}
+
+fn transpose2(m: [f64; 4]) -> (result: [f64; 4]) {
+    return [m[0], m[2], m[1], m[3]];
+}
+
+fn trace2(m: [f64; 4]) -> (result: f64) {
+    return m[0] + m[3];
+}
+
+fn det2(m: [f64; 4]) -> (result: f64) {
+    return m[0] * m[3] - m[1] * m[2];
+}
+
+fn matvec2(m: [f64; 4], x: [f64; 2]) -> (result: [f64; 2]) {
+    return [m[0] * x[0] + m[1] * x[1], m[2] * x[0] + m[3] * x[1]];
+}
+
+fn matmul2(a: [f64; 4], b: [f64; 4]) -> (result: [f64; 4]) {
+    return [
+        a[0] * b[0] + a[1] * b[2],
+        a[0] * b[1] + a[1] * b[3],
+        a[2] * b[0] + a[3] * b[2],
+        a[2] * b[1] + a[3] * b[3]
+    ];
+}
+
+// 2x2 inverse outcome: the inverse in flat row-major order, or
+// Singular for a zero determinant. No pivot choice exists at 2x2, so
+// singularity is exactly det == 0.0 (which traps nothing: the branch
+// keeps the division away from zero).
+enum Inv2 { Value { value: [f64; 4] }, Singular }
+
+fn inv2(m: [f64; 4]) -> (result: Inv2) {
+    let d: f64 = det2(m);
+    if d == 0.0 {
+        return Inv2.Singular;
+    }
+    return Inv2.Value {
+        value: [m[3] / d, (0.0 - m[1]) / d, (0.0 - m[2]) / d, m[0] / d]
+    };
+}
+
+// 2x2 solve outcome via Cramer's rule: exact for well-conditioned
+// systems, with the usual Cramer's-rule rounding caveats on
+// ill-conditioned ones (no pivoting, no refinement in v1).
+enum Solve2 { Value { value: [f64; 2] }, Singular }
+
+fn solve2(m: [f64; 4], b: [f64; 2]) -> (result: Solve2) {
+    let d: f64 = det2(m);
+    if d == 0.0 {
+        return Solve2.Singular;
+    }
+    let x: f64 = (b[0] * m[3] - m[1] * b[1]) / d;
+    let y: f64 = (m[0] * b[1] - b[0] * m[2]) / d;
+    return Solve2.Value { value: [x, y] };
+}
+
+fn mat3(
+    m00: f64, m01: f64, m02: f64,
+    m10: f64, m11: f64, m12: f64,
+    m20: f64, m21: f64, m22: f64
+) -> (result: [f64; 9]) {
+    return [m00, m01, m02, m10, m11, m12, m20, m21, m22];
+}
+
+fn vec3(x: f64, y: f64, z: f64) -> (result: [f64; 3]) {
+    return [x, y, z];
+}
+
+fn identity3() -> (result: [f64; 9]) {
+    return [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0];
+}
+
+fn transpose3(m: [f64; 9]) -> (result: [f64; 9]) {
+    return [m[0], m[3], m[6], m[1], m[4], m[7], m[2], m[5], m[8]];
+}
+
+fn trace3(m: [f64; 9]) -> (result: f64) {
+    return m[0] + m[4] + m[8];
+}
+
+// 3x3 determinant by the Rule of Sarrus expansion along row 0.
+fn det3(m: [f64; 9]) -> (result: f64) {
+    let c0: f64 = m[4] * m[8] - m[5] * m[7];
+    let c1: f64 = m[3] * m[8] - m[5] * m[6];
+    let c2: f64 = m[3] * m[7] - m[4] * m[6];
+    return m[0] * c0 - m[1] * c1 + m[2] * c2;
+}
+
+fn matvec3(m: [f64; 9], x: [f64; 3]) -> (result: [f64; 3]) {
+    return [
+        m[0] * x[0] + m[1] * x[1] + m[2] * x[2],
+        m[3] * x[0] + m[4] * x[1] + m[5] * x[2],
+        m[6] * x[0] + m[7] * x[1] + m[8] * x[2]
+    ];
+}
+
+fn matmul3(a: [f64; 9], b: [f64; 9]) -> (result: [f64; 9]) {
+    return [
+        a[0] * b[0] + a[1] * b[3] + a[2] * b[6],
+        a[0] * b[1] + a[1] * b[4] + a[2] * b[7],
+        a[0] * b[2] + a[1] * b[5] + a[2] * b[8],
+        a[3] * b[0] + a[4] * b[3] + a[5] * b[6],
+        a[3] * b[1] + a[4] * b[4] + a[5] * b[7],
+        a[3] * b[2] + a[4] * b[5] + a[5] * b[8],
+        a[6] * b[0] + a[7] * b[3] + a[8] * b[6],
+        a[6] * b[1] + a[7] * b[4] + a[8] * b[7],
+        a[6] * b[2] + a[7] * b[5] + a[8] * b[8]
+    ];
+}

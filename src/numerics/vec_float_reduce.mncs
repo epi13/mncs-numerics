@@ -1,0 +1,176 @@
+mncs 0.16;
+
+// mncs.numerics.vec_float_reduce — generic bounded float reductions.
+//
+// Every kernel traverses once, left to right, accumulating in program
+// order, so the value is independent of scheduling and identical on
+// every backend down to the last bit. Non-finite lane values trap on
+// first use under the float rule; these kernels neither create nor
+// propagate NaN — they fail closed.
+//
+// This module constructs no sequences, so it lowers on all five
+// executable backends. Constructive kernels live in
+// mncs.numerics.vec_float_build.v1, which documents why construction
+// is a narrower envelope.
+//
+// Contract: N >= 1 for the exact-sequence kernels. Empty data is
+// handled by the view-typed kernels, which observe a zero length.
+
+module mncs.numerics.vec_float_reduce.v1;
+
+use mncs.numerics.scalar_float;
+
+// Plain sum, program order. Cancellation-prone by construction; use
+// neumaier_sum when the data needs it.
+fn sum<N: Nat>(xs: [f64; N]) -> (result: f64) {
+    iterate i over xs carrying acc: f64 = 0.0 {
+        next acc = acc + xs[i];
+    }
+    return acc;
+}
+
+// Dot product, program order: acc + x*y per lane.
+fn dot<N: Nat>(xs: [f64; N], ys: [f64; N]) -> (result: f64) {
+    iterate i over xs carrying acc: f64 = 0.0 {
+        next acc = acc + xs[i] * ys[i];
+    }
+    return acc;
+}
+
+// Squared Euclidean norm: dot(x, x) spelled directly.
+fn norm2<N: Nat>(xs: [f64; N]) -> (result: f64) {
+    iterate i over xs carrying acc: f64 = 0.0 {
+        next acc = acc + xs[i] * xs[i];
+    }
+    return acc;
+}
+
+// Arithmetic mean. N >= 1, so the divisor (xs.len as f64) is >= 1.0
+// and the division cannot trap on its own.
+fn mean<N: Nat>(xs: [f64; N]) -> (result: f64) {
+    return sum<N>(xs) / (xs.len as f64);
+}
+
+// Comparison-only extrema. No arithmetic, no new trap. N >= 1.
+fn min<N: Nat>(xs: [f64; N]) -> (result: f64) {
+    iterate i over xs carrying acc: f64 = xs[0] {
+        next acc = select(xs[i] < acc, xs[i], acc);
+    }
+    return acc;
+}
+
+fn max<N: Nat>(xs: [f64; N]) -> (result: f64) {
+    iterate i over xs carrying acc: f64 = xs[0] {
+        next acc = select(xs[i] > acc, xs[i], acc);
+    }
+    return acc;
+}
+
+// Squared Euclidean distance, program order.
+fn dist2<N: Nat>(xs: [f64; N], ys: [f64; N]) -> (result: f64) {
+    iterate i over xs carrying acc: f64 = 0.0 {
+        let d: f64 = xs[i] - ys[i];
+        next acc = acc + d * d;
+    }
+    return acc;
+}
+
+// L1 norm: sum of absolute values through the scalar primitive, so
+// -0.0 lanes contribute +0.0 exactly like fabs. Never cancels;
+// overflows only if the true sum exceeds ~1.8e308, trapping then.
+fn l1<N: Nat>(xs: [f64; N]) -> (result: f64) {
+    iterate i over xs carrying acc: f64 = 0.0 {
+        next acc = acc + fabs(xs[i]);
+    }
+    return acc;
+}
+
+// L-infinity norm: the lane with maximum absolute value. N >= 1.
+// Magnitudes compare through fabs; the returned lane keeps its sign.
+fn linf<N: Nat>(xs: [f64; N]) -> (result: f64) {
+    iterate i over xs carrying acc: f64 = xs[0] {
+        next acc = select(fabs(xs[i]) > fabs(acc), xs[i], acc);
+    }
+    return acc;
+}
+
+// Carried state for compensated summation.
+record Neumaier { sum: f64, comp: f64 }
+
+fn neumaier_step(st: Neumaier, x: f64) -> (result: Neumaier) {
+    let t: f64 = st.sum + x;
+    let sa: f64 = select(st.sum < 0.0, 0.0 - st.sum, st.sum);
+    let xa: f64 = select(x < 0.0, 0.0 - x, x);
+    let c: f64 = select(sa >= xa, (st.sum - t) + x, (x - t) + st.sum);
+    return Neumaier { sum: t, comp: st.comp + c };
+}
+
+// Neumaier compensated sum: tracks the rounding error of each
+// addition and folds it back at the end. On adversarial inputs such
+// as [1e16, 1.0, -1e16] the plain sum returns 0.0 while this returns
+// 1.0. Costs roughly twice the additions of sum; the compensation is
+// exact in the absence of overflow.
+fn neumaier_sum<N: Nat>(xs: [f64; N]) -> (result: f64) {
+    let seed: Neumaier = Neumaier { sum: 0.0, comp: 0.0 };
+    iterate i over xs carrying st: Neumaier = seed {
+        next st = neumaier_step(st, xs[i]);
+    }
+    return st.sum + st.comp;
+}
+
+// Population variance by the two-pass algorithm: mean first, then
+// the mean of squared deviations. Two passes cost one extra
+// traversal and avoid the catastrophic cancellation of the
+// sum-of-squares shortcut on shifted data.
+fn variance<N: Nat>(xs: [f64; N]) -> (result: f64) {
+    let m: f64 = mean<N>(xs);
+    iterate i over xs carrying acc: f64 = 0.0 {
+        let d: f64 = xs[i] - m;
+        next acc = acc + d * d;
+    }
+    return acc / (xs.len as f64);
+}
+
+// Euclidean norm via the imported Newton square root. Inherits the
+// norm2 overflow trap; norm(0) == 0.0 exactly.
+fn norm<N: Nat>(xs: [f64; N]) -> (result: f64) {
+    return sqrt_value(norm2<N>(xs));
+}
+
+// Cosine similarity outcome: the cosine, or an explicit refusal when
+// either input has zero norm (the quotient would be 0/0).
+enum CosOutcome { Value { value: f64 }, ZeroNorm }
+
+fn cosine<N: Nat>(xs: [f64; N], ys: [f64; N]) -> (result: CosOutcome) {
+    let nx: f64 = norm<N>(xs);
+    let ny: f64 = norm<N>(ys);
+    let denom: f64 = nx * ny;
+    if denom == 0.0 {
+        return CosOutcome.ZeroNorm;
+    }
+    // denom > 0 here (a product of norms), so the quotient cannot
+    // trap; the branch above exists for the zero case only.
+    // Rounding note: dot and the two norms round independently, so
+    // |cosine| can exceed 1.0 by an epsilon on nearly-parallel
+    // inputs. Clamp before acos; this module provides no acos.
+    return CosOutcome.Value { value: dot<N>(xs, ys) / denom };
+}
+
+// Sum over a view, including the empty view (whose sum is 0.0).
+fn sum_view<N: Nat>(view: [f64; up_to N]) -> (result: f64) {
+    iterate i over view carrying acc: f64 = 0.0 {
+        next acc = acc + view[i];
+    }
+    return acc;
+}
+
+// Mean outcome over a view: the mean, or Empty for a zero-length
+// view, whose mean is undefined (0/0 would trap).
+enum FMean { Value { value: f64 }, Empty }
+
+fn mean_view<N: Nat>(view: [f64; up_to N]) -> (result: FMean) {
+    if view.len == 0 {
+        return FMean.Empty;
+    }
+    return FMean.Value { value: sum_view<N>(view) / (view.len as f64) };
+}

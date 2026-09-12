@@ -1,0 +1,624 @@
+{
+ "schema_version": "0.2",
+ "name": "mncs-numerics-mat-float-drivers",
+ "cases": [
+  {
+   "id": "d-d_trace_2x2-0",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.mat_float_drivers.v1",
+     "function": "d_trace_2x2"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 4607182418800017408,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4611686018427387904,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 4613937818241073152,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4616189618054758400,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4617315517961601024,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "d-d_trace_3x3-1",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.mat_float_drivers.v1",
+     "function": "d_trace_3x3"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 4607182418800017408,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4611686018427387904,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4613937818241073152,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 4616189618054758400,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4617315517961601024,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4618441417868443648,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 4619567317775286272,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4620693217682128896,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4621256167635550208,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4624633867356078080,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "d-d_frob_2x2-2",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.mat_float_drivers.v1",
+     "function": "d_frob_2x2"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 4607182418800017408,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4611686018427387904,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 4613937818241073152,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4616189618054758400,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4629137466983448576,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "d-d_frob_2x3-3",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.mat_float_drivers.v1",
+     "function": "d_frob_2x3"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 4607182418800017408,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4611686018427387904,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4613937818241073152,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 4616189618054758400,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4617315517961601024,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4618441417868443648,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4636103972657037312,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "d-d_sum_2x3-4",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.mat_float_drivers.v1",
+     "function": "d_sum_2x3"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 4607182418800017408,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4611686018427387904,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4613937818241073152,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 4616189618054758400,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4617315517961601024,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4618441417868443648,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4626604192193052672,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "d-d_max_3x2-5",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.mat_float_drivers.v1",
+     "function": "d_max_3x2"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 13830554455654793216,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4617315517961601024,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 4613937818241073152,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 4611686018427387904,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 0,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 13842939354630062080,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4617315517961601024,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "d-d_max_2x2-6",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.mat_float_drivers.v1",
+     "function": "d_max_2x2"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 13839561654909534208,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 13835058055282163712,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 13844628204490326016,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 13837309855095848960,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 13835058055282163712,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

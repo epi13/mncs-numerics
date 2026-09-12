@@ -1,0 +1,1894 @@
+{
+ "schema_version": "0.2",
+ "name": "mncs-numerics-vec-float-reduce",
+ "cases": [
+  {
+   "id": "r-sum-0",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "sum"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4621819117588971520,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-dot-1",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "dot"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4617315517961601024,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4618441417868443648,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4619567317775286272,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4620693217682128896,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4634626229029306368,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-norm2-2",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "norm2"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4629137466983448576,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-mean-3",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "mean"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4612811918334230528,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-min-4",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "min"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4621256167635550208,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 13835058055282163712,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 13835058055282163712,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-max-5",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "max"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4621256167635550208,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 13835058055282163712,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4621256167635550208,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-dist2-6",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "dist2"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4617315517961601024,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4618441417868443648,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4619567317775286272,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4620693217682128896,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4634204016564240384,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-l1-7",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "l1"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 13837309855095848960,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 13830554455654793216,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4620693217682128896,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-linf-8",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "linf"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 13837309855095848960,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4602678819172646912,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 13840124604862955520,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 13840124604862955520,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-sum-9",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "sum"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4846369599423283200,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 14069741636278059008,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 3
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 0,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-neumaier_sum-10",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "neumaier_sum"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4846369599423283200,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 14069741636278059008,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 3
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4607182418800017408,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-neumaier_sum-11",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "neumaier_sum"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4621819117588971520,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-variance-12",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "variance"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4617315517961601024,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4617315517961601024,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4619567317775286272,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4620693217682128896,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 8
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4614184108845694976,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-variance-13",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "variance"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4726483295951388672,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4726483296018497536,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4726483296085606400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 3
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4604180019048437077,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-mean-14",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "mean"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4726483295951388672,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4726483296018497536,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4726483296085606400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 3
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4726483296018497536,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-norm-15",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "norm"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 2
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4617315517961601024,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-norm-16",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "norm"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 16384,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4617852826192094607,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-cosine-17",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "cosine"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 16384,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 2
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.vec_float_reduce.v1::CosOutcome",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.vec_float_reduce.v1::CosOutcome::Value",
+      "discriminant": 0,
+      "payload": [
+       [
+        "value",
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-cosine-18",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "cosine"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 16384,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 2
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.vec_float_reduce.v1::CosOutcome",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.vec_float_reduce.v1::CosOutcome::Value",
+      "discriminant": 0,
+      "payload": [
+       [
+        "value",
+        {
+         "float": {
+          "bits": 4607182418800017409,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-cosine-19",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "cosine"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 16384,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 2
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.vec_float_reduce.v1::CosOutcome",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.vec_float_reduce.v1::CosOutcome::ZeroNorm",
+      "discriminant": 1,
+      "payload": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-sum-20",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "sum"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4631107791820423168,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 1
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4631107791820423168,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-mean-21",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "mean"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 13842939354630062080,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 1
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 13842939354630062080,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-variance-22",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "variance"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4617315517961601024,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 1
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 0,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-sum-23",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "sum"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 9214871658872686752,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 9214871658872686752,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 2
+     }
+    ]
+   },
+   "expected_status": "runtime_failure"
+  },
+  {
+   "id": "r-norm2-24",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "norm2"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 7598952565167317594,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 7598952565167317594,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 2
+     }
+    ]
+   },
+   "expected_status": "runtime_failure"
+  },
+  {
+   "id": "r-sum_view-25",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "sum_view"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4618441417868443648,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-sum_view-26",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "sum_view"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": []
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 0,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-mean_view-27",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "mean_view"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4607182418800017408,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4613937818241073152,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.vec_float_reduce.v1::FMean",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.vec_float_reduce.v1::FMean::Value",
+      "discriminant": 0,
+      "payload": [
+       [
+        "value",
+        {
+         "float": {
+          "bits": 4612811918334230528,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "r-mean_view-28",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.vec_float_reduce.v1",
+     "function": "mean_view"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": []
+      }
+     }
+    ],
+    "step_budget": 8192,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 4
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.vec_float_reduce.v1::FMean",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.vec_float_reduce.v1::FMean::Empty",
+      "discriminant": 1,
+      "payload": []
+     }
+    }
+   ]
+  }
+ ]
+}

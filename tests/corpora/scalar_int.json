@@ -1,0 +1,3745 @@
+{
+ "schema_version": "0.2",
+ "name": "mncs-numerics-scalar-int",
+ "cases": [
+  {
+   "id": "i-abs_checked-0",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 0,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_checked-1",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 1,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 1,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_checked-2",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -1,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 1,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_checked-3",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 5,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 5,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_checked-4",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -5,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 5,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_checked-5",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 123456789,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 123456789,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_checked-6",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 9223372036854775807,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 9223372036854775807,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_checked-7",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -9223372036854775807,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 9223372036854775807,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_checked-min-trap",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -9223372036854775808,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "runtime_failure"
+  },
+  {
+   "id": "i-abs_wrap-9",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_wrap"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 0,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_wrap-10",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_wrap"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 7,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 7,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_wrap-11",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_wrap"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -7,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 7,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_wrap-12",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_wrap"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 9223372036854775807,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 9223372036854775807,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_wrap-13",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_wrap"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -9223372036854775808,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -9223372036854775808,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_sat-14",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_sat"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 0,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_sat-15",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_sat"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 7,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 7,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_sat-16",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_sat"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -7,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 7,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_sat-17",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_sat"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 9223372036854775807,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 9223372036854775807,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_sat-18",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_sat"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -9223372036854775807,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 9223372036854775807,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_sat-19",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_sat"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -9223372036854775808,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 9223372036854775807,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-min_i64-20",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "min_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 3,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 7,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 3,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-max_i64-21",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "max_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 3,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 7,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 7,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-min_i64-22",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "min_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 7,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 3,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 3,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-max_i64-23",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "max_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 7,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 3,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 7,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-min_i64-24",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "min_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -5,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": -5,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -5,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-max_i64-25",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "max_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -5,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": -5,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -5,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-min_i64-26",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "min_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -9223372036854775808,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 9223372036854775807,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -9223372036854775808,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-max_i64-27",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "max_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -9223372036854775808,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 9223372036854775807,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 9223372036854775807,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-min_i64-28",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "min_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 9223372036854775807,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": -9223372036854775808,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -9223372036854775808,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-max_i64-29",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "max_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 9223372036854775807,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": -9223372036854775808,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 9223372036854775807,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-min_i64-30",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "min_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 0,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-max_i64-31",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "max_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 0,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-clamp_i64-32",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "clamp_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 5,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 10,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 5,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-clamp_i64-33",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "clamp_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -3,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 10,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 0,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-clamp_i64-34",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "clamp_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 30,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 10,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 10,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-clamp_i64-35",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "clamp_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 10,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 0,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-clamp_i64-36",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "clamp_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 10,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 10,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 10,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-clamp_i64-37",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "clamp_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -9223372036854775808,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": -9223372036854775808,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 9223372036854775807,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -9223372036854775808,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-clamp_i64-38",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "clamp_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 9223372036854775807,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": -9223372036854775808,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 9223372036854775807,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 9223372036854775807,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-sign_i64-39",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "sign_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -9,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -1,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-sign_i64-40",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "sign_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 0,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-sign_i64-41",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "sign_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 9,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 1,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-sign_i64-42",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "sign_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -9223372036854775808,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -1,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-sign_i64-43",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "sign_i64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 9223372036854775807,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 1,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-pow_checked-44",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "pow_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 2,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.scalar_int.v1::PowOutcome",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.scalar_int.v1::PowOutcome::Value",
+      "discriminant": 0,
+      "payload": [
+       [
+        "value",
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-pow_checked-45",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "pow_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 2,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 10,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.scalar_int.v1::PowOutcome",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.scalar_int.v1::PowOutcome::Value",
+      "discriminant": 0,
+      "payload": [
+       [
+        "value",
+        {
+         "integer": {
+          "value": 1024,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-pow_checked-46",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "pow_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 3,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 5,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.scalar_int.v1::PowOutcome",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.scalar_int.v1::PowOutcome::Value",
+      "discriminant": 0,
+      "payload": [
+       [
+        "value",
+        {
+         "integer": {
+          "value": 243,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-pow_checked-47",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "pow_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -2,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 3,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.scalar_int.v1::PowOutcome",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.scalar_int.v1::PowOutcome::Value",
+      "discriminant": 0,
+      "payload": [
+       [
+        "value",
+        {
+         "integer": {
+          "value": -8,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-pow_checked-48",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "pow_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -2,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 4,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.scalar_int.v1::PowOutcome",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.scalar_int.v1::PowOutcome::Value",
+      "discriminant": 0,
+      "payload": [
+       [
+        "value",
+        {
+         "integer": {
+          "value": 16,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-pow_checked-49",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "pow_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 10,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.scalar_int.v1::PowOutcome",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.scalar_int.v1::PowOutcome::Value",
+      "discriminant": 0,
+      "payload": [
+       [
+        "value",
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-pow_checked-50",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "pow_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.scalar_int.v1::PowOutcome",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.scalar_int.v1::PowOutcome::Value",
+      "discriminant": 0,
+      "payload": [
+       [
+        "value",
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-pow_checked-51",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "pow_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 5,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.scalar_int.v1::PowOutcome",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.scalar_int.v1::PowOutcome::Value",
+      "discriminant": 0,
+      "payload": [
+       [
+        "value",
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-pow_checked-52",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "pow_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 5,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 1,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.scalar_int.v1::PowOutcome",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.scalar_int.v1::PowOutcome::Value",
+      "discriminant": 0,
+      "payload": [
+       [
+        "value",
+        {
+         "integer": {
+          "value": 5,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-pow_checked-53",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "pow_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 2,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 62,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.scalar_int.v1::PowOutcome",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.scalar_int.v1::PowOutcome::Value",
+      "discriminant": 0,
+      "payload": [
+       [
+        "value",
+        {
+         "integer": {
+          "value": 4611686018427387904,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-pow_checked-54",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "pow_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 1,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 64,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.scalar_int.v1::PowOutcome",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.scalar_int.v1::PowOutcome::Value",
+      "discriminant": 0,
+      "payload": [
+       [
+        "value",
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-pow_checked-55",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "pow_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -1,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 64,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.scalar_int.v1::PowOutcome",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.scalar_int.v1::PowOutcome::Value",
+      "discriminant": 0,
+      "payload": [
+       [
+        "value",
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": true
+          }
+         }
+        }
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-pow_checked-overflow-trap",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "pow_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 2,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 63,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "runtime_failure"
+  },
+  {
+   "id": "i-pow_checked-exp-too-large",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "pow_checked"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 2,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 65,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "finite": {
+      "type_identity": "mncs:0.2:finite-type:mncs.numerics.scalar_int.v1::PowOutcome",
+      "variant_identity": "mncs:0.2:finite-variant:mncs.numerics.scalar_int.v1::PowOutcome::ExpTooLarge",
+      "discriminant": 1,
+      "payload": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-gcd-58",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "gcd"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 48,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 18,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 6,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-gcd-59",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "gcd"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 18,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 48,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 6,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-gcd-60",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "gcd"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 5,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 5,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-gcd-61",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "gcd"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 5,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 5,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-gcd-62",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "gcd"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 0,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-gcd-63",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "gcd"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 1071,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 462,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 21,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-gcd-64",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "gcd"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 13,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 13,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 13,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-gcd-65",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "gcd"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 100,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 75,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 25,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-gcd-66",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "gcd"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 17,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 5,
+       "type": {
+        "bits": 64,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 1,
+      "type": {
+       "bits": 64,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_checked_i32-67",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_checked_i32"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 0,
+      "type": {
+       "bits": 32,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_checked_i32-68",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_checked_i32"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 1,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 1,
+      "type": {
+       "bits": 32,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_checked_i32-69",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_checked_i32"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -1,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 1,
+      "type": {
+       "bits": 32,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_checked_i32-70",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_checked_i32"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 2147483647,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 2147483647,
+      "type": {
+       "bits": 32,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_checked_i32-71",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_checked_i32"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -2147483647,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 2147483647,
+      "type": {
+       "bits": 32,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-abs_checked_i32-min-trap",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "abs_checked_i32"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -2147483648,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "runtime_failure"
+  },
+  {
+   "id": "i-min_i32-73",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "min_i32"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 3,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 7,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 3,
+      "type": {
+       "bits": 32,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-max_i32-74",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "max_i32"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 3,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 7,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 7,
+      "type": {
+       "bits": 32,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-min_i32-75",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "min_i32"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 7,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 3,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 3,
+      "type": {
+       "bits": 32,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-max_i32-76",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "max_i32"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 7,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 3,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 7,
+      "type": {
+       "bits": 32,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-min_i32-77",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "min_i32"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -2147483648,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 2147483647,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": -2147483648,
+      "type": {
+       "bits": 32,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-max_i32-78",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "max_i32"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": -2147483648,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 2147483647,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 2147483647,
+      "type": {
+       "bits": 32,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-clamp_i32-79",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "clamp_i32"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 99,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 10,
+       "type": {
+        "bits": 32,
+        "signed": true
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 10,
+      "type": {
+       "bits": 32,
+       "signed": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-min_u64-80",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "min_u64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 3,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 7,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 3,
+      "type": {
+       "bits": 64,
+       "signed": false
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-max_u64-81",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "max_u64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 3,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 7,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 7,
+      "type": {
+       "bits": 64,
+       "signed": false
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-min_u64-82",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "min_u64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 7,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 3,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 3,
+      "type": {
+       "bits": 64,
+       "signed": false
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-max_u64-83",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "max_u64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 7,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 3,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 7,
+      "type": {
+       "bits": 64,
+       "signed": false
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-min_u64-84",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "min_u64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 18446744073709551615,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 0,
+      "type": {
+       "bits": 64,
+       "signed": false
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-max_u64-85",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "max_u64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 18446744073709551615,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 18446744073709551615,
+      "type": {
+       "bits": 64,
+       "signed": false
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-min_u64-86",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "min_u64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 18446744073709551615,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 18446744073709551615,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 18446744073709551615,
+      "type": {
+       "bits": 64,
+       "signed": false
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-max_u64-87",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "max_u64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 18446744073709551615,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 18446744073709551615,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 18446744073709551615,
+      "type": {
+       "bits": 64,
+       "signed": false
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "i-clamp_u64-88",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.scalar_int.v1",
+     "function": "clamp_u64"
+    },
+    "arguments": [
+     {
+      "integer": {
+       "value": 18446744073709551615,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 0,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     },
+     {
+      "integer": {
+       "value": 100,
+       "type": {
+        "bits": 64,
+        "signed": false
+       }
+      }
+     }
+    ],
+    "step_budget": 4096
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "integer": {
+      "value": 100,
+      "type": {
+       "bits": 64,
+       "signed": false
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

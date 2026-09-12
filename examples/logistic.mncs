@@ -1,0 +1,28 @@
+mncs 0.16;
+
+// Logistic-map trajectories: x_{n+1} = r * x_n * (1 - x_n).
+// A determinism exhibit: the recurrence uses only `+` and `*` over
+// finite values, so every backend must agree bit-for-bit, however
+// chaotic the trajectory. The corpus pins exact bits from an
+// independent oracle; any backend divergence here is a compiler bug,
+// never an acceptable tolerance.
+//
+// r = 2.5 converges to the fixed point (r-1)/r = 0.6 (stable regime);
+// r = 3.7 and r = 4.0 are chaotic (sensitive dependence). Sixty-four
+// steps fit the counted-iteration bound with room to spare.
+
+module mncs.numerics.examples.logistic.v1;
+
+record Traj { x: f64, r: f64 }
+
+fn traj_step(st: Traj) -> (result: Traj) {
+    return Traj { x: st.r * st.x * (1.0 - st.x), r: st.r };
+}
+
+fn trajectory(r: f64, x0: f64) -> (result: f64) {
+    let seed: Traj = Traj { x: x0, r: r };
+    iterate step up_to 64 carrying st: Traj = seed {
+        next st = traj_step(st);
+    }
+    return st.x;
+}

@@ -1,0 +1,34 @@
+mncs 0.16;
+
+// Trapezoid integration of sin over [0, pi]: a consumer test that
+// composes the sin intrinsic with a counted loop and scalar float
+// arithmetic. No library import: the point is the intrinsic/loop
+// interaction, not the reduction vocabulary.
+//
+// With N panels, integral ~= h * sum_{i=1}^{N-1} sin(i*h): the
+// endpoints sin(0) and sin(pi) both vanish, so only interior samples
+// enter. The counted index is a u64 position; the sample abscissa is
+// (step as f64) * h.
+
+module mncs.numerics.examples.trapezoid.v1;
+
+record Trap { acc: f64, step: u64 }
+
+fn trap_step(st: Trap, h: f64) -> (result: Trap) {
+    let x: f64 = (st.step as f64) * h;
+    return Trap { acc: st.acc + sin(x), step: st.step + 1 };
+}
+
+// Integrate sin over [0, pi] with 64 panels. Expected value 2.0 to
+// within the trapezoid discretization error (~6.3e-4 here); the
+// corpus pins the exact bits AND the generator asserts |got - 2| is
+// small, so a wrong-rule bug cannot hide behind agreement.
+fn sin_integral_64() -> (result: f64) {
+    let pi: f64 = 3.141592653589793;
+    let h: f64 = pi / 64.0;
+    let seed: Trap = Trap { acc: 0.0, step: 1 };
+    iterate panel up_to 63 carrying st: Trap = seed {
+        next st = trap_step(st, h);
+    }
+    return h * st.acc;
+}
