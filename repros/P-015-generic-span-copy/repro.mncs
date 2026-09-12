@@ -1,0 +1,10 @@
+mncs 0.16;
+
+module probe.p015.v1;
+
+fn rot_sym<N: Nat>(xs: [f64; N], k: u64) -> (result: [f64; N]) {
+    let n: u64 = xs.len;
+    let k2: u64 = k % n;
+    let tmp: [f64; N] = copy_span(xs, 0, xs, k2, n - k2);
+    return copy_span(tmp, n - k2, xs, 0, k2);
+}

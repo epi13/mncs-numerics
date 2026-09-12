@@ -1,0 +1,11 @@
+mncs 0.16;
+
+module probe.p016.v1;
+
+fn gather_sum<N: Nat>(xs: [f64; N], p: [u64; N]) -> (result: f64) {
+    iterate i over p carrying acc: f64 = 0.0 {
+        let c: u64 = checked_index(xs, p[i]);
+        next acc = acc + xs[c];
+    }
+    return acc;
+}

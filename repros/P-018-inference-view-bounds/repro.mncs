@@ -1,0 +1,16 @@
+mncs 0.16;
+
+// P-018 minimal case: N is in scope and the argument carries it, but
+// inference does not flow constraints through `up_to` view bounds.
+module probe.p018.v1;
+
+fn vsum<N: Nat>(view: [f64; up_to N]) -> (result: f64) {
+    iterate i over view carrying acc: f64 = 0.0 {
+        next acc = acc + view[i];
+    }
+    return acc;
+}
+
+fn vmean<N: Nat>(view: [f64; up_to N]) -> (result: f64) {
+    return vsum(view) / (view.len as f64);
+}

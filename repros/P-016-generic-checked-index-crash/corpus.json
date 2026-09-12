@@ -1,0 +1,99 @@
+{
+ "schema_version": "0.2",
+ "name": "probe-gonly",
+ "cases": [
+  {
+   "id": "g1",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "probe.p016.v1",
+     "function": "gather_sum"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4621819117588971520,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4626322717216342016,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4629137466983448576,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "integer": {
+          "value": 2,
+          "type": {
+           "bits": 64,
+           "signed": false
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 0,
+          "type": {
+           "bits": 64,
+           "signed": false
+          }
+         }
+        },
+        {
+         "integer": {
+          "value": 1,
+          "type": {
+           "bits": 64,
+           "signed": false
+          }
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 4096,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 3
+     }
+    ]
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "float": {
+      "bits": 4633641066610819072,
+      "type": {
+       "bits": 64
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

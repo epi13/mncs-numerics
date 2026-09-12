@@ -1,0 +1,7 @@
+mncs 0.16;
+
+module probe.p017.v1;
+
+fn softplus(x: f64) -> (result: f64) {
+    return log(1.0 + exp(x));
+}
