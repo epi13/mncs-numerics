@@ -11,7 +11,11 @@ cargo run -q -p mncs-cli -- experiment run repros/P-006-cranelift-arity-crash/re
 echo "exit: $?"
 ```
 
-Expected: `invalid_request` (bytecode/WASM/C11/LLVM all return one).
-Actual: SIGSEGV, exit 139, empty stdout. Bisected from a 150-case
-corpus; NaN inputs were suspected and exonerated (correct-arity NaN
-is fine — the original bad-arity cases happened to carry NaN).
+**RESOLVED (2026-09-12).** Expected: `invalid_request` on all five
+backends. Was: SIGSEGV, exit 139, empty stdout on Cranelift only
+(bisected from a 150-case corpus; NaN inputs were suspected and
+exonerated — correct-arity NaN is fine). The audit also found the
+C11/LLVM retained-session paths (and C11 one-shot) missing the gate:
+extra arguments were silently ignored there. All native paths now
+refuse with one shared value-contract message; kept as a
+reproducer.

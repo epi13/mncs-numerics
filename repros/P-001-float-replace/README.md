@@ -11,7 +11,13 @@ cargo run -q -p mncs-cli -- experiment run repros/P-001-float-replace/repro.mncs
   --backend mncs-llvm-ir --corpus repros/P-001-float-replace/corpus.json
 ```
 
+**RESOLVED (2026-09-12): all five backends return `20.0` bit-exact.**
+Was:
+
 - bytecode / C11 / Cranelift: `returned`, expectation met.
 - WASM: per-entrypoint `CGN302` refusal (`float sequences are not supported`).
 - LLVM: `clang failed: ... '%relem35_v9' defined with type 'double' but
   expected 'i64'`; the whole artifact (including unrelated entrypoints) is poisoned.
+
+LLVM now bitcasts the replacement lane to the raw slot word; WASM
+moves float lanes as 8-byte I64 words. Kept as a reproducer.

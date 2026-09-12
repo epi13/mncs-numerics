@@ -30,14 +30,12 @@ fn fabs(x: f64) -> (result: f64) {
     return x;
 }
 
-// General negation, spelled against zero: there is no unary `-x`
-// in the language outside literal atoms. Exact on every finite
-// input EXCEPT +0.0: `0.0 - 0.0 == +0.0` while IEEE `- (+0.0)` is
-// `-0.0`, and no available operation produces -0.0 from +0.0 without
-// trapping. So fneg(+0.0) == +0.0, a pinned one-bit deviation from
-// IEEE negation (pressure P-007). fneg(-0.0) == +0.0 is exact.
+// Exact IEEE-754 negation via the `neg(x)` intrinsic: total on
+// finite inputs, including signed zeros (`neg(+0.0) == -0.0`, where
+// `0.0 - x` rounds to `+0.0`). Formerly spelled `0.0 - x` with a
+// pinned one-bit deviation (pressure P-007, repaired).
 fn fneg(x: f64) -> (result: f64) {
-    return 0.0 - x;
+    return neg(x);
 }
 
 // Minimum by comparison. Traps on non-finite inputs via the trap
@@ -245,7 +243,11 @@ fn quadratic(a: f64, b: f64, c: f64) -> (result: QuadRoots) {
         return QuadRoots { n: 0, r0: 0.0, r1: 0.0 };
     }
     if disc == 0.0 {
-        return QuadRoots { n: 1, r0: (0.0 - b) / (2.0 * a), r1: 0.0 };
+        // `(0.0 - b)` (not `neg(b)`) is load-bearing for signed
+        // zeros: b == +0.0 must yield r0 == +0.0 here, matching the
+        // pinned corpus bits. `2 * a` uses integer-to-float
+        // adaptation (`2` is exact); it is bit-identical to `2.0 * a`.
+        return QuadRoots { n: 1, r0: (0.0 - b) / (2 * a), r1: 0.0 };
     }
     // disc > 0 here, so the DomainError arm is unreachable; it exists
     // only because match arms must be exhaustive.
@@ -254,7 +256,7 @@ fn quadratic(a: f64, b: f64, c: f64) -> (result: QuadRoots) {
         DomainError => 0.0,
     };
     let sb: f64 = select(b < 0.0, -1.0, 1.0);
-    let q: f64 = (0.0 - 0.5) * (b + sb * s);
+    let q: f64 = -0.5 * (b + sb * s);
     let lo: f64 = fmin(q / a, c / q);
     let hi: f64 = fmax(q / a, c / q);
     return QuadRoots { n: 2, r0: lo, r1: hi };

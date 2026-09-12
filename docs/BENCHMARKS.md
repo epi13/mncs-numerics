@@ -1,10 +1,12 @@
 # Benchmarks
 
-Kernels in `benches/` (`bench_reduce.mncs`: all backends;
-`bench_build.mncs`: bytecode/C11/Cranelift — the split is load-bearing,
-see P-001), measured by `scripts/bench.py`. Every number below is
-gated on the kernel returning its exact expected scalar first; a
-benchmark of wrong code would not be recorded.
+Kernels in `benches/` (`bench_reduce.mncs` and `bench_build.mncs`,
+both on all backends since the P-001 repair; the build file was
+bytecode/C11/Cranelift-only while the P-001 envelope held — the
+baseline below is marked per cell), measured by `scripts/bench.py`.
+Every number below is gated on the kernel returning its exact
+expected scalar first; a benchmark of wrong code would not be
+recorded.
 
 ## What the numbers mean (read this before quoting them)
 

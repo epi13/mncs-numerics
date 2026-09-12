@@ -1,9 +1,9 @@
 mncs 0.16;
 
-// Construction benchmark kernels: reference bytecode, C11, and
-// Cranelift only (pressure P-001). Kept in a separate file from
-// bench_reduce.mncs so LLVM's whole-artifact poisoning cannot take
-// down the reduction baselines. See docs/BENCHMARKS.md.
+// Construction benchmark kernels (all backends since the P-001
+// repair; formerly bytecode/C11/Cranelift only). Kept in a separate
+// file from bench_reduce.mncs by construction-vs-reduction shape.
+// See docs/BENCHMARKS.md.
 
 module mncs.numerics.bench_build.v1;
 

@@ -21,9 +21,10 @@ Rules:
 - Committed corpora must match generator output byte-for-byte; the
   runner never edits them.
 
-Single-parameter generics are named directly from the corpus with
-`type_arguments`. Multi-parameter instantiations go through the
-in-language drivers in tests/drivers (pressure P-002).
+Generic instantiations — single- and multi-parameter alike — are
+named directly from the corpus with `type_arguments`. (Before the
+P-002 language repair, multi-parameter instantiations went through
+in-language drivers in tests/drivers; those wrappers are retired.)
 """
 
 import math
@@ -304,11 +305,10 @@ def gen_scalar_float():
     # fabs / fneg incl. signed zeros.
     for x in (0.0, -0.0, 3.5, -3.5, 1e300, -1e300, 5e-324):
         sc("v", "fabs", [fj(x)], [fj(abs(x))])
-        # fneg mirrors 0.0 - x exactly (NOT unary minus): +0.0 stays
-        # +0.0 instead of becoming -0.0 (pressure P-007). In IEEE,
-        # 0.0 - 0.0 == +0.0 while -(+0.0) == -0.0; the language offers
-        # no exact negation, so the deviation is pinned, not hidden.
-        sc("v", "fneg", [fj(x)], [fj(0.0 - x)])
+        # fneg is exact IEEE negation via the neg(x) intrinsic
+        # (pressure P-007, repaired): neg(+0.0) == -0.0, where the old
+        # 0.0 - x spelling rounded to +0.0.
+        sc("v", "fneg", [fj(x)], [fj(-x)])
     # fmin/fmax mirror the branch (NaN-free inputs; NaN traps).
     for a, b in ((3.0, 7.0), (7.0, 3.0), (-0.0, 0.0), (0.0, -0.0),
                  (-2.5, -2.5), (1e300, 1e-300)):
@@ -732,50 +732,63 @@ def gen_mat_float_small():
 
 
 # ---------------------------------------------------------------------------
-# mat drivers (multi-parameter generics via in-language wrappers)
+# mat_float (generic MxN reductions, seeded directly from the corpus)
 # ---------------------------------------------------------------------------
 
-def gen_mat_float_drivers():
-    mod = "mncs.numerics.test.mat_float_drivers.v1"
+def gen_mat_float():
+    mod = "mncs.numerics.mat_float.v1"
     c = []
 
-    def sc(fn, args, exp, budget=16384):
-        c.append(case("d-%s-%d" % (fn, len(c)), mod, fn, args, exp,
-                      step_budget=budget))
+    def sc(name, fn, args, exp, type_args, budget=16384):
+        c.append(case("g-%s" % name, mod, fn, args, exp,
+                      step_budget=budget, type_args=type_args))
 
-    sc("d_trace_2x2", [nest((1.0, 2.0), (3.0, 4.0))], [fj(5.0)])
-    sc("d_trace_3x3",
+    sc("trace-2x2", "trace_g",
+       [nest((1.0, 2.0), (3.0, 4.0))], [fj(5.0)], targs(2))
+    sc("trace-3x3", "trace_g",
        [nest((1.0, 2.0, 3.0), (4.0, 5.0, 6.0), (7.0, 8.0, 9.0))],
-       [fj(15.0)])
-    sc("d_frob_2x2", [nest((1.0, 2.0), (3.0, 4.0))], [fj(30.0)])
-    sc("d_frob_2x3", [nest((1.0, 2.0, 3.0), (4.0, 5.0, 6.0))],
-       [fj(91.0)])
-    sc("d_sum_2x3", [nest((1.0, 2.0, 3.0), (4.0, 5.0, 6.0))],
-       [fj(21.0)])
-    sc("d_max_3x2", [nest((-1.0, 5.0), (3.0, 2.0), (0.0, -7.0))],
-       [fj(5.0)])
-    sc("d_max_2x2", [nest((-4.0, -2.0), (-9.0, -3.0))], [fj(-2.0)])
+       [fj(15.0)], targs(3))
+    sc("frob-2x2", "frobenius2_g",
+       [nest((1.0, 2.0), (3.0, 4.0))], [fj(30.0)], targs(2, 2))
+    sc("frob-2x3", "frobenius2_g",
+       [nest((1.0, 2.0, 3.0), (4.0, 5.0, 6.0))],
+       [fj(91.0)], targs(2, 3))
+    sc("sum-2x3", "sum_g",
+       [nest((1.0, 2.0, 3.0), (4.0, 5.0, 6.0))],
+       [fj(21.0)], targs(2, 3))
+    sc("max-3x2", "max_g",
+       [nest((-1.0, 5.0), (3.0, 2.0), (0.0, -7.0))],
+       [fj(5.0)], targs(3, 2))
+    sc("max-2x2", "max_g",
+       [nest((-4.0, -2.0), (-9.0, -3.0))], [fj(-2.0)], targs(2, 2))
 
-    write_corpus(os.path.join(OUT, "mat_float_drivers.json"),
-                 "mncs-numerics-mat-float-drivers", c)
+    write_corpus(os.path.join(OUT, "mat_float.json"),
+                 "mncs-numerics-mat-float", c)
     return c
 
 
-def gen_mat_float_build_drivers():
-    mod = "mncs.numerics.test.mat_float_build_drivers.v1"
+def gen_mat_float_build():
+    mod = "mncs.numerics.mat_float_build.v1"
     c = []
 
-    def sc(fn, args, exp, budget=32768):
-        c.append(case("e-%s-%d" % (fn, len(c)), mod, fn, args, exp,
-                      step_budget=budget))
+    def sc(name, fn, args, exp, type_args, budget=32768):
+        c.append(case("b-%s" % name, mod, fn, args, exp,
+                      step_budget=budget, type_args=type_args))
 
+    # The exemplar (out/seed) arguments are all-zero values of the
+    # result shape; they contribute shape only (P-003), since every
+    # kernel overwrites every lane.
     a22 = nest((1.0, 2.0), (3.0, 4.0))
-    sc("d_matvec_2x2", [a22, sq(5.0, 6.0)], [sq(17.0, 39.0)])
-    sc("d_matvec_3x2",
-       [nest((1.0, 2.0), (3.0, 4.0), (5.0, 6.0)), sq(2.0, 3.0)],
-       [sq(8.0, 18.0, 28.0)])
-    sc("d_matmul_2x2x2", [a22, a22],
-       [nest((7.0, 10.0), (15.0, 22.0))])
+    sc("matvec-2x2", "matvec_into",
+       [a22, sq(5.0, 6.0), sq(0.0, 0.0)],
+       [sq(17.0, 39.0)], targs(2, 2))
+    sc("matvec-3x2", "matvec_into",
+       [nest((1.0, 2.0), (3.0, 4.0), (5.0, 6.0)), sq(2.0, 3.0),
+        sq(0.0, 0.0, 0.0)],
+       [sq(8.0, 18.0, 28.0)], targs(3, 2))
+    sc("matmul-2x2x2", "matmul_into",
+       [a22, a22, nest((0.0, 0.0), (0.0, 0.0))],
+       [nest((7.0, 10.0), (15.0, 22.0))], targs(2, 2, 2))
     # 2x3 times 3x2 -> 2x2, mirrored program order per cell.
     a23 = ((1.0, 2.0, 3.0), (4.0, 5.0, 6.0))
     b32 = ((7.0, 8.0), (9.0, 10.0), (11.0, 12.0))
@@ -784,16 +797,20 @@ def gen_mat_float_build_drivers():
         tuple(((0.0 + a23[i][0] * b32[0][j]) + a23[i][1] * b32[1][j])
               + a23[i][2] * b32[2][j] for j in range(2))
         for i in range(2))
-    sc("d_matmul_2x3x2", [nest(*a23), nest(*b32)],
-       [nest(*expect)])
-    sc("d_transpose_2x3", [nest((1.0, 2.0, 3.0), (4.0, 5.0, 6.0))],
-       [nest((1.0, 4.0), (2.0, 5.0), (3.0, 6.0))])
-    sc("d_diag_3x3",
-       [nest((1.0, 2.0, 3.0), (4.0, 5.0, 6.0), (7.0, 8.0, 9.0))],
-       [sq(1.0, 5.0, 9.0)])
+    sc("matmul-2x3x2", "matmul_into",
+       [nest(*a23), nest(*b32), nest((0.0, 0.0), (0.0, 0.0))],
+       [nest(*expect)], targs(2, 3, 2))
+    sc("transpose-2x3", "transpose_into",
+       [nest((1.0, 2.0, 3.0), (4.0, 5.0, 6.0)),
+        nest((0.0, 0.0), (0.0, 0.0), (0.0, 0.0))],
+       [nest((1.0, 4.0), (2.0, 5.0), (3.0, 6.0))], targs(2, 3))
+    sc("diag-3x3", "diag_into",
+       [nest((1.0, 2.0, 3.0), (4.0, 5.0, 6.0), (7.0, 8.0, 9.0)),
+        sq(0.0, 0.0, 0.0)],
+       [sq(1.0, 5.0, 9.0)], targs(3, 3))
 
-    write_corpus(os.path.join(OUT, "mat_float_build_drivers.json"),
-                 "mncs-numerics-mat-float-build-drivers", c)
+    write_corpus(os.path.join(OUT, "mat_float_build.json"),
+                 "mncs-numerics-mat-float-build", c)
     return c
 
 
@@ -893,8 +910,8 @@ def main():
     total = 0
     for gen in (gen_scalar_int, gen_scalar_float, gen_vec_int,
                 gen_vec_float_reduce, gen_vec_float_build,
-                gen_mat_float_small, gen_mat_float_drivers,
-                gen_mat_float_build_drivers, gen_examples, gen_props):
+                gen_mat_float_small, gen_mat_float,
+                gen_mat_float_build, gen_examples, gen_props):
         cases = gen()
         print("%-28s %4d cases" % (gen.__name__, len(cases)))
         total += len(cases)

@@ -28,15 +28,15 @@ the workspace there).
 
 | ID | Title | Severity | Status |
 |----|-------|----------|--------|
-| P-001 | Float `SequenceReplace` miscompiled on LLVM, refused on WASM | correctness blocker | confirmed |
-| P-002 | Host seeding drops repeated generic spellings (`(2,2)` → `(2)`) | expressiveness blocker | confirmed, root-caused |
-| P-003 | No fill for symbolic bounds (`[x; N]` refused) | expressiveness blocker | confirmed |
-| P-004 | No generic records or enums | expressiveness blocker | confirmed |
-| P-005 | No dimension-equality constraints (silent wide trace) | safety issue | confirmed |
-| P-006 | Cranelift SIGSEGV on arity-mismatched execution request | correctness blocker | confirmed |
-| P-007 | No exact negation (`fneg(+0.0) == +0.0`) | correctness edge | confirmed, worked around |
-| P-008 | No literal adaptation / exponent notation for `f64` | ergonomics | confirmed, worked around |
-| P-009 | No generic numeric arithmetic; misleading MNE120 | expressiveness blocker | confirmed, worked around |
+| P-001 | Float `SequenceReplace` miscompiled on LLVM, refused on WASM | correctness blocker | **resolved** (all five backends construct bit-exactly) |
+| P-002 | Host seeding drops repeated generic spellings (`(2,2)` → `(2)`) | expressiveness blocker | **resolved** (language repair validated; drivers retired) |
+| P-003 | No fill for symbolic bounds (`[x; N]` refused) | expressiveness blocker | partially resolved (MNE256 names the rule; fill open) |
+| P-004 | No generic records or enums | expressiveness blocker | partially resolved (MNP213/MNP214 refuse once; types open) |
+| P-005 | No dimension-equality constraints (silent wide trace) | safety issue | **resolved** for `trace_g` (structural `trace_g<N>`; general constraints open) |
+| P-006 | Cranelift SIGSEGV on arity-mismatched execution request | correctness blocker | **resolved** (gate on every native path) |
+| P-007 | No exact negation (`fneg(+0.0) == +0.0`) | correctness edge | **resolved** (`neg(x)` intrinsic, exact) |
+| P-008 | No literal adaptation / exponent notation for `f64` | ergonomics | **resolved** (adaptation + exponents; migrated) |
+| P-009 | No generic numeric arithmetic; misleading MNE120 | expressiveness blocker | partially resolved (MNE120 fixed; traits open) |
 | P-010 | No float vectors (`vec<f64, N>` refused) | expressiveness blocker | confirmed, worked around |
 | P-011 | Stale profile docs over-claim float-sequence/record limits | tooling/docs | confirmed |
 | P-012 | No correctly-rounded FMA | accuracy note | confirmed |
@@ -97,7 +97,8 @@ disposition after re-running against the current toolchain:
 
 ## P-001 — Float `SequenceReplace` miscompiled on LLVM, refused on WASM
 
-- **Severity:** correctness blocker. **Status:** confirmed.
+- **Severity:** correctness blocker. **Status:** RESOLVED (this
+  section kept as the record).
 - **Affects:** every constructive float kernel
   (`src/numerics/vec_float_build.mncs`, `mat_float_build.mncs`).
 - **Repro:** `repros/P-001-float-replace/` (`repro.mncs` + `corpus.json`).
@@ -121,27 +122,44 @@ disposition after re-running against the current toolchain:
   `scaled`/`axpy`/`matvec` on the optimizing backend, and the
   whole-artifact poisoning means one constructive function disables
   LLVM for every other function in the file.
-- **Workaround:** split construction from reduction at module
-  granularity (`vec_float_build` vs `vec_float_reduce`,
-  `mat_float_build` vs `mat_float`), and pin LLVM+WASM as
-  expected-refusals for the build modules in `scripts/run_tests.py`.
-  Cost: two parallel module hierarchies, seeded-construction APIs (see
-  P-003), and no LLVM coverage for any constructive kernel.
-- **Direction:** fix the LLVM `SequenceReplace` element-type lowering
-  to use the element's lowered type (the WASM refusal message shows
-  the frontend already knows the operation is float-typed); scope the
-  poisoning to the refusing entrypoint as WASM already does.
-- **Regression test:** any corpus case calling `scaled<4>` on
-  `mncs-llvm-ir` (committed: `vec_float_build.json`, currently pinned
-  refused).
-- **Depends on:** none. Blocks: LLVM coverage of P-003 workarounds.
+- **Former workaround (retired):** split construction from
+  reduction at module granularity and pinned LLVM+WASM as
+  expected-refusals for the build modules. The module split stays as
+  file organization, but the backend envelope is unified: every
+  suite runs on all five backends with no pins.
+- **Repair (mncs-language, numerics-pressure campaign 2026-09-12),
+  two halves:**
+  - LLVM miscompile: 8-byte lanes lower as `i64` (`slot_payload_ty`
+    maps every W64 lane to `i64`), which is bitwise-exact for bulk
+    lane copies but ill-typed for the replacement-lane store of a
+    `double` SSA value. The emission now bitcasts the lane to the
+    raw slot word first (mirroring the `Return` float handling: a
+    converting store would truncate). Whole-artifact poisoning goes
+    away with the miscompile.
+  - WASM refusal: the lowering refused `ValType::F64` lanes in
+    `SequenceReplace`/`SequenceCopy` although the MVP interpreter is
+    untyped (floats ride as bit-carried words; I64 moves are exact).
+    Float lanes now move as 8-byte I64 words, matching the
+    `store_element_width` write contract. (Emitted-bytes external
+    validity for float stores is a pre-existing, separate condition:
+    float literals already emit that shape.)
+- **Validation:** P-001 repro passes everywhere (exact 20.0 bits);
+  `vec_float_build`/`mat_float_build`/`props_build` run on all five
+  backends with pins lifted (22+6+2 cases); language-side
+  `float_replace_constructs_bit_exact_sequences` (copy PASS-level +
+  scaled case-level, `-0.0`/subnormal lanes) and a `copy_f64`
+  span-copy case cover both lowering paths on all backends.
+- **Regression test:** `scaled<4>` corpus cases on LLVM/WASM
+  (committed, unpinned).
+- **Depends on:** none.
 
 ## P-002 — Host seeding drops repeated generic spellings
 
 - **Severity:** expressiveness blocker (harness + host-driven use).
-  **Status:** confirmed, root-caused (no language change made here).
+  **Status:** RESOLVED by the `mncs-language` repair below; validated
+  end-to-end (this section kept as the record).
 - **Affects:** every multi-parameter generic called directly from a
-  corpus (`matvec_into<M,N>`, `matmul_into<M,K,N>`, `trace_g<M,N>`…).
+  corpus (`matvec_into<M,N>`, `matmul_into<M,K,N>`, `trace_g<N>`…).
 - **Repro:** `repros/P-002-host-multi-generic/`; corpus names
   `matvec_into` with `type_arguments: [{nat 2}, {nat 2}]`.
 - **Expected:** the `(2,2)` specialization compiles in and runs.
@@ -166,33 +184,55 @@ disposition after re-running against the current toolchain:
   path into generic numerical code; silently requiring distinct
   sorted arguments makes corpus-driven testing of square
   multi-parameter kernels impossible.
-- **Workaround:** in-language driver wrappers
-  (`tests/drivers/mat_*_drivers.mncs`) with exact `<2, 2>`
-  instantiation; corpora call the wrappers. Cost: one thin wrapper
-  per tested shape, and the wrappers must be maintained alongside the
-  API.
-- **Direction:** keep spellings positional (no sort/dedup across
-  argument positions); dedup only byte-identical full seed keys,
-  which the merge map already does.
-- **Regression test:** the P-002 repro corpus itself (two cases:
-  `(2,2)` pins the dedup half, `(3,2)` pins the sort half; both
-  expect `returned` on bytecode today and on all backends after the
-  repair).
+- **Former workaround (retired):** in-language driver wrappers
+  (`tests/drivers/mat_*_drivers.mncs`, deleted) with exact `<2, 2>`
+  instantiation; corpora called the wrappers.
+- **Repair (mncs-language, numerics-pressure campaign 2026-09-12):**
+  host-spelling addresses are positional: the seed merge in
+  `crates/mncs-model/src/generics.rs` keeps distinct positional
+  spelling vectors whole (first-seen order) instead of
+  `sort`+`dedup` across positions; `GenericSpecializationRecord`
+  carries the ordered address set, and the artifact entrypoint map
+  plus `mncs abi` emit one row per address sharing one
+  specialization entry. `(2,2)` and `(3,2)` each resolve; two
+  spellings of one instantiation (nominal short name vs identity)
+  share the entry with one row each.
+- **Validation:** the P-002 repro passes on bytecode/C11/Cranelift
+  (LLVM/WASM now show the honest P-001 construction symptoms, not
+  mis-addressing); `mat_float`/`mat_float_build` corpora name
+  `trace_g<N>`/`matvec_into`/`matmul_into` (incl. 3-param `<2,3,2>`)
+  directly — 13 cases green, drivers deleted; language-side
+  `host_generic_entrypoints` suite covers `(2,2)`/`(3,2)`/nominal
+  union on all five backends with artifact-row assertions.
+- **Regression test:** `mat_float.json`/`mat_float_build.json`
+  (direct multi-param seeding) + the P-002 repro corpus.
 - **Depends on:** none.
 
 ## P-003 — No fill for symbolic bounds
 
-- **Severity:** expressiveness blocker. **Status:** confirmed.
+- **Severity:** expressiveness blocker. **Status:** partially resolved
+  — the diagnostic half is fixed (see below); symbolic-repeat
+  materialization remains open language design.
 - **Affects:** every constructor (`broadcast`, `zeros`, `identity`,
   `matmul` result allocation).
 - **Repro:** `repros/P-003-symbolic-fill/repro.mncs` — `return [x; N];`
   for symbolic `N`.
 - **Expected:** an N-fold sequence, or a precise "symbolic repeat
   refuses" diagnostic.
-- **Actual:** parse refusal `MNP203: expected repeat count after ';'`
-  plus cascade diagnostics (MNP016/MNP017/MNP006/MNP007) that bury the
-  root cause: none names the real rule (repeat counts must be
+- **Was:** parse refusal `MNP203: expected repeat count after ';'`
+  plus cascade diagnostics (MNP016/MNP017/MNP006/MNP007) that buried
+  the root cause: none named the real rule (repeat counts must be
   literals).
+- **Repair (diagnostic half, mncs-language 2026-09-12):** the parser
+  carries a bare-identifier count through `repeat_literal` (the `]`
+  still parses, so no cascade) and elaboration validates the count
+  text before the expected-type check: `[x; N]` now reports one
+  `MNE256` — "symbolic repeat count `N` is not supported; repeat
+  counts must be Nat literals" — in both the exact-bound and the
+  symbolic-bound shape (language-side
+  `symbolic_repeat_count_names_the_literal_rule_once`). The full
+  feature needs runtime dynamic fill on every construction-capable
+  backend, so it stays open (see the remaining direction below).
 - **Why it matters:** without fill, no generic kernel can RETURN a
   fresh sequence; `matmul<M,K,N>(a, b)` is inexpressible and every
   constructive API threads an exemplar (`matmul_into(a, b, out)`).
@@ -211,7 +251,9 @@ disposition after re-running against the current toolchain:
 
 ## P-004 — No generic records or enums
 
-- **Severity:** expressiveness blocker. **Status:** confirmed.
+- **Severity:** expressiveness blocker. **Status:** partially resolved
+  — the diagnostic half is fixed (see below); parameterized
+  records/enums remain open language design.
 - **Affects:** generic carried state (`prefix<N>`, any multi-scalar
   generic fold) and generic outcome types (`normalized<N>` returning
   `Value { value: [f64; N] }` vs `ZeroNorm`).
@@ -220,8 +262,19 @@ disposition after re-running against the current toolchain:
   `enum Outcome<N: Nat> { Value { value: [f64; N] }, Empty }`.
 - **Expected:** Nat-parameterized records/enums, or a precise
   diagnostic.
-- **Actual:** parse refusals (`MNP123` for records, `MNP072` for
-  enums) plus cascades that name everything except the real rule.
+- **Was:** parse refusals (`MNP123` for records, `MNP072` for enums)
+  plus cascades that named everything except the real rule.
+- **Repair (diagnostic half, mncs-language 2026-09-12):** `record_decl`
+  and `finite_type` detect `<` after the type name, reuse the shared
+  `generic_params` parser, refuse once at the `<` (`MNP213` for
+  records, `MNP214` for enums: "cannot take type parameters"), and
+  skip the balanced body so following declarations still parse
+  (language-side `pressure_generic_type_refusal`). Diagnostics after
+  the first in the P-004 repros are use-site cascade for a type that
+  cannot exist yet — documented in the repro README, same status as
+  P-009's second error. The full feature needs parameterized nominal
+  types with substitution across every backend's record/enum layout,
+  so it stays open (see the remaining direction below).
 - **Why it matters:** a traversal carries exactly one state value, so
   multi-scalar generic folds need a record; without generic records,
   `prefix<N>` and friends are concrete-width-only (`prefix4` + a
@@ -244,31 +297,39 @@ disposition after re-running against the current toolchain:
 
 ## P-005 — No dimension-equality constraints
 
-- **Severity:** safety issue. **Status:** confirmed.
-- **Affects:** `trace_g`, `diag_into`, any square-only kernel.
+- **Severity:** safety issue. **Status:** RESOLVED for `trace_g`
+  (this section kept as the record); general dimension arithmetic
+  (`M == N` as a bound) remains open language design.
+- **Affects:** `trace_g` (fixed); `diag_into`, any other square-only
+  kernel still documents squareness as a precondition.
 - **Repro:** `repros/P-005-dimension-constraints/` — `trace_g<2, 3>`
-  over `[[1,2,3],[4,5,6]]` returns `6.0` (partial diagonal) with no
-  diagnostic. (Tall inputs trap fail-closed; only wide is silent.)
+  over `[[1,2,3],[4,5,6]]` used to return `6.0` (partial diagonal)
+  with no diagnostic. (Tall inputs trapped fail-closed; only wide
+  was silent.)
 - **Expected:** a type-level way to require `M == N`, or at minimum a
   runtime complaint on shape mismatch.
-- **Actual:** squareness is a doc comment; wide inputs silently sum a
-  prefix of the diagonal.
-- **Why it matters:** silent wrong-shape acceptance is the classic
+- **Actual (before):** squareness was a doc comment; wide inputs
+  silently summed a prefix of the diagonal.
+- **Fix:** the first Direction option — `trace_g<N: Nat>` with
+  `[[f64; N]; N]`, so one parameter names both dimensions and a
+  two-argument seed cannot elaborate (MNE221, pinned in the language
+  repo by `module_imports.rs` `count`). No language change was
+  needed: the existing arity gate already refuses the hazard once
+  the signature stops accepting it.
+- **Why it mattered:** silent wrong-shape acceptance is the classic
   scientific-computing footgun (MATLAB-style). Fail-closed on tall
-  but silent on wide is the worst combination: half the mistakes are
-  caught, so the other half is trusted.
-- **Workaround:** documented preconditions + square-only committed
-  corpora. Cost: vigilance; no mechanical enforcement available.
-- **Direction:** dimension-arithmetic constraints on Nat parameters
-  (`fn trace<N: Nat>(m: [[f64; N]; N])`), or a `square` witness
-  argument the compiler checks.
-- **Regression test:** the P-005 repro (expects the silent 6.0 TODAY;
-  must be rewritten to expect a refusal when the language changes).
+  but silent on wide was the worst combination: half the mistakes
+  were caught, so the other half was trusted.
+- **Regression test:** the P-005 repro now pins the MNE221 refusal
+  via `source-study`; the positive path is pinned by
+  `g-trace-2x2`/`g-trace-3x3` in `tests/corpora/mat_float.json`
+  (single-argument seeds, green on all five backends).
 - **Depends on:** none.
 
 ## P-006 — Cranelift SIGSEGV on arity-mismatched execution request
 
-- **Severity:** correctness blocker (compiler crash). **Status:** confirmed.
+- **Severity:** correctness blocker (compiler crash). **Status:**
+  RESOLVED (this section kept as the record).
 - **Affects:** any harness/client that sends a malformed request to
   the Cranelift backend.
 - **Repro:** `repros/P-006-cranelift-arity-crash/` — two-argument `f64`
@@ -285,83 +346,106 @@ disposition after re-running against the current toolchain:
   narrow runtime boundary for Fabric packaging: a crash there is a
   reliability hole, not a cosmetic diagnostic gap.
 - **Workaround:** none needed in-library (committed corpora never
-  mismatch arity); harness authors must treat exit 139 as possible
-  until repaired.
-- **Direction:** arity-check the request against the entrypoint value
-  contract before lowering (the check exists on every other backend).
-- **Regression test:** the P-006 repro (expects `invalid_request` on
-  all five backends; today it crashes one).
+  mismatch arity).
+- **Repair (mncs-language, numerics-pressure campaign 2026-09-12):**
+  the Cranelift JIT called the compiled N-argument function through
+  a wrong-arity pointer type — no request-vs-contract check before
+  raw trampoline dispatch. Gated with the shared value-contract
+  message (`expected N argument(s), received M`), and the same audit
+  found the C11/LLVM retained-session paths (and the C11 one-shot)
+  also missing the gate their siblings had: missing arguments
+  surfaced as unattributed driver failures, extra arguments were
+  silently ignored. All native execution paths (one-shot, retained
+  session, AOT fallback) now refuse identically; bytecode keeps its
+  own `argument count does not match SSA inputs`.
+- **Regression test:** the P-006 repro (`invalid_request` on all
+  five, no signal) + language-side
+  `arity_mismatched_requests_fail_closed_without_crashing`
+  (too-few/too-many/exact on all backends plus frozen-artifact
+  execution).
 - **Depends on:** none.
 
 ## P-007 — No exact negation
 
-- **Severity:** correctness edge. **Status:** confirmed, worked around
-  (pinned, not hidden).
+- **Severity:** correctness edge. **Status:** RESOLVED (this section
+  kept as the record).
 - **Affects:** `fneg` (`src/numerics/scalar_float.mncs`).
-- **Repro:** committed corpus case `f-fneg-v-1` (`fneg(+0.0)`,
-  expects `+0.0`) + `repros/P-007-exact-negation/README.md`.
-- **Expected (IEEE):** `-(+0.0) == -0.0`.
-- **Actual:** `0.0 - 0.0 == +0.0`, and no available operation produces
-  `-0.0` from `+0.0` without trapping (comparisons equate the zeros;
-  division traps). So `fneg(+0.0) == +0.0`: a one-bit deviation from
-  IEEE negation, pinned in the corpus with this report as its
-  justification. Every other finite input negates exactly
-  (`fneg(-0.0) == +0.0` is exact).
-- **Why it matters:** signed-zero discipline is load-bearing in
-  branch cuts, complex arithmetic, and interval endpoints. A library
-  that cannot spell negation cannot promise IEEE Annex behavior.
-- **Workaround:** documented deviation; `fabs` uses `<=` (exact for
-  all inputs including `-0.0`, found during this run).
-- **Direction:** a `neg(x)` intrinsic (exact, total on finite inputs),
-  or unary `-x` for non-literal operands.
-- **Regression test:** `f-fneg-v-1` (must be UPDATED to `-0.0` when
-  exact negation lands).
+- **Was:** `0.0 - 0.0 == +0.0` with no operation producing `-0.0`
+  from `+0.0` without trapping, so `fneg(+0.0) == +0.0`: a one-bit
+  deviation from IEEE negation, pinned in the corpus (`f-fneg-v-1`
+  expected `+0.0`).
+- **Repair (mncs-language, numerics-pressure campaign 2026-09-12):**
+  a `neg(x)` float intrinsic (Profile 0.12), exact and total on
+  finite inputs including signed zeros, lowered inline on every
+  backend (LLVM `fneg`, Cranelift `fneg`, C11 unary minus, WASM
+  `f64.neg` via a new `F64Neg` instruction, reference executors by
+  direct negation) with the input-finiteness guard only — no libm
+  call, no result guard (negating a finite input is finite). General
+  `-x` on non-literals stays refused by the standing Profile 0.13
+  decision; `neg(x)` keeps the exactness explicit at the source (new
+  arity diagnostic MNP212).
+- **Validation:** language-side `stage_c2_neg` (6 cases: signed
+  zeros, value, subnormal, double negation, NaN trap) green on all
+  five backends; `f-fneg-v-1` updated to `-0.0` (bits
+  `0x8000000000000000`) and green everywhere; `fneg` redefined as
+  `neg(x)`.
+- **Regression test:** `f-fneg-v-1` + `stage-c2-neg-corpus.json`.
 - **Depends on:** none.
 
 ## P-008 — Integer literals do not adapt to `f64`; no exponent notation
 
-- **Severity:** ergonomics. **Status:** confirmed, worked around.
+- **Severity:** ergonomics. **Status:** RESOLVED and migrated
+  (this section kept as the record).
 - **Affects:** every float kernel with a whole-number constant.
 - **Repro:** `repros/P-008-float-literal-adaptation/repro.mncs` —
   `xs[i] * 2` inside an `[f64; N]` traversal.
 - **Expected:** `2` adapts to `2.0` (Profile 0.6 gives integer
   literals symmetric adaptation across int widths).
-- **Actual:** `MNE118: integer literal cannot satisfy a non-integer
-  type` + `MNE119` (operands must share a type). The diagnostic is
-  accurate; the missing rule is the asymmetry: ints adapt, floats do
-  not. Compounding it, there is NO exponent notation at all: `1.5e3`,
-  `1.5e-3`, and `1e16` all fail at parse time (MNP016/MNP017/MNP007
-  cascade), so `1e-12` must be spelled as twelve zeros after a dot
-  and `1e100` cannot be spelled directly at all — magnitudes are
-  computed (`1.0 / 100000000000000000000.0`-style) or spelled out
-  longhand (see `prop_norm_nonneg` in `tests/drivers/`).
-- **Why it matters:** numerical code is dense with 2/0/1 constants
-  (a paper cut on every line) and lives on extreme magnitudes
-  (tolerances like `1e-12`, scales like `1e16`): forcing `.0` plus
-  zero-counting on every one invites transcription bugs in exactly
-  the constants correctness depends on.
-- **Workaround:** spell every constant longhand (done throughout
-  `src/` and `tests/`). Cost: pervasive, minor, but real.
-- **Direction:** extend literal adaptation to `f64` targets (exact
-  for |lit| < 2^53; refuse or round explicitly beyond) and admit
-  `digits[.digits]e[+-]digits` spellings with correct rounding.
-- **Regression test:** the P-008 compile repro.
+- **Was:** `MNE118: integer literal cannot satisfy a non-integer
+  type` + `MNE119` (operands must share a type). Compounding it,
+  there was NO exponent notation at all: `1.5e3`, `1.5e-3`, and
+  `1e16` all failed at parse time (MNP016/MNP017/MNP007 cascade).
+- **Repair (mncs-language 2026-09-12):** integer literals adapt to
+  `f64` targets symmetrically with the int-width rule — exact below
+  2^53, refused beyond — and `digits[.digits]e[+-]digits` spellings
+  parse with correct rounding. Genuinely mixed non-literal widths
+  still refuse (MNE119), so the fail-closed boundary did not move.
+- **Why it mattered:** numerical code is dense with 2/0/1 constants
+  and lives on extreme magnitudes (`1e-12`, `1e16`): forcing `.0`
+  plus zero-counting invited transcription bugs in exactly the
+  constants correctness depends on.
+- **Migration:** `src/` uses the adapted spelling where load-bearing
+  (`(2 * a)` in `quadratic`, pinned bit-identical to `2.0 * a`;
+  `-0.5` literal; `neg(x)` P-007 cleanup in the same files).
+  Longhand spellings elsewhere remain valid and were left in place.
+- **Regression test:** the P-008 repro (now elaborates cleanly) +
+  language-side `pressure_literal_symmetry` (left/right-literal
+  symmetry, exact int-to-float adaptation, MNE119 still closed) on
+  all five backends.
 - **Depends on:** none.
 
 ## P-009 — No generic numeric arithmetic; misleading MNE120
 
 - **Severity:** expressiveness blocker + diagnostics issue.
-  **Status:** confirmed, worked around.
+  **Status:** partially resolved — the diagnostic half is fixed (see
+  below); operator-constrained generics remain open language design.
 - **Affects:** any attempt at one kernel for many element types.
 - **Repro:** `repros/P-009-generic-arithmetic/repro.mncs` —
   `fn gdot<T, N: Nat>(xs: [T; N], ys: [T; N])` with `+`/`*` inside.
 - **Expected:** a trait/constraint mechanism, or at least a
   diagnostic naming the missing capability.
-- **Actual:** `MNE120: arithmetic operands must have an integer type`
+- **Was:** `MNE120: arithmetic operands must have an integer type`
   — doubly wrong: it says "integer" although `f64` supports `+`/`*`,
   and it blames the operand rather than the missing constraint
   system. (A second error, `MNE102` on the carried binding, is pure
   cascade.)
+- **Repair (diagnostic half, mncs-language 2026-09-12):** MNE120 now
+  names the actual operand type; for a generic parameter it reports
+  ``the generic type parameter `T`, which carries no arithmetic
+  capability; call the function at a concrete integer type``
+  (language-side `generic_arithmetic_names_the_type_parameter`). The
+  trait/constraint mechanism itself is deliberately left open (see
+  the remaining direction below).
 - **Why it matters:** without element-generic arithmetic, `sum`/`dot`
   are duplicated per width (`sum_i32`/`dot_i32` in `vec_int.mncs`
   exist precisely to measure this: line-for-line copies with the type

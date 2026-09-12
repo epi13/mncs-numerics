@@ -23,13 +23,12 @@ fn prop_dot_sym() -> (result: bool) {
 }
 
 // Squared norms are never negative, even on wide-dynamic-range
-// lanes. (No exponent notation exists for literals — pressure
-// P-008 — so magnitudes are spelled out or computed: tiny is
-// 1e-20, big is ~1e100 (kept far from overflow on purpose: the
-// property is non-negativity, not extremes handling).
+// lanes. Magnitudes use exponent notation (tiny is 1e-20, big is
+// ~1e100 — kept far from overflow on purpose: the property is
+// non-negativity, not extremes handling).
 fn prop_norm_nonneg() -> (result: bool) {
-    let tiny: f64 = 1.0 / 100000000000000000000.0;
-    let big: f64 = 100000000000000000000.0 * 100000000000000000000.0 * 100000000000000000000.0 * 100000000000000000000.0 * 100000000000000000000.0;
+    let tiny: f64 = 1.0 / 1e20;
+    let big: f64 = 1e20 * 1e20 * 1e20 * 1e20 * 1e20;
     let xs: [f64; 4] = [tiny, -0.0, big, -3.25];
     return norm2<4>(xs) >= 0.0;
 }
@@ -37,7 +36,7 @@ fn prop_norm_nonneg() -> (result: bool) {
 // Neumaier strictly improves on the plain sum for the trio:
 // plain is 0.0, compensated is 1.0.
 fn prop_neumaier_improves() -> (result: bool) {
-    let xs: [f64; 3] = [10000000000000000.0, 1.0, -10000000000000000.0];
+    let xs: [f64; 3] = [1e16, 1.0, -1e16];
     return sum<3>(xs) == 0.0 && neumaier_sum<3>(xs) == 1.0;
 }
 

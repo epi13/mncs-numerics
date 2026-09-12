@@ -30,16 +30,18 @@ BENCH_BUILD = os.path.join(ROOT, "benches", "bench_build.mncs")
 MOD_REDUCE = "mncs.numerics.bench_reduce.v1"
 MOD_BUILD = "mncs.numerics.bench_build.v1"
 
-NARROW = ["mncs-research-bytecode", "mncs-c11", "mncs-cranelift"]
-
 # kernel -> (source, module, expected_scalar, backends or None for all).
+# Construction kernels once ran on a narrowed backend set (the P-001
+# refusal envelope); P-001 is repaired, so every kernel runs
+# everywhere. docs/BENCHMARKS.md keeps the historical baseline with
+# the old envelope marked per cell.
 KERNELS = {
     "bench_sum_256": (BENCH_REDUCE, MOD_REDUCE, 256.0, None),
     "bench_sum_1024": (BENCH_REDUCE, MOD_REDUCE, 1024.0, None),
     "bench_dot_256": (BENCH_REDUCE, MOD_REDUCE, 512.0, None),
-    "bench_axpy_256": (BENCH_BUILD, MOD_BUILD, 1024.0, NARROW),
-    "bench_matvec_8": (BENCH_BUILD, MOD_BUILD, 64.0, NARROW),
-    "bench_matmul_8": (BENCH_BUILD, MOD_BUILD, 512.0, NARROW),
+    "bench_axpy_256": (BENCH_BUILD, MOD_BUILD, 1024.0, None),
+    "bench_matvec_8": (BENCH_BUILD, MOD_BUILD, 64.0, None),
+    "bench_matmul_8": (BENCH_BUILD, MOD_BUILD, 512.0, None),
 }
 
 

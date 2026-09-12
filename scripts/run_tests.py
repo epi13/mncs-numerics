@@ -30,11 +30,6 @@ SRC = os.path.join(ROOT, "src")
 CORPORA = os.path.join(ROOT, "tests", "corpora")
 DRIVERS = os.path.join(ROOT, "tests", "drivers")
 
-NATIVE_ONLY_REFUSAL = (
-    "float-replace construction: refused on WASM (CGN302), miscompiled "
-    "on LLVM (P-001)"
-)
-
 SUITES = [
     {"name": "scalar_int",
      "source": os.path.join(SRC, "numerics", "scalar_int.mncs"),
@@ -55,27 +50,19 @@ SUITES = [
     {"name": "vec_float_build",
      "source": os.path.join(SRC, "numerics", "vec_float_build.mncs"),
      "corpus": os.path.join(CORPORA, "vec_float_build.json"),
-     "backends": ["mncs-research-bytecode", "mncs-c11", "mncs-cranelift"],
-     "expected_refusals": [
-         ("mncs-portable-wasm-mvp", "", "P-001", NATIVE_ONLY_REFUSAL),
-         ("mncs-llvm-ir", "", "P-001", NATIVE_ONLY_REFUSAL),
-     ]},
+     "backends": ALL_BACKENDS},
     {"name": "mat_float_small",
      "source": os.path.join(SRC, "numerics", "mat_float_small.mncs"),
      "corpus": os.path.join(CORPORA, "mat_float_small.json"),
      "backends": ALL_BACKENDS},
-    {"name": "mat_float_drivers",
-     "source": os.path.join(DRIVERS, "mat_float_drivers.mncs"),
-     "corpus": os.path.join(CORPORA, "mat_float_drivers.json"),
+    {"name": "mat_float",
+     "source": os.path.join(SRC, "numerics", "mat_float.mncs"),
+     "corpus": os.path.join(CORPORA, "mat_float.json"),
      "backends": ALL_BACKENDS},
-    {"name": "mat_float_build_drivers",
-     "source": os.path.join(DRIVERS, "mat_float_build_drivers.mncs"),
-     "corpus": os.path.join(CORPORA, "mat_float_build_drivers.json"),
-     "backends": ["mncs-research-bytecode", "mncs-c11", "mncs-cranelift"],
-     "expected_refusals": [
-         ("mncs-portable-wasm-mvp", "", "P-001", NATIVE_ONLY_REFUSAL),
-         ("mncs-llvm-ir", "", "P-001", NATIVE_ONLY_REFUSAL),
-     ]},
+    {"name": "mat_float_build",
+     "source": os.path.join(SRC, "numerics", "mat_float_build.mncs"),
+     "corpus": os.path.join(CORPORA, "mat_float_build.json"),
+     "backends": ALL_BACKENDS},
     {"name": "examples_stats",
      "source": os.path.join(ROOT, "examples", "stats.mncs"),
      "corpus": os.path.join(CORPORA, "examples_stats.json"),
@@ -99,11 +86,7 @@ SUITES = [
     {"name": "props_build",
      "source": os.path.join(DRIVERS, "prop_drivers_build.mncs"),
      "corpus": os.path.join(CORPORA, "props_build.json"),
-     "backends": ["mncs-research-bytecode", "mncs-c11", "mncs-cranelift"],
-     "expected_refusals": [
-         ("mncs-portable-wasm-mvp", "", "P-001", NATIVE_ONLY_REFUSAL),
-         ("mncs-llvm-ir", "", "P-001", NATIVE_ONLY_REFUSAL),
-     ]},
+     "backends": ALL_BACKENDS},
 ]
 
 

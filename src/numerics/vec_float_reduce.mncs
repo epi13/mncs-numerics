@@ -99,8 +99,12 @@ record Neumaier { sum: f64, comp: f64 }
 
 fn neumaier_step(st: Neumaier, x: f64) -> (result: Neumaier) {
     let t: f64 = st.sum + x;
-    let sa: f64 = select(st.sum < 0.0, 0.0 - st.sum, st.sum);
-    let xa: f64 = select(x < 0.0, 0.0 - x, x);
+    // Absolute values via exact neg under a strict guard: the taken
+    // arm is strictly negative and finite, where `neg` and `0.0 -`
+    // agree bit-for-bit (`fabs` keeps `0.0 -` deliberately — it must
+    // normalize -0.0, which `neg` would preserve).
+    let sa: f64 = select(st.sum < 0.0, neg(st.sum), st.sum);
+    let xa: f64 = select(x < 0.0, neg(x), x);
     let c: f64 = select(sa >= xa, (st.sum - t) + x, (x - t) + st.sum);
     return Neumaier { sum: t, comp: st.comp + c };
 }

@@ -58,7 +58,7 @@
    "expected": [
     {
      "float": {
-      "bits": 0,
+      "bits": 9223372036854775808,
       "type": {
        "bits": 64
       }

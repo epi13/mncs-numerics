@@ -1,14 +1,14 @@
 {
  "schema_version": "0.2",
- "name": "mncs-numerics-mat-float-build-drivers",
+ "name": "mncs-numerics-mat-float-build",
  "cases": [
   {
-   "id": "e-d_matvec_2x2-0",
+   "id": "b-matvec-2x2",
    "request": {
     "schema_version": "0.1",
     "target": {
-     "module": "mncs.numerics.test.mat_float_build_drivers.v1",
-     "function": "d_matvec_2x2"
+     "module": "mncs.numerics.mat_float_build.v1",
+     "function": "matvec_into"
     },
     "arguments": [
      {
@@ -82,9 +82,41 @@
         }
        ]
       }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
      }
     ],
-    "step_budget": 32768
+    "step_budget": 32768,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 2
+     },
+     {
+      "kind": "nat",
+      "value": 2
+     }
+    ]
    },
    "expected_status": "returned",
    "expected": [
@@ -113,12 +145,12 @@
    ]
   },
   {
-   "id": "e-d_matvec_3x2-1",
+   "id": "b-matvec-3x2",
    "request": {
     "schema_version": "0.1",
     "target": {
-     "module": "mncs.numerics.test.mat_float_build_drivers.v1",
-     "function": "d_matvec_3x2"
+     "module": "mncs.numerics.mat_float_build.v1",
+     "function": "matvec_into"
     },
     "arguments": [
      {
@@ -214,9 +246,49 @@
         }
        ]
       }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
      }
     ],
-    "step_budget": 32768
+    "step_budget": 32768,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 3
+     },
+     {
+      "kind": "nat",
+      "value": 2
+     }
+    ]
    },
    "expected_status": "returned",
    "expected": [
@@ -253,12 +325,12 @@
    ]
   },
   {
-   "id": "e-d_matmul_2x2x2-2",
+   "id": "b-matmul-2x2x2",
    "request": {
     "schema_version": "0.1",
     "target": {
-     "module": "mncs.numerics.test.mat_float_build_drivers.v1",
-     "function": "d_matmul_2x2x2"
+     "module": "mncs.numerics.mat_float_build.v1",
+     "function": "matmul_into"
     },
     "arguments": [
      {
@@ -360,9 +432,73 @@
         }
        ]
       }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 0,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 0,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 0,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 0,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      }
      }
     ],
-    "step_budget": 32768
+    "step_budget": 32768,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 2
+     },
+     {
+      "kind": "nat",
+      "value": 2
+     },
+     {
+      "kind": "nat",
+      "value": 2
+     }
+    ]
    },
    "expected_status": "returned",
    "expected": [
@@ -419,12 +555,12 @@
    ]
   },
   {
-   "id": "e-d_matmul_2x3x2-3",
+   "id": "b-matmul-2x3x2",
    "request": {
     "schema_version": "0.1",
     "target": {
-     "module": "mncs.numerics.test.mat_float_build_drivers.v1",
-     "function": "d_matmul_2x3x2"
+     "module": "mncs.numerics.mat_float_build.v1",
+     "function": "matmul_into"
     },
     "arguments": [
      {
@@ -564,9 +700,73 @@
         }
        ]
       }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 0,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 0,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 0,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 0,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      }
      }
     ],
-    "step_budget": 32768
+    "step_budget": 32768,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 2
+     },
+     {
+      "kind": "nat",
+      "value": 3
+     },
+     {
+      "kind": "nat",
+      "value": 2
+     }
+    ]
    },
    "expected_status": "returned",
    "expected": [
@@ -623,12 +823,12 @@
    ]
   },
   {
-   "id": "e-d_transpose_2x3-4",
+   "id": "b-transpose-2x3",
    "request": {
     "schema_version": "0.1",
     "target": {
-     "module": "mncs.numerics.test.mat_float_build_drivers.v1",
-     "function": "d_transpose_2x3"
+     "module": "mncs.numerics.mat_float_build.v1",
+     "function": "transpose_into"
     },
     "arguments": [
      {
@@ -696,9 +896,91 @@
         }
        ]
       }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 0,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 0,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 0,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 0,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "sequence": {
+          "values": [
+           {
+            "float": {
+             "bits": 0,
+             "type": {
+              "bits": 64
+             }
+            }
+           },
+           {
+            "float": {
+             "bits": 0,
+             "type": {
+              "bits": 64
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      }
      }
     ],
-    "step_budget": 32768
+    "step_budget": 32768,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 2
+     },
+     {
+      "kind": "nat",
+      "value": 3
+     }
+    ]
    },
    "expected_status": "returned",
    "expected": [
@@ -777,12 +1059,12 @@
    ]
   },
   {
-   "id": "e-d_diag_3x3-5",
+   "id": "b-diag-3x3",
    "request": {
     "schema_version": "0.1",
     "target": {
-     "module": "mncs.numerics.test.mat_float_build_drivers.v1",
-     "function": "d_diag_3x3"
+     "module": "mncs.numerics.mat_float_build.v1",
+     "function": "diag_into"
     },
     "arguments": [
      {
@@ -880,9 +1162,49 @@
         }
        ]
       }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
      }
     ],
-    "step_budget": 32768
+    "step_budget": 32768,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 3
+     },
+     {
+      "kind": "nat",
+      "value": 3
+     }
+    ]
    },
    "expected_status": "returned",
    "expected": [

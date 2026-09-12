@@ -12,19 +12,18 @@ use mncs.numerics.vec_float_build;
 
 // add(x, zeros_like(x)) == x, witnessed by a zero L1 residual.
 fn prop_add_zero() -> (result: bool) {
-    let xs: [f64; 4] = [1.5, -2.5, 10000000000000000.0, -10000000000000000.0];
+    let xs: [f64; 4] = [1.5, -2.5, 1e16, -1e16];
     let back: [f64; 4] = add<4>(xs, zeros_like<4>(xs));
     return sum<4>(abs_elem<4>(sub<4>(back, xs))) == 0.0;
 }
 
 // scaled(x, 1.0) == x, same witness shape.
 fn prop_scale_one() -> (result: bool) {
-    let xs: [f64; 4] = [1.5, -2.5, 10000000000000000.0, -10000000000000000.0];
+    let xs: [f64; 4] = [1.5, -2.5, 1e16, -1e16];
     let back: [f64; 4] = scaled<4>(xs, 1.0);
     return sum<4>(abs_elem<4>(sub<4>(back, xs))) == 0.0;
 }
 
 // (Transpose-involution and matmul-identity properties live in
-// prop_drivers_reduce.mncs: they need only literal construction and
-// run on all five backends. Only the add-zero/scale-one properties
-// genuinely construct, so only they pay the P-001 envelope here.)
+// prop_drivers_reduce.mncs: they need only literal construction.
+// Since the P-001 repair every property runs on all five backends.

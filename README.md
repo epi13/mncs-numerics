@@ -18,7 +18,7 @@ report with a minimal reproducer (`docs/LANGUAGE_PRESSURES.md`,
 
 - `src/numerics/` — the library (`.mncs` only, no host numerics)
 - `tests/corpora/` — committed deterministic execution corpora
-- `tests/drivers/` — in-language wrappers for multi-param generics (P-002)
+- `tests/drivers/` — nullary property programs (P-002 multi-param seeding wrappers retired)
 - `examples/` — consumer-integration programs (also executed)
 - `benches/` + `scripts/bench.py` — steps + wall-clock harness
 - `scripts/` — oracle (`gen_corpora.py`), runner (`run_tests.py`), shared lib
@@ -46,10 +46,11 @@ for direct CLI use (the library resolves as `mncs.numerics.*`).
 
 v1 library: integer + float scalars, generic int/float reductions,
 elementwise construction, 2x2/3x3 + generic MxN matrices, four
-examples — 384 committed cases green on all backends except the
-P-001 construction envelope (LLVM miscompile, WASM honest refusal),
-which is pinned as confirmed refusals, not passes. Thirteen language
-pressures filed, two of them correctness blockers (P-001, P-006).
+examples — 384 committed cases green on all five backends with no
+refusal pins. Fourteen language pressures filed. P-001 (float
+construction on LLVM/WASM), P-002 (host multi-param seeding), and
+P-006 (Cranelift arity crash) are repaired; the P-002 driver
+wrappers are retired.
 
 See `docs/ARCHITECTURE.md`, `docs/NUMERICAL_SEMANTICS.md`,
 `docs/LANGUAGE_PRESSURES.md`, `docs/BENCHMARKS.md`.

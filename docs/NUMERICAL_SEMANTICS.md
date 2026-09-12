@@ -57,9 +57,9 @@ failure, never a value. Consequences the library depends on:
 
 Signed zeros: `+0.0 == -0.0` in every comparison; `fabs` normalizes
 both to `+0.0` (via `<=`); `fmin(-0.0, +0.0) == -0.0` (first arm
-wins). The one deviation is `fneg(+0.0) == +0.0` (pressure P-007):
-exact negation is inexpressible, and the deviation is pinned in the
-corpus, not hidden.
+wins); `fneg` is exact IEEE negation via the `neg(x)` intrinsic
+(`neg(+0.0) == -0.0`, pinned in the corpus; pressure P-007,
+repaired).
 
 Subnormals flow through arithmetic normally (pinned: `5e-324`
 cases); conversions `as` truncate float→int (trapping out of range)
@@ -97,12 +97,14 @@ ascending, and reports `n ∈ {2, 1, 0, -1}` (`-1` = degenerate
 
 Small matrices are **flat row-major** sequences (`Mat2 = [f64; 4]`,
 `Mat3 = [f64; 9]`); generic matrices are **nested row-major**
-(`[[f64; N]; M]`). Flat literals construct on every backend;
-`replace`-construction does not (pressure P-001), which is why the
-build modules exist separately and take exemplar seeds (pressure
-P-003). Generic squareness is a documented precondition, not a type
-fact (pressure P-005): `trace_g` on wide input silently sums a
-diagonal prefix.
+(`[[f64; N]; M]`). Flat literals and `replace`-construction build on
+every backend (pressure P-001, repaired); the build modules still
+live separately and take exemplar seeds because no kernel can RETURN
+a fresh symbolic-bound sequence (pressure P-003, open). Squareness
+is structural, not a documented precondition (pressure P-005,
+resolved): `trace_g<N>` names both dimensions with one parameter,
+so a non-square seed is an MNE221 elaboration refusal, not a silent
+partial diagonal.
 
 `solve2`/`inv2` are Cramer's rule (exact singularity test
 `det == 0.0`, no pivoting — documented, not a general solver).

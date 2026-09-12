@@ -9,18 +9,17 @@ mncs 0.16;
 // mncs.numerics.mat_float_build.v1 under the narrower construction
 // envelope.
 //
-// Squareness caveat: the language has no dimension-equality
-// constraints (pressure P-005), so squareness is a documented
-// precondition, not a type fact. trace_g on a tall matrix traps
-// fail-closed when a row index exceeds the column bound; on a wide
-// matrix it silently sums only the first M diagonal lanes. Callers
-// must pass square matrices; the corpus pins square inputs.
-
+// Squareness note: trace_g below takes a single Nat parameter N
+// naming both dimensions, so squareness is structural (pressure
+// P-005, resolved): a two-argument seed cannot elaborate.
 module mncs.numerics.mat_float.v1;
 
 // Trace of a square matrix: sum of m[i][i] over the row traversal.
-// Precondition: M == N.
-fn trace_g<M: Nat, N: Nat>(m: [[f64; N]; M]) -> (result: f64) {
+// Squareness is structural: the single parameter N names both
+// dimensions, so a non-square call cannot elaborate (MNE221 arity
+// refusal) and a seed with two arguments cannot resolve. No
+// precondition, no silent partial diagonal (pressure P-005).
+fn trace_g<N: Nat>(m: [[f64; N]; N]) -> (result: f64) {
     iterate i over m carrying acc: f64 = 0.0 {
         next acc = acc + m[i][i];
     }

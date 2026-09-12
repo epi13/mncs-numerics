@@ -1,10 +1,11 @@
 mncs 0.16;
 
-// P-005: trace_g over a NON-square matrix. The language has no way to
-// demand M == N, so this elaborates and runs. The 2x3 input silently
-// yields m[0][0] + m[1][1] = 1.0 + 5.0 = 6.0: a partial diagonal with
-// no diagnostic. (A tall matrix traps fail-closed instead; only the
-// wide case is silent.)
+// P-005 (RESOLVED): trace_g over a NON-square matrix. The language
+// still has no general dimension-equality constraints, but trace_g
+// now takes a single Nat parameter N naming both dimensions, so the
+// seed below cannot elaborate: MNE221 "generic argument count
+// mismatch for 'trace_g': expected 1, got 2". The silent partial
+// diagonal (1.0 + 5.0 = 6.0) is gone; the hazard is a compile error.
 
 module dim.probe;
 

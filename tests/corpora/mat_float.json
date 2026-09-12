@@ -1,14 +1,14 @@
 {
  "schema_version": "0.2",
- "name": "mncs-numerics-mat-float-drivers",
+ "name": "mncs-numerics-mat-float",
  "cases": [
   {
-   "id": "d-d_trace_2x2-0",
+   "id": "g-trace-2x2",
    "request": {
     "schema_version": "0.1",
     "target": {
-     "module": "mncs.numerics.test.mat_float_drivers.v1",
-     "function": "d_trace_2x2"
+     "module": "mncs.numerics.mat_float.v1",
+     "function": "trace_g"
     },
     "arguments": [
      {
@@ -62,7 +62,13 @@
       }
      }
     ],
-    "step_budget": 16384
+    "step_budget": 16384,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 2
+     }
+    ]
    },
    "expected_status": "returned",
    "expected": [
@@ -77,12 +83,12 @@
    ]
   },
   {
-   "id": "d-d_trace_3x3-1",
+   "id": "g-trace-3x3",
    "request": {
     "schema_version": "0.1",
     "target": {
-     "module": "mncs.numerics.test.mat_float_drivers.v1",
-     "function": "d_trace_3x3"
+     "module": "mncs.numerics.mat_float.v1",
+     "function": "trace_g"
     },
     "arguments": [
      {
@@ -182,7 +188,13 @@
       }
      }
     ],
-    "step_budget": 16384
+    "step_budget": 16384,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 3
+     }
+    ]
    },
    "expected_status": "returned",
    "expected": [
@@ -197,12 +209,12 @@
    ]
   },
   {
-   "id": "d-d_frob_2x2-2",
+   "id": "g-frob-2x2",
    "request": {
     "schema_version": "0.1",
     "target": {
-     "module": "mncs.numerics.test.mat_float_drivers.v1",
-     "function": "d_frob_2x2"
+     "module": "mncs.numerics.mat_float.v1",
+     "function": "frobenius2_g"
     },
     "arguments": [
      {
@@ -256,7 +268,17 @@
       }
      }
     ],
-    "step_budget": 16384
+    "step_budget": 16384,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 2
+     },
+     {
+      "kind": "nat",
+      "value": 2
+     }
+    ]
    },
    "expected_status": "returned",
    "expected": [
@@ -271,12 +293,12 @@
    ]
   },
   {
-   "id": "d-d_frob_2x3-3",
+   "id": "g-frob-2x3",
    "request": {
     "schema_version": "0.1",
     "target": {
-     "module": "mncs.numerics.test.mat_float_drivers.v1",
-     "function": "d_frob_2x3"
+     "module": "mncs.numerics.mat_float.v1",
+     "function": "frobenius2_g"
     },
     "arguments": [
      {
@@ -346,7 +368,17 @@
       }
      }
     ],
-    "step_budget": 16384
+    "step_budget": 16384,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 2
+     },
+     {
+      "kind": "nat",
+      "value": 3
+     }
+    ]
    },
    "expected_status": "returned",
    "expected": [
@@ -361,12 +393,12 @@
    ]
   },
   {
-   "id": "d-d_sum_2x3-4",
+   "id": "g-sum-2x3",
    "request": {
     "schema_version": "0.1",
     "target": {
-     "module": "mncs.numerics.test.mat_float_drivers.v1",
-     "function": "d_sum_2x3"
+     "module": "mncs.numerics.mat_float.v1",
+     "function": "sum_g"
     },
     "arguments": [
      {
@@ -436,7 +468,17 @@
       }
      }
     ],
-    "step_budget": 16384
+    "step_budget": 16384,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 2
+     },
+     {
+      "kind": "nat",
+      "value": 3
+     }
+    ]
    },
    "expected_status": "returned",
    "expected": [
@@ -451,12 +493,12 @@
    ]
   },
   {
-   "id": "d-d_max_3x2-5",
+   "id": "g-max-3x2",
    "request": {
     "schema_version": "0.1",
     "target": {
-     "module": "mncs.numerics.test.mat_float_drivers.v1",
-     "function": "d_max_3x2"
+     "module": "mncs.numerics.mat_float.v1",
+     "function": "max_g"
     },
     "arguments": [
      {
@@ -532,7 +574,17 @@
       }
      }
     ],
-    "step_budget": 16384
+    "step_budget": 16384,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 3
+     },
+     {
+      "kind": "nat",
+      "value": 2
+     }
+    ]
    },
    "expected_status": "returned",
    "expected": [
@@ -547,12 +599,12 @@
    ]
   },
   {
-   "id": "d-d_max_2x2-6",
+   "id": "g-max-2x2",
    "request": {
     "schema_version": "0.1",
     "target": {
-     "module": "mncs.numerics.test.mat_float_drivers.v1",
-     "function": "d_max_2x2"
+     "module": "mncs.numerics.mat_float.v1",
+     "function": "max_g"
     },
     "arguments": [
      {
@@ -606,7 +658,17 @@
       }
      }
     ],
-    "step_budget": 16384
+    "step_budget": 16384,
+    "type_arguments": [
+     {
+      "kind": "nat",
+      "value": 2
+     },
+     {
+      "kind": "nat",
+      "value": 2
+     }
+    ]
    },
    "expected_status": "returned",
    "expected": [
