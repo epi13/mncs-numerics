@@ -145,13 +145,15 @@ disposition after re-running against the current toolchain:
 - **Repro:** `repros/P-002-host-multi-generic/`; corpus names
   `matvec_into` with `type_arguments: [{nat 2}, {nat 2}]`.
 - **Expected:** the `(2,2)` specialization compiles in and runs.
-- **Actual:** `invalid_request: no compiled specialization ...
-  for arguments (2, 2); compiled instantiations: [(2)]`. The emitted
-  artifact row carries `args_spellings: ["2"]` while `canonical_args`
-  is the correct `"value:2|value:2"` (inspected in the backend
-  artifact JSON): the specialization is RIGHT, its host address is
-  truncated. Distinct sorted spellings (`(2,3)`) work, which is why
-  the existing single-argument suites never caught it.
+- **Actual:** with two corpus cases, `(2,2)` and `(3,2)`, every
+  native backend reports `compiled instantiations: [(2), (2, 3)]` —
+  the first collapsed by dedup, the second reordered by sort. The
+  emitted artifact row for the `(2,2)` seed carries
+  `args_spellings: ["2"]` while `canonical_args` is the correct
+  `"value:2|value:2"` (inspected in the backend artifact JSON): the
+  specialization is RIGHT, its host address is truncated. Bytecode
+  (which resolves through `canonical_args`) passes both cases, which
+  is why the existing single-argument suites never caught it.
 - **Root cause (for the language repair campaign):**
   `crates/mncs-model/src/generics.rs` merges host seeds per
   instantiation and then runs `spellings.sort(); spellings.dedup();`
@@ -172,9 +174,10 @@ disposition after re-running against the current toolchain:
 - **Direction:** keep spellings positional (no sort/dedup across
   argument positions); dedup only byte-identical full seed keys,
   which the merge map already does.
-- **Regression test:** the P-002 repro corpus itself (expects
-  `returned` 17.0/39.0 on bytecode); plus a `(3,2)`-ordered case to
-  pin the sort half of the bug.
+- **Regression test:** the P-002 repro corpus itself (two cases:
+  `(2,2)` pins the dedup half, `(3,2)` pins the sort half; both
+  expect `returned` on bytecode today and on all backends after the
+  repair).
 - **Depends on:** none.
 
 ## P-003 — No fill for symbolic bounds

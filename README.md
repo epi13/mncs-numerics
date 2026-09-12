@@ -7,7 +7,7 @@ cannot yet express.
 `mncs-numerics` is a real numerical library written in MNCS (scalars,
 generic reductions, elementwise kernels, small and generic matrices,
 stability showcases) together with the adversarial harness that
-executes it: a deterministic Python oracle generates 365+ execution
+executes it: a deterministic Python oracle generates 384 execution
 cases, and `scripts/run_tests.py` runs every suite on all five
 compiler backends with a pinned refusal matrix. When the language
 cannot express a reasonable API, the gap is filed as a pressure
@@ -46,7 +46,7 @@ for direct CLI use (the library resolves as `mncs.numerics.*`).
 
 v1 library: integer + float scalars, generic int/float reductions,
 elementwise construction, 2x2/3x3 + generic MxN matrices, four
-examples — 365 committed cases green on all backends except the
+examples — 384 committed cases green on all backends except the
 P-001 construction envelope (LLVM miscompile, WASM honest refusal),
 which is pinned as confirmed refusals, not passes. Thirteen language
 pressures filed, two of them correctness blockers (P-001, P-006).
