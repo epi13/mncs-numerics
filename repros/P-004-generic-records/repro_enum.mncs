@@ -1,0 +1,9 @@
+mncs 0.16;
+
+module genum.probe;
+
+enum Outcome<N: Nat> { Value { value: [f64; N] }, Empty }
+
+fn f<N: Nat>(xs: [f64; N]) -> (result: Outcome<N>) {
+    return Outcome<N>.Empty;
+}

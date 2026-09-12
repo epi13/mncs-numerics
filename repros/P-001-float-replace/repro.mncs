@@ -1,0 +1,16 @@
+mncs 0.16;
+
+module probe.eight;
+
+fn scaled<N: Nat>(xs: [f64; N], s: f64) -> (result: [f64; N]) {
+    iterate i over xs carrying out: [f64; N] = xs {
+        next out = replace(out, i, xs[i] * s);
+    }
+    return out;
+}
+
+fn demo() -> (result: f64) {
+    let xs: [f64; 4] = [1.0, 2.0, 3.0, 4.0];
+    let ys: [f64; 4] = scaled<4>(xs, 2.0);
+    return ys[0] + ys[1] + ys[2] + ys[3];
+}

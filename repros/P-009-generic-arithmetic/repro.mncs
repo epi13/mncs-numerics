@@ -1,0 +1,10 @@
+mncs 0.16;
+
+module probe.five;
+
+fn gdot<T, N: Nat>(xs: [T; N], ys: [T; N]) -> (result: T) {
+    iterate i over xs carrying acc: T = xs[0] {
+        next acc = acc + xs[i] * ys[i];
+    }
+    return acc;
+}

@@ -1,6 +1,8 @@
 # RFC 0001: Numerical pressure foundation
 
-Status: Draft
+Status: Implemented (v1, 2026-09-12). The library/harness split is
+documented in `docs/ARCHITECTURE.md`; this RFC remains the founding
+statement of the adversarial framing and is not updated further.
 
 ## Purpose
 

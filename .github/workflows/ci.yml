@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  determinism:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: mncs-numerics
+      - name: Committed corpora match the oracle
+        run: |
+          set -euo pipefail
+          cd mncs-numerics
+          python3 scripts/gen_corpora.py
+          git diff --exit-code -- tests/corpora \
+            || { echo "corpora differ from oracle output; run scripts/gen_corpora.py and commit"; exit 1; }
+
+  suites:
+    runs-on: ubuntu-latest
+    needs: determinism
+    strategy:
+      fail-fast: false
+      matrix:
+        backend: [mncs-research-bytecode, mncs-portable-wasm-mvp, mncs-c11,
+                  mncs-llvm-ir, mncs-cranelift]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: mncs-numerics
+      - uses: actions/checkout@v4
+        with:
+          repository: epi13/mncs-language
+          path: mncs-language
+      - name: Install LLVM toolchain for external-target backends
+        run: |
+          if ! command -v llc >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends llvm clang
+          fi
+          llc --version | head -2
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build mncs-cli (release)
+        run: cargo build --release -p mncs-cli
+        working-directory: mncs-language
+      - name: Run suites on ${{ matrix.backend }}
+        run: |
+          set -euo pipefail
+          cd mncs-numerics
+          export MNCS_LANGUAGE_DIR=$GITHUB_WORKSPACE/mncs-language
+          export MNCS_BIN=$GITHUB_WORKSPACE/mncs-language/target/release/mncs
+          python3 scripts/run_tests.py --backends ${{ matrix.backend }}
+
+  bench-smoke:
+    runs-on: ubuntu-latest
+    needs: determinism
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: mncs-numerics
+      - uses: actions/checkout@v4
+        with:
+          repository: epi13/mncs-language
+          path: mncs-language
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build mncs-cli (release)
+        run: cargo build --release -p mncs-cli
+        working-directory: mncs-language
+      - name: Benchmark smoke (one kernel, reference backend)
+        run: |
+          set -euo pipefail
+          cd mncs-numerics
+          export MNCS_LANGUAGE_DIR=$GITHUB_WORKSPACE/mncs-language
+          export MNCS_BIN=$GITHUB_WORKSPACE/mncs-language/target/release/mncs
+          python3 scripts/bench.py --backends mncs-research-bytecode \
+            --kernels bench_sum_256

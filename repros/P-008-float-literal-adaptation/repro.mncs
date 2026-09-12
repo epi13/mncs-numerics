@@ -1,0 +1,10 @@
+mncs 0.16;
+
+module adapt.probe;
+
+fn half_sum<N: Nat>(xs: [f64; N]) -> (result: f64) {
+    iterate i over xs carrying acc: f64 = 0.0 {
+        next acc = acc + xs[i] * 2;
+    }
+    return acc;
+}

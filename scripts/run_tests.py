@@ -92,6 +92,18 @@ SUITES = [
      "source": os.path.join(ROOT, "examples", "logistic.mncs"),
      "corpus": os.path.join(CORPORA, "examples_logistic.json"),
      "backends": ALL_BACKENDS},
+    {"name": "props_reduce",
+     "source": os.path.join(DRIVERS, "prop_drivers_reduce.mncs"),
+     "corpus": os.path.join(CORPORA, "props_reduce.json"),
+     "backends": ALL_BACKENDS},
+    {"name": "props_build",
+     "source": os.path.join(DRIVERS, "prop_drivers_build.mncs"),
+     "corpus": os.path.join(CORPORA, "props_build.json"),
+     "backends": ["mncs-research-bytecode", "mncs-c11", "mncs-cranelift"],
+     "expected_refusals": [
+         ("mncs-portable-wasm-mvp", "", "P-001", NATIVE_ONLY_REFUSAL),
+         ("mncs-llvm-ir", "", "P-001", NATIVE_ONLY_REFUSAL),
+     ]},
 ]
 
 

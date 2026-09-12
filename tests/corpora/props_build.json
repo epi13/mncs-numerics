@@ -1,0 +1,46 @@
+{
+ "schema_version": "0.2",
+ "name": "mncs-numerics-props-build",
+ "cases": [
+  {
+   "id": "p-prop_add_zero",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.prop_drivers_build.v1",
+     "function": "prop_add_zero"
+    },
+    "arguments": [],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "boolean": {
+      "value": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "p-prop_scale_one",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.prop_drivers_build.v1",
+     "function": "prop_scale_one"
+    },
+    "arguments": [],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "boolean": {
+      "value": true
+     }
+    }
+   ]
+  }
+ ]
+}

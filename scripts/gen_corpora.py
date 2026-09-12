@@ -558,6 +558,19 @@ def gen_vec_float_reduce():
     sc("sum", 1, [sq(42.0)], [fj(42.0)])
     sc("mean", 1, [sq(-7.0)], [fj(-7.0)])
     sc("variance", 1, [sq(5.0)], [fj(0.0)])
+    # Horner evaluation: (x-2)(x+1) = x^2 - x - 2 at x = 3 is 4;
+    # x^2 - 4 at x = 2 is 0; constant polynomial echoes.
+    def o_polyval(coeffs, x):
+        acc = 0.0
+        for c_ in coeffs:
+            acc = acc * x + c_
+        return acc
+
+    for coeffs, x in (((1.0, -1.0, -2.0), 3.0), ((1.0, 0.0, -4.0), 2.0),
+                      ((5.0,), 123.0), ((2.0, 3.0), 4.0),
+                      ((1.0, -100000000.0, 1.0), 100000000.0)):
+        sc("polyval", len(coeffs), [sq(*coeffs), fj(x)],
+           [fj(o_polyval(coeffs, x))])
     # Overflow traps instead of infinities.
     sc("sum", 2, [sq(1e308, 1e308)], None, status="runtime_failure")
     sc("norm2", 2, [sq(1e200, 1e200)], None, status="runtime_failure")
@@ -613,6 +626,15 @@ def gen_vec_float_build():
     sc("broadcast_like", 4, [a4, fj(7.0)], [sq(7.0, 7.0, 7.0, 7.0)])
     sc("zeros_like", 4, [a4], [sq(0.0, 0.0, 0.0, 0.0)])
     sc("ones_like", 4, [a4], [sq(1.0, 1.0, 1.0, 1.0)])
+    # normalize([3,4]) is [0.6,0.8]; the zero vector traps on 0/0
+    # (documented; generic outcome enums are P-004).
+    sc("normalized", 2, [sq(3.0, 4.0)], [sq(3.0 / 5.0, 4.0 / 5.0)])
+    sc("normalized", 4, [a4],
+       [sq(1.0 / o_newton_sqrt(30.0), 2.0 / o_newton_sqrt(30.0),
+           3.0 / o_newton_sqrt(30.0), 4.0 / o_newton_sqrt(30.0))],
+       budget=16384)
+    sc("normalized", 2, [sq(0.0, 0.0)], None,
+       status="runtime_failure")
     # Eight lanes incl. a sign flip.
     a8 = sq(1.0, -2.0, 3.0, -4.0, 5.0, -6.0, 7.0, -8.0)
     sc("scaled", 8, [a8, fj(0.5)],
@@ -846,13 +868,33 @@ def gen_examples():
     return made
 
 
+def gen_props():
+    made = []
+
+    def emit(name, mod, fns):
+        cases = [case("p-%s" % fn, mod, fn, [], [boolean(True)],
+                      step_budget=16384) for fn in fns]
+        write_corpus(os.path.join(OUT, "props_%s.json" % name),
+                     "mncs-numerics-props-%s" % name, cases)
+        made.extend(cases)
+
+    emit("reduce", "mncs.numerics.test.prop_drivers_reduce.v1",
+         ["prop_dot_sym", "prop_norm_nonneg", "prop_neumaier_improves",
+          "prop_mean_const", "prop_variance_const", "prop_dist_self",
+          "prop_transpose_inv2", "prop_matmul_ident2",
+          "prop_matmul_ident3"])
+    emit("build", "mncs.numerics.test.prop_drivers_build.v1",
+         ["prop_add_zero", "prop_scale_one"])
+    return made
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     total = 0
     for gen in (gen_scalar_int, gen_scalar_float, gen_vec_int,
                 gen_vec_float_reduce, gen_vec_float_build,
                 gen_mat_float_small, gen_mat_float_drivers,
-                gen_mat_float_build_drivers, gen_examples):
+                gen_mat_float_build_drivers, gen_examples, gen_props):
         cases = gen()
         print("%-28s %4d cases" % (gen.__name__, len(cases)))
         total += len(cases)

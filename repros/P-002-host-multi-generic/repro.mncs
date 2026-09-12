@@ -1,0 +1,17 @@
+mncs 0.16;
+
+module probe.fifteen_v1;
+
+fn swap_rows(m: [[f64; 2]; 2]) -> (result: [[f64; 2]; 2]) {
+    return replace(m, 0, m[1]);
+}
+
+fn matvec_into<M: Nat, N: Nat>(m: [[f64; N]; M], x: [f64; N], out: [f64; M]) -> (result: [f64; M]) {
+    iterate i over m carrying acc: [f64; M] = out {
+        iterate j over m[i] carrying dot: f64 = 0.0 {
+            next dot = dot + m[i][j] * x[j];
+        }
+        next acc = replace(acc, i, dot);
+    }
+    return acc;
+}

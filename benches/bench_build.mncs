@@ -1,0 +1,39 @@
+mncs 0.16;
+
+// Construction benchmark kernels: reference bytecode, C11, and
+// Cranelift only (pressure P-001). Kept in a separate file from
+// bench_reduce.mncs so LLVM's whole-artifact poisoning cannot take
+// down the reduction baselines. See docs/BENCHMARKS.md.
+
+module mncs.numerics.bench_build.v1;
+
+use mncs.numerics.vec_float_reduce;
+use mncs.numerics.vec_float_build;
+use mncs.numerics.mat_float_build;
+
+fn bench_axpy_256() -> (result: f64) {
+    let xs: [f64; 256] = [1.0; 256];
+    let ys: [f64; 256] = [2.0; 256];
+    return sum<256>(axpy<256>(2.0, xs, ys));
+}
+
+fn bench_matvec_8() -> (result: f64) {
+    let m: [[f64; 8]; 8] = [[1.0; 8]; 8];
+    let x: [f64; 8] = [1.0; 8];
+    let seed: [f64; 8] = [0.0; 8];
+    return sum<8>(matvec_into<8, 8>(m, x, seed));
+}
+
+fn bench_matmul_8() -> (result: f64) {
+    let a: [[f64; 8]; 8] = [[1.0; 8]; 8];
+    let b: [[f64; 8]; 8] = [[1.0; 8]; 8];
+    let seed: [[f64; 8]; 8] = [[0.0; 8]; 8];
+    let c: [[f64; 8]; 8] = matmul_into<8, 8, 8>(a, b, seed);
+    iterate i over c carrying acc: f64 = 0.0 {
+        iterate j over c[i] carrying inner: f64 = 0.0 {
+            next inner = inner + c[i][j];
+        }
+        next acc = acc + inner;
+    }
+    return acc;
+}

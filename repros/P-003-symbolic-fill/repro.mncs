@@ -1,0 +1,7 @@
+mncs 0.16;
+
+module fill.probe;
+
+fn broadcast<N: Nat>(x: f64) -> (result: [f64; N]) {
+    return [x; N];
+}

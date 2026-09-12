@@ -1,0 +1,1 @@
+{"schema_version": "0.2", "name": "probe8", "cases": [{"id": "demo", "request": {"schema_version": "0.1", "target": {"module": "probe.eight", "function": "demo"}, "arguments": [], "step_budget": 4096}, "expected_status": "returned", "expected": [{"float": {"bits": 4626322717216342016, "type": {"bits": 64}}}]}]}

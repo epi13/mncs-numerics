@@ -1,0 +1,15 @@
+mncs 0.16;
+
+// P-005: trace_g over a NON-square matrix. The language has no way to
+// demand M == N, so this elaborates and runs. The 2x3 input silently
+// yields m[0][0] + m[1][1] = 1.0 + 5.0 = 6.0: a partial diagonal with
+// no diagnostic. (A tall matrix traps fail-closed instead; only the
+// wide case is silent.)
+
+module dim.probe;
+
+use mncs.numerics.mat_float;
+
+fn wide_trace(m: [[f64; 3]; 2]) -> (result: f64) {
+    return trace_g<2, 3>(m);
+}

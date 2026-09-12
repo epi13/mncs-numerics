@@ -20,6 +20,7 @@ mncs 0.16;
 module mncs.numerics.vec_float_build.v1;
 
 use mncs.numerics.scalar_float;
+use mncs.numerics.vec_float_reduce;
 
 // Elementwise scale: out[i] = xs[i] * s.
 fn scaled<N: Nat>(xs: [f64; N], s: f64) -> (result: [f64; N]) {
@@ -126,4 +127,18 @@ fn zeros_like<N: Nat>(xs: [f64; N]) -> (result: [f64; N]) {
 
 fn ones_like<N: Nat>(xs: [f64; N]) -> (result: [f64; N]) {
     return broadcast_like<N>(xs, 1.0);
+}
+
+// Unit vector in the direction of xs: out[i] = xs[i] / |xs|.
+// Zero vectors TRAP on 0.0 / 0.0 rather than returning a refusal:
+// a generic outcome enum (`Value { value: [f64; N] }` vs `ZeroNorm`)
+// is inexpressible without generic enums (pressure P-004), so the
+// degenerate case fails closed and loudly. Callers that must survive
+// zero check `norm2` first.
+fn normalized<N: Nat>(xs: [f64; N]) -> (result: [f64; N]) {
+    let n: f64 = sqrt_value(norm2<N>(xs));
+    iterate i over xs carrying out: [f64; N] = xs {
+        next out = replace(out, i, xs[i] / n);
+    }
+    return out;
 }

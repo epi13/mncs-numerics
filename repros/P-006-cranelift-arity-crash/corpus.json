@@ -1,0 +1,1 @@
+{"schema_version": "0.2", "name": "arity-min", "cases": [{"id": "arity", "request": {"schema_version": "0.1", "target": {"module": "crash.arity", "function": "fmin2"}, "arguments": [{"float": {"bits": 4607182418800017408, "type": {"bits": 64}}}], "step_budget": 4096}, "expected_status": "runtime_failure"}]}

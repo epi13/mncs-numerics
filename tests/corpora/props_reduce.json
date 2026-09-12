@@ -1,0 +1,186 @@
+{
+ "schema_version": "0.2",
+ "name": "mncs-numerics-props-reduce",
+ "cases": [
+  {
+   "id": "p-prop_dot_sym",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.prop_drivers_reduce.v1",
+     "function": "prop_dot_sym"
+    },
+    "arguments": [],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "boolean": {
+      "value": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "p-prop_norm_nonneg",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.prop_drivers_reduce.v1",
+     "function": "prop_norm_nonneg"
+    },
+    "arguments": [],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "boolean": {
+      "value": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "p-prop_neumaier_improves",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.prop_drivers_reduce.v1",
+     "function": "prop_neumaier_improves"
+    },
+    "arguments": [],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "boolean": {
+      "value": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "p-prop_mean_const",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.prop_drivers_reduce.v1",
+     "function": "prop_mean_const"
+    },
+    "arguments": [],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "boolean": {
+      "value": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "p-prop_variance_const",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.prop_drivers_reduce.v1",
+     "function": "prop_variance_const"
+    },
+    "arguments": [],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "boolean": {
+      "value": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "p-prop_dist_self",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.prop_drivers_reduce.v1",
+     "function": "prop_dist_self"
+    },
+    "arguments": [],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "boolean": {
+      "value": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "p-prop_transpose_inv2",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.prop_drivers_reduce.v1",
+     "function": "prop_transpose_inv2"
+    },
+    "arguments": [],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "boolean": {
+      "value": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "p-prop_matmul_ident2",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.prop_drivers_reduce.v1",
+     "function": "prop_matmul_ident2"
+    },
+    "arguments": [],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "boolean": {
+      "value": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "p-prop_matmul_ident3",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.test.prop_drivers_reduce.v1",
+     "function": "prop_matmul_ident3"
+    },
+    "arguments": [],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "boolean": {
+      "value": true
+     }
+    }
+   ]
+  }
+ ]
+}

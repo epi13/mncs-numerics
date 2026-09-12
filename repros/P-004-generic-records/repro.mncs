@@ -1,0 +1,9 @@
+mncs 0.16;
+
+module box.probe;
+
+record Box<N: Nat> { lane: [f64; N] }
+
+fn mkbox<N: Nat>(xs: [f64; N]) -> (result: Box<N>) {
+    return Box<N> { lane: xs };
+}

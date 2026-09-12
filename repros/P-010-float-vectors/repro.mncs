@@ -1,0 +1,7 @@
+mncs 0.16;
+
+module fvec.probe;
+
+fn first_lane(v: vec<f64, 4>) -> (result: f64) {
+    return extract_lane(v, 0);
+}

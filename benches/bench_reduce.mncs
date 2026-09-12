@@ -1,0 +1,27 @@
+mncs 0.16;
+
+// Reduction benchmark kernels: every entry lowers on all five
+// backends. Constructive kernels live in bench_build.mncs: one
+// `replace` anywhere in the file poisons LLVM for the whole artifact
+// (pressure P-001), so the envelopes must not share a file. See
+// docs/BENCHMARKS.md and scripts/bench.py.
+
+module mncs.numerics.bench_reduce.v1;
+
+use mncs.numerics.vec_float_reduce;
+
+fn bench_sum_256() -> (result: f64) {
+    let xs: [f64; 256] = [1.0; 256];
+    return sum<256>(xs);
+}
+
+fn bench_sum_1024() -> (result: f64) {
+    let xs: [f64; 1024] = [1.0; 1024];
+    return sum<1024>(xs);
+}
+
+fn bench_dot_256() -> (result: f64) {
+    let xs: [f64; 256] = [1.0; 256];
+    let ys: [f64; 256] = [2.0; 256];
+    return dot<256>(xs, ys);
+}

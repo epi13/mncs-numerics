@@ -156,6 +156,18 @@ fn cosine<N: Nat>(xs: [f64; N], ys: [f64; N]) -> (result: CosOutcome) {
     return CosOutcome.Value { value: dot<N>(xs, ys) / denom };
 }
 
+// Polynomial evaluation by Horner's rule, leading coefficient
+// first: p(x) = (...((c[0]) * x + c[1]) * x + ...) * x + c[N-1].
+// One traversal, one multiply-add per lane, no temporaries. N >= 1
+// (a degree -1 polynomial is meaningless); the empty polynomial is
+// outside the contract.
+fn polyval<N: Nat>(coeffs: [f64; N], x: f64) -> (result: f64) {
+    iterate i over coeffs carrying acc: f64 = 0.0 {
+        next acc = acc * x + coeffs[i];
+    }
+    return acc;
+}
+
 // Sum over a view, including the empty view (whose sum is 0.0).
 fn sum_view<N: Nat>(view: [f64; up_to N]) -> (result: f64) {
     iterate i over view carrying acc: f64 = 0.0 {

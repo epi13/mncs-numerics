@@ -1,0 +1,10 @@
+mncs 0.16;
+
+module ir.probe;
+
+fn dot4(xs: [f64; 4], ys: [f64; 4]) -> (result: f64) {
+    iterate i over xs carrying acc: f64 = 0.0 {
+        next acc = acc + xs[i] * ys[i];
+    }
+    return acc;
+}
