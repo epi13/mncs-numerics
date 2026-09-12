@@ -39,6 +39,8 @@ KERNELS = {
     "bench_sum_256": (BENCH_REDUCE, MOD_REDUCE, 256.0, None),
     "bench_sum_1024": (BENCH_REDUCE, MOD_REDUCE, 1024.0, None),
     "bench_dot_256": (BENCH_REDUCE, MOD_REDUCE, 512.0, None),
+    "bench_masked_dot_256": (BENCH_REDUCE, MOD_REDUCE, 512.0, None),
+    "bench_rotate_256": (BENCH_BUILD, MOD_BUILD, 256.0, None),
     "bench_axpy_256": (BENCH_BUILD, MOD_BUILD, 1024.0, None),
     "bench_matvec_8": (BENCH_BUILD, MOD_BUILD, 64.0, None),
     "bench_matmul_8": (BENCH_BUILD, MOD_BUILD, 512.0, None),

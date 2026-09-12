@@ -62,6 +62,36 @@ def sq(*xs):
     return seq([fj(x) for x in xs])
 
 
+def sb(*bs):
+    """Sequence of bool lanes."""
+    return seq([boolean(b) for b in bs])
+
+
+def o_masked_sum(xs, ms):
+    """Live-lane sum in program order (dead lanes contribute nothing)."""
+    acc = 0.0
+    for x, live in zip(xs, ms):
+        if live:
+            acc += x
+    return acc
+
+
+def o_recip_sum(xs, ms):
+    """Live-lane reciprocal sum in program order."""
+    acc = 0.0
+    for x, live in zip(xs, ms):
+        if live:
+            acc += 1.0 / x
+    return acc
+
+
+def o_rotate(xs, k):
+    """Left rotation by k (reduced mod N), lane-exact."""
+    n = len(xs)
+    k2 = k % n
+    return [xs[(i + k2) % n] for i in range(n)]
+
+
 def si(*xs):
     """Sequence of i64 lanes."""
     return seq([ij(x) for x in xs])
@@ -581,6 +611,16 @@ def gen_vec_float_reduce():
        [finite(mod, "FMean", "Value", 0, [("value", fj(2.5))])])
     sc("mean_view", 4, [seq([])],
        [finite(mod, "FMean", "Empty", 1)])
+    # Dynamic prefix sums: partial, empty, full, over-range (trap),
+    # and wrapping-huge (trap, never an address). Appended after the
+    # view cases so earlier positional case IDs stay stable.
+    sc("take_sum", 4, [a4, ij(2, 64, False)], [fj(3.0)])
+    sc("take_sum", 4, [a4, ij(0, 64, False)], [fj(0.0)])
+    sc("take_sum", 4, [a4, ij(4, 64, False)], [fj(10.0)])
+    sc("take_sum", 4, [a4, ij(5, 64, False)], None,
+       status="runtime_failure")
+    sc("take_sum", 4, [a4, ij(2 ** 64 - 1, 64, False)], None,
+       status="runtime_failure")
 
     write_corpus(os.path.join(OUT, "vec_float_reduce.json"),
                  "mncs-numerics-vec-float-reduce", c)
@@ -642,8 +682,73 @@ def gen_vec_float_build():
     sc("reversed", 8, [a8],
        [sq(-8.0, 7.0, -6.0, 5.0, -4.0, 3.0, -2.0, 1.0)])
 
+    # Left rotation: by one, by zero, full, overflowing, and one-lane.
+    for xs, k in (((1.0, 2.0, 3.0, 4.0), 1), ((1.0, 2.0, 3.0, 4.0), 0),
+                  ((1.0, 2.0, 3.0, 4.0), 4), ((1.0, 2.0, 3.0, 4.0), 6),
+                  ((9.0,), 3),
+                  ((1.0, -2.0, 3.0, -4.0, 5.0, -6.0, 7.0, -8.0), 3)):
+        n = len(xs)
+        sc("rotate_left", n, [sq(*xs), ij(k, 64, False)],
+           [sq(*o_rotate(xs, k))])
+
     write_corpus(os.path.join(OUT, "vec_float_build.json"),
                  "mncs-numerics-vec-float-build", c)
+    return c
+
+
+# ---------------------------------------------------------------------------
+# vec_float_mask
+# ---------------------------------------------------------------------------
+
+def gen_vec_float_mask():
+    mod = "mncs.numerics.vec_float_mask.v1"
+    c = []
+
+    def sc(fn, n, args, exp, status="returned", budget=8192):
+        c.append(case("k-%s-%d" % (fn, len(c)), mod, fn, args, exp,
+                      expected_status=status, step_budget=budget,
+                      type_args=targs(n)))
+
+    a4 = (1.0, 2.0, 3.0, 4.0)
+    b4 = (5.0, 6.0, 7.0, 8.0)
+    live_half = (True, False, True, False)
+    live_all = (True, True, True, True)
+    live_none = (False, False, False, False)
+    sc("masked_sum", 4, [sq(*a4), sb(*live_half)],
+       [fj(o_masked_sum(a4, live_half))])
+    sc("masked_sum", 4, [sq(*a4), sb(*live_all)], [fj(10.0)])
+    sc("masked_sum", 4, [sq(*a4), sb(*live_none)], [fj(0.0)])
+    sc("masked_sum", 1, [sq(42.0), sb(True)], [fj(42.0)])
+    sc("masked_sum", 1, [sq(42.0), sb(False)], [fj(0.0)])
+    sc("masked_dot", 4, [sq(*a4), sq(*b4), sb(True, True, False, False)],
+       [fj(1.0 * 5.0 + 2.0 * 6.0)])
+    sc("masked_dot", 4, [sq(*a4), sq(*b4), sb(*live_none)], [fj(0.0)])
+    # The taken-trap escape: zeros on dead lanes never divide.
+    assert o_recip_sum((2.0, 0.0, 4.0, 0.0), live_half) == 0.75
+    assert o_masked_sum(a4, live_half) == 4.0
+    sc("recip_sum", 4, [sq(2.0, 0.0, 4.0, 0.0), sb(*live_half)],
+       [fj(o_recip_sum((2.0, 0.0, 4.0, 0.0), live_half))])
+    sc("recip_sum", 4, [sq(0.0, 0.0, 0.0, 0.0), sb(*live_none)],
+       [fj(0.0)])
+    sc("recip_sum", 2, [sq(2.0, 4.0), sb(True, True)],
+       [fj(0.75)])
+    sc("count_live", 4, [sb(*live_half)], [ij(2, 64, False)])
+    sc("count_live", 4, [sb(*live_none)], [ij(0, 64, False)])
+    sc("count_live", 4, [sb(*live_all)], [ij(4, 64, False)])
+    sc("masked_mean", 4, [sq(*a4), sb(*live_half)],
+       [finite(mod, "FMaskedMean", "Value", 0, [("value", fj(2.0))])])
+    sc("masked_mean", 4, [sq(*a4), sb(*live_none)],
+       [finite(mod, "FMaskedMean", "Empty", 1)])
+    # NaN on a dead lane is inert (lazy arm never loads it); NaN on a
+    # live lane traps on first use under the float rule.
+    nan = struct.unpack("<d", struct.pack("<Q", 0x7FF8000000000001))[0]
+    sc("masked_sum", 4, [sq(1.0, nan, 3.0, 4.0), sb(True, False, True, True)],
+       [fj(8.0)])
+    sc("masked_sum", 4, [sq(1.0, nan, 3.0, 4.0), sb(*live_all)], None,
+       status="runtime_failure")
+
+    write_corpus(os.path.join(OUT, "vec_float_mask.json"),
+                 "mncs-numerics-vec-float-mask", c)
     return c
 
 
@@ -761,6 +866,37 @@ def gen_mat_float():
        [fj(5.0)], targs(3, 2))
     sc("max-2x2", "max_g",
        [nest((-4.0, -2.0), (-9.0, -3.0))], [fj(-2.0)], targs(2, 2))
+    sc("min-3x2", "min_g",
+       [nest((-1.0, 5.0), (3.0, 2.0), (0.0, -7.0))],
+       [fj(-7.0)], targs(3, 2))
+    sc("min-2x2", "min_g",
+       [nest((-4.0, -2.0), (-9.0, -3.0))], [fj(-9.0)], targs(2, 2))
+    # Frobenius norm pins the Newton path end to end
+    # (sqrt(1+4+9+16) = sqrt(30)).
+    frob = o_newton_sqrt(1.0 + 4.0 + 9.0 + 16.0)
+    assert abs(frob - math.sqrt(30.0)) < 1e-12, frob
+    sc("frob-norm-2x2", "frobenius_g",
+       [nest((1.0, 2.0), (3.0, 4.0))], [fj(frob)], targs(2, 2))
+
+    def o_mean_g(rows):
+        s = 0.0
+        n = 0.0
+        for row in rows:
+            for x in row:
+                s += x
+                n += 1.0
+        return s / n
+
+    # One-pass mean over rectangular shapes (oracle mirrors the
+    # sum-and-count record traversal lane for lane).
+    sc("mean-2x3", "mean_g",
+       [nest((1.0, 2.0, 3.0), (4.0, 5.0, 6.0))],
+       [fj(o_mean_g(((1.0, 2.0, 3.0), (4.0, 5.0, 6.0))))],
+       targs(2, 3))
+    sc("mean-3x2", "mean_g",
+       [nest((-1.0, 5.0), (3.0, 2.0), (0.0, -7.0))],
+       [fj(o_mean_g(((-1.0, 5.0), (3.0, 2.0), (0.0, -7.0))))],
+       targs(3, 2))
 
     write_corpus(os.path.join(OUT, "mat_float.json"),
                  "mncs-numerics-mat-float", c)
@@ -841,6 +977,11 @@ def gen_examples():
            budget=16384),
         sc("l1_linf4", stats, "l1_linf4", [sq(-3.0, 0.5, 4.0, -4.5)],
            [sq(o_sum((3.0, 0.5, 4.0, 4.5)), -4.5)]),
+        # Masked report over [2, 0, 4, 0] keeping lanes 0 and 2: the
+        # zeros sit on dead lanes, so the reciprocal arm never fires.
+        sc("masked", stats, "report_masked4",
+           [sq(2.0, 0.0, 4.0, 0.0), sb(True, False, True, False)],
+           [sq(6.0, 2.0, 0.75)], budget=16384),
     ])
 
     trap = "mncs.numerics.examples.trapezoid.v1"
@@ -910,6 +1051,7 @@ def main():
     total = 0
     for gen in (gen_scalar_int, gen_scalar_float, gen_vec_int,
                 gen_vec_float_reduce, gen_vec_float_build,
+                gen_vec_float_mask,
                 gen_mat_float_small, gen_mat_float,
                 gen_mat_float_build, gen_examples, gen_props):
         cases = gen()

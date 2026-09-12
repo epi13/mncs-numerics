@@ -293,6 +293,116 @@
      }
     }
    ]
+  },
+  {
+   "id": "x-masked",
+   "request": {
+    "schema_version": "0.1",
+    "target": {
+     "module": "mncs.numerics.examples.stats.v1",
+     "function": "report_masked4"
+    },
+    "arguments": [
+     {
+      "sequence": {
+       "values": [
+        {
+         "float": {
+          "bits": 4611686018427387904,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 4616189618054758400,
+          "type": {
+           "bits": 64
+          }
+         }
+        },
+        {
+         "float": {
+          "bits": 0,
+          "type": {
+           "bits": 64
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "sequence": {
+       "values": [
+        {
+         "boolean": {
+          "value": true
+         }
+        },
+        {
+         "boolean": {
+          "value": false
+         }
+        },
+        {
+         "boolean": {
+          "value": true
+         }
+        },
+        {
+         "boolean": {
+          "value": false
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "step_budget": 16384
+   },
+   "expected_status": "returned",
+   "expected": [
+    {
+     "sequence": {
+      "values": [
+       {
+        "float": {
+         "bits": 4618441417868443648,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4611686018427387904,
+         "type": {
+          "bits": 64
+         }
+        }
+       },
+       {
+        "float": {
+         "bits": 4604930618986332160,
+         "type": {
+          "bits": 64
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
   }
  ]
 }
