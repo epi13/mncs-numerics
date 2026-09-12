@@ -8,7 +8,7 @@ cannot yet express.
 generic reductions, guarded/masked reductions, elementwise kernels,
 rotation, small and generic matrices, stability showcases) together
 with the adversarial harness that executes it: a deterministic
-Python oracle generates 407 execution cases, and
+Python oracle generates 418 execution cases, and
 `scripts/run_tests.py` runs every suite on all five compiler
 backends with no refusal pins. When the language cannot express a
 reasonable API, the gap is filed as a pressure report with a
@@ -47,7 +47,7 @@ for direct CLI use (the library resolves as `mncs.numerics.*`).
 
 v1 library: integer + float scalars, generic int/float reductions,
 guarded (masked) reductions, elementwise construction, rotation,
-2x2/3x3 + generic MxN matrices, four examples — 407 committed cases
+2x2/3x3 + generic MxN matrices, four examples — 418 committed cases
 green on all five backends with no refusal pins. Eighteen language
 pressures filed. P-001 (float construction on LLVM/WASM), P-002
 (host multi-param seeding), and P-006 (Cranelift arity crash) are
