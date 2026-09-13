@@ -1,0 +1,15 @@
+{
+  "schema_version": "mncs-family.repository-manifest/v0alpha1",
+  "repository": "mncs-numerics",
+  "revision": 1,
+  "manifest_location": "in-repository",
+  "authority": {"note": "Numerics owns reusable numeric primitives and algorithms; consumers retain domain semantics."},
+  "contracts": {
+    "provides": [
+      {"contract": "numeric-primitives", "version": "1", "kind": "mncs-library", "stability": "experimental", "fingerprint_sources": ["src/numerics/"]},
+      {"contract": "numeric-algorithms", "version": "1", "kind": "mncs-library", "stability": "experimental", "fingerprint_sources": ["src/numerics/"]}
+    ],
+    "consumes": [{"contract": "mncs-language.source-profile", "envelope": {"op": "compatible-minor", "version": "0.16"}, "required": true, "evidence_refs": ["scripts/run_tests.py"]}],
+    "tests": [{"test": "numerics-corpus", "covers": ["numeric-primitives", "numeric-algorithms"], "obligation": "self", "command": {"argv": ["python3", "scripts/run_tests.py"]}}]
+  }
+}
