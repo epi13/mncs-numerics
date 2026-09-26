@@ -1,0 +1,12 @@
+mncs 0.16;
+
+module litinfer.probe;
+
+use mncs.numerics.vec_float_reduce;
+
+// A sequence literal carries its own length, but the Nat argument is
+// not inferred from it: elaboration demands an exact or bounded-view
+// expected type for the literal before inference can run.
+fn probe() -> (result: f64) {
+    return take_sum([1.0, 2.0], 1);
+}

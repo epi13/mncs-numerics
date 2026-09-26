@@ -12,7 +12,14 @@ Default operators (`+ - * / %`) are **checked**: overflow, `MIN / -1`,
 failures (`runtime_failure` in corpora), never wraps. Suffixed
 operators are total by definition: wrapping (`+% -% *%`) reduces
 modulo 2^N, saturating (`+| -| *|`) clamps at the bound. Shifts take
-counts modulo the width; signed `>>` is arithmetic.
+counts modulo the width; signed `>>` is arithmetic. Division
+truncates toward zero (including negative sums: `mean_checked` of
+`[-7, 0, 0, 0]` is `-1`); the remainder takes the dividend sign
+(`-7 % 2 == -1`). Shift, negative-truncation, and remainder-sign
+semantics are pinned by the native contract suite
+(`tests/native/contract_int.mncs`), which is their first
+machine-checked statement — the corpora never covered raw
+operators.
 
 Per-function policy is explicit in `src/numerics/scalar_int.mncs`:
 
@@ -63,7 +70,12 @@ repaired).
 
 Subnormals flow through arithmetic normally (pinned: `5e-324`
 cases); conversions `as` truncate float→int (trapping out of range)
-and round int→float per IEEE-754.
+and round int→float per IEEE-754. The exact/inexact boundary is
+`2^53`: magnitudes at or below it round-trip exactly
+(`((x as f64) as i64) == x`), while `2^53 + 1` converts to `2^53`
+— pinned in-language by `tests/native/contract_float.mncs`
+(`inexact_boundary_at_two_to_53`, plus round-trip and
+order-preservation properties over generated lanes).
 
 ## Reductions and order
 

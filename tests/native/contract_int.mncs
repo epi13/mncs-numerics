@@ -1,0 +1,236 @@
+mncs 0.18;
+
+// Native integer contracts for mncs.numerics, executed through the
+// canonical `mncs test` entrypoint (mncs-test) instead of the corpus
+// harness.
+//
+// Division of labor with tests/corpora/scalar_int.json and
+// tests/corpora/vec_int.json: every trapping behavior (checked
+// overflow, MIN/-1, division by zero, out-of-contract shapes) stays
+// pinned in the corpora with `expected_status: runtime_failure`.
+// A `test` declaration cannot express an expected trap, so this file
+// covers total behavior only: boundary values, wrapping/saturating
+// intents, operator semantics the corpora never pinned (shifts,
+// negative division/modulo signs), conversions, and deterministic
+// generative properties via mncs.test.generative.
+//
+// Assertion vocabulary note: mncs.test.assertions speaks i64/bool
+// (plus bounded bytes). u64/i32 results enter through `==` against
+// adapting literals or through exact widening `as i64`.
+
+module mncs.numerics.test.contract_int.v1;
+
+use mncs.test.assertions;
+use mncs.test.suite;
+use mncs.test.generative;
+use mncs.numerics.scalar_int;
+use mncs.numerics.vec_int;
+
+// i64::MIN spelled without an unrepresentable literal: 0 - MAX - 1
+// never overflows, so this binding is total.
+fn i64_min() -> (result: i64) {
+    return 0 - 9223372036854775807 - 1;
+}
+
+// --- absolute value across the three intents ---
+
+test abs_checked_interior() -> (result: TestResult) {
+    let ok: bool = abs_checked(7) == 7 && abs_checked(-7) == 7;
+    let zero: bool = abs_checked(0) == 0;
+    return from_assertion(equals_bool(true, ok && zero, 1001));
+}
+
+test abs_wrap_min_is_min() -> (result: TestResult) {
+    return from_assertion(equals_i64(i64_min(), abs_wrap(i64_min()), 1002));
+}
+
+test abs_sat_min_is_max() -> (result: TestResult) {
+    return from_assertion(equals_i64(9223372036854775807, abs_sat(i64_min()), 1003));
+}
+
+test abs_sat_interior() -> (result: TestResult) {
+    let ok: bool = abs_sat(-7) == 7 && abs_sat(7) == 7 && abs_sat(0) == 0;
+    return from_assertion(equals_bool(true, ok, 1004));
+}
+
+// --- comparison-only helpers at the boundaries ---
+
+test min_max_clamp_boundaries() -> (result: TestResult) {
+    let lo: bool = min_i64(i64_min(), 9223372036854775807) == i64_min();
+    let hi: bool = max_i64(i64_min(), 9223372036854775807) == 9223372036854775807;
+    let clo: bool = clamp_i64(99, 0, 10) == 10 && clamp_i64(-99, 0, 10) == 0;
+    let edge: bool = clamp_i64(i64_min(), 0, 10) == 0;
+    return from_assertion(equals_bool(true, lo && hi && clo && edge, 1005));
+}
+
+test sign_boundaries() -> (result: TestResult) {
+    let ok: bool = sign_i64(i64_min()) == -1 && sign_i64(0) == 0;
+    let max: bool = sign_i64(9223372036854775807) == 1;
+    return from_assertion(equals_bool(true, ok && max, 1006));
+}
+
+// --- wrapping vs saturating operator intents ---
+
+test wrapping_operators() -> (result: TestResult) {
+    let add: bool = 9223372036854775807 +% 1 == i64_min();
+    let sub: bool = i64_min() -% 1 == 9223372036854775807;
+    let dbl: bool = 9223372036854775807 +% 9223372036854775807 == -2;
+    let mul: bool = 9223372036854775807 *% 2 == -2;
+    return from_assertion(equals_bool(true, add && sub && dbl && mul, 1007));
+}
+
+test saturating_operators() -> (result: TestResult) {
+    let add: bool = 9223372036854775807 +| 1 == 9223372036854775807;
+    let lo: bool = i64_min() +| -1 == i64_min();
+    let sub: bool = i64_min() -| 1 == i64_min();
+    let hi: bool = 9223372036854775807 -| -1 == 9223372036854775807;
+    let mul: bool = 9223372036854775807 *| 2 == 9223372036854775807;
+    return from_assertion(equals_bool(true, add && lo && sub && hi && mul, 1008));
+}
+
+// --- shifts: counts modulo width, signed >> arithmetic ---
+//
+// The corpora never pinned raw shift operators, so these native
+// cases are the first machine-checked statement of the documented
+// shift semantics.
+
+test shift_semantics() -> (result: TestResult) {
+    let shl: bool = (1 << 3) == 8;
+    let shr: bool = (8 >> 2) == 2;
+    let arith: bool = (-8 >> 2) == -2;
+    let wrap_count: bool = (1 << 64) == 1;
+    return from_assertion(equals_bool(true, shl && shr && arith && wrap_count, 1009));
+}
+
+test shift_unsigned() -> (result: TestResult) {
+    let x: u64 = 8;
+    return from_assertion(equals_bool(true, (x >> 2) == 2, 1010));
+}
+
+// --- division truncates toward zero, remainder takes the dividend sign ---
+//
+// mean_checked pins truncation for positive sums only; the negative
+// lane below pins it for negative sums for the first time.
+
+test division_truncates_toward_zero() -> (result: TestResult) {
+    let pos: bool = 7 / 2 == 3;
+    let neg: bool = 0 - 7 / 2 == -3;
+    let neg4: [i64; 4] = [-7, 0, 0, 0];
+    let via_mean: bool = mean_checked(neg4) == -1;
+    return from_assertion(equals_bool(true, pos && neg && via_mean, 1011));
+}
+
+test remainder_dividend_sign() -> (result: TestResult) {
+    let neg: bool = (0 - 7) % 2 == -1;
+    let pos: bool = 7 % 2 == 1;
+    return from_assertion(equals_bool(true, neg && pos, 1012));
+}
+
+// --- bounded power and Euclid ---
+
+test pow_checked_values() -> (result: TestResult) {
+    let two_ten: bool = match pow_checked(2, 10) {
+        PowOutcome.Value { value } => value == 1024,
+        ExpTooLarge => false,
+    };
+    let empty: bool = match pow_checked(5, 0) {
+        PowOutcome.Value { value } => value == 1,
+        ExpTooLarge => false,
+    };
+    let zero_zero: bool = match pow_checked(0, 0) {
+        PowOutcome.Value { value } => value == 1,
+        ExpTooLarge => false,
+    };
+    let one_64: bool = match pow_checked(1, 64) {
+        PowOutcome.Value { value } => value == 1,
+        ExpTooLarge => false,
+    };
+    return from_assertion(equals_bool(true, two_ten && empty && zero_zero && one_64, 1013));
+}
+
+test pow_checked_refuses_wide_exponent() -> (result: TestResult) {
+    // Any payload means the refusal did not happen (`value != value`
+    // is false for every i64, so the arm contributes false).
+    let refused: bool = match pow_checked(2, 65) {
+        PowOutcome.Value { value } => value != value,
+        ExpTooLarge => true,
+    };
+    return from_assertion(equals_bool(true, refused, 1014));
+}
+
+test gcd_values() -> (result: TestResult) {
+    let basic: bool = gcd(12, 8) == 4;
+    let zeros: bool = gcd(0, 0) == 0;
+    let edge: bool = gcd(7, 0) == 7 && gcd(0, 5) == 5;
+    return from_assertion(equals_bool(true, basic && zeros && edge, 1015));
+}
+
+// --- narrower widths ---
+
+test i32_helpers() -> (result: TestResult) {
+    let abs: bool = (abs_checked_i32(-7) as i64) == 7;
+    let mm: bool = (min_i32(-3, 9) as i64) == -3 && (max_i32(-3, 9) as i64) == 9;
+    let cl: bool = (clamp_i32(99, 0, 10) as i64) == 10;
+    return from_assertion(equals_bool(true, abs && mm && cl, 1016));
+}
+
+test u64_helpers() -> (result: TestResult) {
+    let mm: bool = min_u64(3, 9) == 3 && max_u64(3, 9) == 9;
+    let cl: bool = clamp_u64(99, 0, 10) == 10 && clamp_u64(0, 5, 9) == 5;
+    return from_assertion(equals_bool(true, mm && cl, 1017));
+}
+
+// --- reductions ---
+
+test vec_int_reductions() -> (result: TestResult) {
+    let xs: [i64; 4] = [1, 2, 3, 4];
+    let p: [i64; 2] = [1, 2];
+    let q: [i64; 2] = [3, 4];
+    let z: [i64; 2] = [0, 0];
+    let neg: [i64; 2] = [-1, 2];
+    let s: bool = sum_checked(xs) == 10 && sum_wrap(xs) == 10;
+    let d: bool = dot_checked(p, q) == 11;
+    let mm: bool = min(xs) == 1 && max(xs) == 4;
+    let mean: bool = mean_checked(xs) == 2;
+    let dist: bool = dist2_wrap(z, q) == 25;
+    let l1: bool = l1_wrap(neg) == 3;
+    return from_assertion(equals_bool(true, s && d && mm && mean && dist && l1, 1018));
+}
+
+test vec_int_predicates() -> (result: TestResult) {
+    let ones: [i64; 3] = [1, 2, 1];
+    let mixed: [i64; 2] = [1, 0];
+    let hasneg: [i64; 2] = [-1, 2];
+    let positive: [i64; 2] = [1, 2];
+    let trio32: [i32; 3] = [1, 2, 3];
+    let p32: [i32; 2] = [1, 2];
+    let q32: [i32; 2] = [3, 4];
+    let ce: bool = count_eq(ones, 1) == 2;
+    let nn: bool = all_nonneg(mixed) && all_nonneg(hasneg) == false;
+    let az: bool = any_zero(mixed) && any_zero(positive) == false;
+    let w32: bool = (sum_i32(trio32) as i64) == 6;
+    let d32: bool = (dot_i32(p32, q32) as i64) == 11;
+    return from_assertion(equals_bool(true, ce && nn && az && w32 && d32, 1019));
+}
+
+// --- deterministic generative properties ---
+//
+// mncs.test.generative.replay draws a bound u64 from (seed,
+// case_index); shifting into a symmetric range keeps every lane
+// exactly representable, so the identities below are exact.
+
+test min_max_duality_property() -> (result: TestResult) {
+    let a: i64 = (replay(7, 0, 2000001) as i64) - 1000000;
+    let b: i64 = (replay(7, 1, 2000001) as i64) - 1000000;
+    let dual: bool = min_i64(a, b) + max_i64(a, b) == a + b;
+    let sym: bool = min_i64(a, b) == min_i64(b, a);
+    return from_assertion(equals_bool(true, dual && sym, 1020));
+}
+
+test clamp_idempotence_property() -> (result: TestResult) {
+    let x: i64 = (replay(21, 3, 2000001) as i64) - 1000000;
+    let once: i64 = clamp_i64(x, -100, 100);
+    let twice: i64 = clamp_i64(once, -100, 100);
+    let ordered: bool = min_i64(once, 100) == once && max_i64(once, -100) == once;
+    return from_assertion(equals_bool(true, twice == once && ordered, 1021));
+}

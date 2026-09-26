@@ -14,6 +14,16 @@ otherwise. All five executable backends:
 407 committed cases green on all five backends (2035 cells), no
 refusal pins.
 
+**Revalidation 2026-09-26:** full corpus matrix re-run against
+`mncs-language` at `066897e` (debug binary 2026-09-24) — see the
+campaign evidence under `target/evidence-*.json`. The native
+contract suites (`tests/native/`, Profile 0.18 `test` declarations
+via `mncs test`) were also added in this campaign and are green.
+P-019 filed here. No previously-resolved pressure regressed; open
+pressures were not individually re-run against the new revision
+beyond the regression coverage the corpora and native suites
+provide (see "Remaining debt" in the campaign record).
+
 **How to run a repro** (from this repository root; `LANG` is an
 `mncs-language` checkout at the revision above):
 
@@ -50,6 +60,7 @@ the workspace there).
 | P-016 | Generic `checked_index` panics four backends (`unreachable`) | correctness blocker (compiler crash) | confirmed, no workaround (gather kernels withheld) |
 | P-017 | No `exp`/`log`/real-power intrinsics | expressiveness blocker (family) | confirmed |
 | P-018 | Inference does not flow through `up_to` view bounds (MNE220) | ergonomics | confirmed, worked around (one explicit `<N>`) |
+| P-019 | Nat arguments not inferred from sequence literals (MNE183) | ergonomics | confirmed, worked around (typed `let` per literal call site) |
 
 Severity scale: correctness blocker > expressiveness blocker >
 safety issue > diagnostics issue > ergonomics > accuracy note >
@@ -823,3 +834,38 @@ disposition after re-running against the current toolchain:
 - **Regression test:** the P-018 compile repro + the committed
   `mean_view` corpus cases.
 - **Depends on:** none.
+
+## P-019 — Nat arguments are not inferred from sequence literals
+
+- **Severity:** ergonomics. **Status:** confirmed, worked around.
+- **Affects:** every generic call site that would pass a fresh
+  literal: `take_sum([1.0, 2.0], 1)`, reductions over inline lanes,
+  and every `tests/native/*.mncs` call shape (all of which bind a
+  typed `let` first).
+- **Repro:** `repros/P-019-literal-generic-inference/repro.mncs`
+  (`take_sum([1.0, 2.0], 1)`).
+- **Invocation:** `source-study repro.mncs --node-id probe`.
+- **Expected:** `N = 2` inferred from the two-lane literal, or a
+  diagnostic naming the literal/inference ordering limit.
+- **Actual:** one `MNE183` (sequence literals require an exact or
+  bounded-view sequence expected type), no cascade. The literal is
+  checked before generic-argument inference runs, so inference never
+  sees the length it could have used.
+- **Why it matters (bounded):** the native contract suites
+  (`tests/native/contract_int.mncs`, `contract_float.mncs`) carry
+  ~40 typed `let` bindings whose only purpose is satisfying MNE183
+  at generic call sites. Small per-site cost, precisely bounded —
+  filed so the inference story has its remaining boundary written
+  down rather than rediscovered.
+- **Workaround:** bind a typed `let` first
+  (`let xs: [f64; 2] = [1.0, 2.0]; take_sum(xs, 1)`), used
+  uniformly across the native suites.
+- **Desired behavior:** infer Nat arguments from sequence-literal
+  lengths at generic call sites (the literal dual of P-018's
+  view-bound inference), or extend MNE183's message for the
+  generic-call shape.
+- **Acceptance criteria:** the P-019 repro elaborates with
+  `N = 2` inferred.
+- **Regression test:** the P-019 compile repro + the native suites
+  (which delete their workaround bindings when it lands).
+- **Depends on:** none. Dual of P-018.

@@ -10,6 +10,6 @@
       {"contract": "numeric-algorithms", "version": "1", "kind": "mncs-library", "stability": "experimental", "fingerprint_sources": ["src/numerics/"]}
     ],
     "consumes": [{"contract": "mncs-language.source-profile", "envelope": {"op": "compatible-minor", "version": "0.16"}, "required": true, "evidence_refs": ["scripts/run_tests.py"]}],
-    "tests": [{"test": "numerics-corpus", "covers": ["numeric-primitives", "numeric-algorithms"], "obligation": "self", "command": {"argv": ["python3", "scripts/run_tests.py"]}}]
+    "tests": [{"test": "numerics-corpus", "covers": ["numeric-primitives", "numeric-algorithms"], "obligation": "self", "command": {"argv": ["python3", "scripts/run_tests.py"]}}, {"test": "numerics-native-contracts", "covers": ["numeric-primitives", "numeric-algorithms"], "obligation": "self", "command": {"argv": ["python3", "scripts/run_native_tests.py"]}}]
   }
 }

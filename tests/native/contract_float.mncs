@@ -1,0 +1,418 @@
+mncs 0.18;
+
+// Native floating-point contracts for mncs.numerics, executed through
+// the canonical `mncs test` entrypoint (mncs-test) instead of the
+// corpus harness.
+//
+// Division of labor with tests/corpora/*.json: every trapping
+// behavior (non-finite inputs/results, division by zero, overflow to
+// infinity, out-of-range casts, degenerate zero-vector
+// normalization) stays pinned in the corpora with
+// `expected_status: runtime_failure`. A `test` declaration cannot
+// express an expected trap, so this file covers total behavior only:
+// scalar identities, tolerance tiers, outcome enums, truncation and
+// rounding, reductions and their compensated forms, masked kernels
+// (including the lazy-match dead-lane property, in-language),
+// construction kernels, small and generic matrices, conversions, and
+// deterministic generative properties.
+//
+// Comparison discipline: `==` is used only where both sides are
+// exactly determined (literals, exact binary64 arithmetic, or
+// correctly-rounded single operations on exact inputs). Anything that
+// rounds through an algorithm (Newton, two-pass variance, norms,
+// unit vectors) goes through the library `approx` with an explicit
+// tolerance budget stated at the call site.
+
+module mncs.numerics.test.contract_float.v1;
+
+use mncs.test.assertions;
+use mncs.test.suite;
+use mncs.test.generative;
+use mncs.numerics.scalar_float;
+use mncs.numerics.vec_float_reduce;
+use mncs.numerics.vec_float_mask;
+use mncs.numerics.vec_float_build;
+use mncs.numerics.mat_float_small;
+use mncs.numerics.mat_float;
+use mncs.numerics.mat_float_build;
+
+// --- scalar identities ---
+
+test fabs_normalizes_signed_zero() -> (result: TestResult) {
+    let negzero: f64 = fneg(0.0);
+    let ok: bool = fabs(negzero) == 0.0 && fabs(-3.5) == 3.5 && fabs(3.5) == 3.5;
+    return from_assertion(equals_bool(true, ok, 2001));
+}
+
+test fneg_values() -> (result: TestResult) {
+    let ok: bool = fneg(5.0) == -5.0 && fneg(-5.0) == 5.0;
+    return from_assertion(equals_bool(true, ok, 2002));
+}
+
+test fmin_fmax_fclamp() -> (result: TestResult) {
+    let mm: bool = fmin(3.0, 7.0) == 3.0 && fmax(3.0, 7.0) == 7.0;
+    let cl: bool = fclamp(99.0, 0.0, 10.0) == 10.0 && fclamp(-99.0, 0.0, 10.0) == 0.0;
+    let mid: bool = fclamp(5.0, 0.0, 10.0) == 5.0;
+    return from_assertion(equals_bool(true, mm && cl && mid, 2003));
+}
+
+test fsign_zeros() -> (result: TestResult) {
+    let ok: bool = fsign(-2.5) == -1.0 && fsign(2.5) == 1.0;
+    let zeros: bool = fsign(0.0) == 0.0 && fsign(fneg(0.0)) == 0.0;
+    return from_assertion(equals_bool(true, ok && zeros, 2004));
+}
+
+// --- tolerance tiers ---
+
+test approx_tiers() -> (result: TestResult) {
+    let abs: bool = approx_abs(1.0, 1.05, 0.1);
+    let abs_miss: bool = approx_abs(1.0, 1.05, 0.01) == false;
+    let neg_tol: bool = approx_abs(1.0, 1.0, -0.5) == false;
+    let rel: bool = approx_rel(100.0, 101.0, 0.02);
+    let combined: bool = approx(0.0, 0.0000001, 0.001, 0.01);
+    return from_assertion(equals_bool(true, abs && abs_miss && neg_tol && rel && combined, 2005));
+}
+
+// --- outcome enums ---
+
+test safe_div_arms() -> (result: TestResult) {
+    let value: bool = match safe_div(6.0, 3.0) {
+        FDiv.Value { value } => value == 2.0,
+        DivByZero => false,
+    };
+    let refused: bool = match safe_div(1.0, 0.0) {
+        FDiv.Value { value } => value != value,
+        DivByZero => true,
+    };
+    return from_assertion(equals_bool(true, value && refused, 2006));
+}
+
+test sqrt_newton_arms() -> (result: TestResult) {
+    let four: bool = match sqrt_newton(4.0) {
+        FSqrt.Value { value } => approx(value, 2.0, 0.000000000001, 0.0),
+        DomainError => false,
+    };
+    let refused: bool = match sqrt_newton(-1.0) {
+        FSqrt.Value { value } => value != value,
+        DomainError => true,
+    };
+    let zero: bool = match sqrt_newton(0.0) {
+        FSqrt.Value { value } => value == 0.0,
+        DomainError => false,
+    };
+    return from_assertion(equals_bool(true, four && refused && zero, 2007));
+}
+
+test sqrt_value_hot_path() -> (result: TestResult) {
+    return from_assertion(equals_bool(true, approx(sqrt_value(9.0), 3.0, 0.000000000001, 0.0), 2008));
+}
+
+// --- truncation and rounding (exact binary64 cases) ---
+
+test trunc_floor_ceil() -> (result: TestResult) {
+    let tr: bool = ftrunc(2.7) == 2.0 && ftrunc(-2.7) == -2.0;
+    let fl: bool = ffloor(2.5) == 2.0 && ffloor(-2.5) == -3.0;
+    let ce: bool = fceil(2.5) == 3.0 && fceil(-2.5) == -2.0;
+    let fr: bool = ffrac(2.5) == 0.5;
+    return from_assertion(equals_bool(true, tr && fl && ce && fr, 2009));
+}
+
+test round_half_away() -> (result: TestResult) {
+    let ok: bool = fround(2.5) == 3.0 && fround(-2.5) == -3.0;
+    let down: bool = fround(2.4) == 2.0 && fround(-2.4) == -2.0;
+    return from_assertion(equals_bool(true, ok && down, 2010));
+}
+
+// --- bounded float power ---
+
+test pow_int_values() -> (result: TestResult) {
+    let exact: bool = match pow_int(2.0, 10) {
+        FPow.Value { value } => value == 1024.0,
+        ExpTooLarge => false,
+    };
+    let empty: bool = match pow_int(5.0, 0) {
+        FPow.Value { value } => value == 1.0,
+        ExpTooLarge => false,
+    };
+    let refused: bool = match pow_int(2.0, 1025) {
+        FPow.Value { value } => value != value,
+        ExpTooLarge => true,
+    };
+    return from_assertion(equals_bool(true, exact && empty && refused, 2011));
+}
+
+// --- stable quadratic ---
+
+test quadratic_two_roots() -> (result: TestResult) {
+    let roots: QuadRoots = quadratic(1.0, -3.0, 2.0);
+    let ok: bool = roots.n == 2 && roots.r0 == 1.0 && roots.r1 == 2.0;
+    return from_assertion(equals_bool(true, ok, 2012));
+}
+
+test quadratic_degenerate_arms() -> (result: TestResult) {
+    let none: QuadRoots = quadratic(1.0, 0.0, 1.0);
+    let flat: QuadRoots = quadratic(0.0, 0.0, 0.0);
+    let linear: QuadRoots = quadratic(0.0, 2.0, -4.0);
+    let ok: bool = none.n == 0 && flat.n == -1;
+    let lin: bool = linear.n == 1 && linear.r0 == 2.0;
+    return from_assertion(equals_bool(true, ok && lin, 2013));
+}
+
+// --- reductions ---
+
+test reduce_basic() -> (result: TestResult) {
+    let xs: [f64; 4] = [1.0, 2.0, 3.0, 4.0];
+    let p: [f64; 2] = [1.0, 2.0];
+    let q: [f64; 2] = [3.0, 4.0];
+    let s: bool = sum(xs) == 10.0;
+    let d: bool = dot(p, q) == 11.0;
+    let mm: bool = min(xs) == 1.0 && max(xs) == 4.0;
+    let mean: bool = mean(xs) == 2.5;
+    let origin: [f64; 2] = [0.0, 0.0];
+    let corner: [f64; 2] = [3.0, 4.0];
+    let negpair: [f64; 2] = [-1.0, 2.0];
+    let dist: bool = dist2(origin, corner) == 25.0;
+    let norms: bool = l1(negpair) == 3.0 && linf(negpair) == 2.0;
+    return from_assertion(equals_bool(true, s && d && mm && mean && dist && norms, 2014));
+}
+
+test neumaier_compensation() -> (result: TestResult) {
+    // The pinned exact-bit trio: plain program-order accumulation
+    // loses the 1.0 lane, Neumaier keeps it.
+    let trio: [f64; 3] = [10000000000000000.0, 1.0, -10000000000000000.0];
+    let plain: bool = sum(trio) == 0.0;
+    let comp: bool = neumaier_sum(trio) == 1.0;
+    return from_assertion(equals_bool(true, plain && comp, 2015));
+}
+
+test variance_two_pass() -> (result: TestResult) {
+    let xs: [f64; 4] = [1.0, 2.0, 3.0, 4.0];
+    return from_assertion(equals_bool(true, variance(xs) == 1.25, 2016));
+}
+
+test norm_and_cosine() -> (result: TestResult) {
+    let v: [f64; 2] = [3.0, 4.0];
+    let ex: [f64; 2] = [1.0, 0.0];
+    let ey: [f64; 2] = [0.0, 1.0];
+    let zz: [f64; 2] = [0.0, 0.0];
+    let n: bool = approx(norm(v), 5.0, 0.000000000001, 0.0);
+    let ortho: bool = match cosine(ex, ey) {
+        CosOutcome.Value { value } => value == 0.0,
+        ZeroNorm => false,
+    };
+    let refused: bool = match cosine(zz, ex) {
+        CosOutcome.Value { value } => value != value,
+        ZeroNorm => true,
+    };
+    return from_assertion(equals_bool(true, n && ortho && refused, 2017));
+}
+
+test polyval_horner() -> (result: TestResult) {
+    // Leading coefficient first: ((1)*2 + 2)*2 + 3 == 11.
+    let c: [f64; 3] = [1.0, 2.0, 3.0];
+    return from_assertion(equals_bool(true, polyval(c, 2.0) == 11.0, 2018));
+}
+
+test take_sum_prefix() -> (result: TestResult) {
+    let xs: [f64; 4] = [1.0, 2.0, 3.0, 4.0];
+    let pre: bool = take_sum(xs, 2) == 3.0;
+    let empty: bool = take_sum(xs, 0) == 0.0;
+    let full: bool = take_sum(xs, 4) == 10.0;
+    return from_assertion(equals_bool(true, pre && empty && full, 2019));
+}
+
+// --- masked kernels, including the lazy-match property ---
+
+test masked_kernels() -> (result: TestResult) {
+    let xs: [f64; 4] = [1.0, 2.0, 3.0, 4.0];
+    let m: [bool; 4] = [true, false, true, false];
+    let s: bool = masked_sum(xs, m) == 4.0;
+    let d: bool = masked_dot(xs, xs, m) == 10.0;
+    let c: bool = count_live(m) == 2;
+    let mean: bool = match masked_mean(xs, m) {
+        FMaskedMean.Value { value } => value == 2.0,
+        Empty => false,
+    };
+    return from_assertion(equals_bool(true, s && d && c && mean, 2020));
+}
+
+test masked_mean_all_dead_is_empty() -> (result: TestResult) {
+    let xs: [f64; 2] = [1.0, 2.0];
+    let dead: [bool; 2] = [false, false];
+    let empty: bool = match masked_mean(xs, dead) {
+        FMaskedMean.Value { value } => value != value,
+        Empty => true,
+    };
+    return from_assertion(equals_bool(true, empty, 2021));
+}
+
+test dead_lane_zero_is_inert() -> (result: TestResult) {
+    // The taken-trap escape that motivates the lazy-match idiom: the
+    // dead lane holds 0.0, whose reciprocal would trap, but the
+    // untaken arm never evaluates so the sum is exactly 0.5.
+    let xs: [f64; 2] = [2.0, 0.0];
+    let m: [bool; 2] = [true, false];
+    return from_assertion(equals_bool(true, recip_sum(xs, m) == 0.5, 2022));
+}
+
+// --- construction kernels ---
+
+test build_elementwise() -> (result: TestResult) {
+    let xs: [f64; 2] = [1.0, 2.0];
+    let ys: [f64; 2] = [10.0, 20.0];
+    let sc: [f64; 2] = scaled(xs, 2.0);
+    let ad: [f64; 2] = add(xs, ys);
+    let su: [f64; 2] = sub(ys, xs);
+    let mu: [f64; 2] = mul_elem(xs, ys);
+    let ax: [f64; 2] = axpy(2.0, xs, ys);
+    let ok: bool = sc[0] == 2.0 && sc[1] == 4.0;
+    let ok2: bool = ad[0] == 11.0 && ad[1] == 22.0;
+    let ok3: bool = su[0] == 9.0 && su[1] == 18.0;
+    let ok4: bool = mu[0] == 10.0 && mu[1] == 40.0;
+    let ok5: bool = ax[0] == 12.0 && ax[1] == 24.0;
+    return from_assertion(equals_bool(true, ok && ok2 && ok3 && ok4 && ok5, 2023));
+}
+
+test build_shape_kernels() -> (result: TestResult) {
+    let xs: [f64; 4] = [1.0, 2.0, 3.0, 4.0];
+    let pre: [f64; 4] = prefix4(xs);
+    let rev: [f64; 4] = reversed(xs);
+    let rot: [f64; 4] = rotate_left(xs, 1);
+    let full: [f64; 4] = rotate_left(xs, 4);
+    let p: bool = pre[0] == 1.0 && pre[1] == 3.0 && pre[2] == 6.0 && pre[3] == 10.0;
+    let r: bool = rev[0] == 4.0 && rev[3] == 1.0;
+    let o: bool = rot[0] == 2.0 && rot[3] == 1.0;
+    let f: bool = full[0] == 1.0 && full[3] == 4.0;
+    return from_assertion(equals_bool(true, p && r && o && f, 2024));
+}
+
+test build_fills() -> (result: TestResult) {
+    let xs: [f64; 2] = [7.0, 8.0];
+    let b: [f64; 2] = broadcast_like(xs, 3.0);
+    let z: [f64; 2] = zeros_like(xs);
+    let o: [f64; 2] = ones_like(xs);
+    let ok: bool = b[0] == 3.0 && b[1] == 3.0;
+    let ok2: bool = z[0] == 0.0 && z[1] == 0.0;
+    let ok3: bool = o[0] == 1.0 && o[1] == 1.0;
+    return from_assertion(equals_bool(true, ok && ok2 && ok3, 2025));
+}
+
+test normalized_unit() -> (result: TestResult) {
+    let v: [f64; 2] = [3.0, 4.0];
+    let u: [f64; 2] = normalized(v);
+    let ok: bool = approx(u[0], 0.6, 0.000000000001, 0.000000000001);
+    let ok2: bool = approx(u[1], 0.8, 0.000000000001, 0.000000000001);
+    return from_assertion(equals_bool(true, ok && ok2, 2026));
+}
+
+// --- small matrices ---
+
+test mat2_algebra() -> (result: TestResult) {
+    let m: [f64; 4] = [1.0, 2.0, 3.0, 4.0];
+    let tr: bool = trace2(m) == 5.0;
+    let det: bool = det2(m) == -2.0;
+    let tp: [f64; 4] = transpose2(m);
+    let t: bool = tp[0] == 1.0 && tp[1] == 3.0 && tp[2] == 2.0 && tp[3] == 4.0;
+    let id: [f64; 4] = matmul2(identity2(), m);
+    let i: bool = id[0] == 1.0 && id[1] == 2.0 && id[2] == 3.0 && id[3] == 4.0;
+    let mv: [f64; 2] = matvec2(m, [5.0, 6.0]);
+    let v: bool = mv[0] == 17.0 && mv[1] == 39.0;
+    return from_assertion(equals_bool(true, tr && det && t && i && v, 2027));
+}
+
+test solve2_cramer() -> (result: TestResult) {
+    // [1 2; 3 4] x = [5; 6]: det -2, x = -4, y = 4.5, exactly.
+    let m: [f64; 4] = [1.0, 2.0, 3.0, 4.0];
+    let b: [f64; 2] = [5.0, 6.0];
+    let sing: [f64; 4] = [1.0, 2.0, 2.0, 4.0];
+    let solved: bool = match solve2(m, b) {
+        Solve2.Value { value } => value[0] == -4.0 && value[1] == 4.5,
+        Singular => false,
+    };
+    let singular: bool = match solve2(sing, b) {
+        Solve2.Value { value } => value[0] != value[0],
+        Singular => true,
+    };
+    return from_assertion(equals_bool(true, solved && singular, 2028));
+}
+
+test inv2_singular_arm() -> (result: TestResult) {
+    let sing: [f64; 4] = [1.0, 2.0, 2.0, 4.0];
+    let m: [f64; 4] = [4.0, 7.0, 2.0, 6.0];
+    let singular: bool = match inv2(sing) {
+        Inv2.Value { value } => value[0] != value[0],
+        Singular => true,
+    };
+    let value: bool = match inv2(m) {
+        Inv2.Value { value } => value[0] == 0.6 && value[3] == 0.4,
+        Singular => false,
+    };
+    return from_assertion(equals_bool(true, singular && value, 2029));
+}
+
+test mat3_identity() -> (result: TestResult) {
+    let tr: bool = trace3(identity3()) == 3.0;
+    let det: bool = det3(identity3()) == 1.0;
+    return from_assertion(equals_bool(true, tr && det, 2030));
+}
+
+// --- generic matrices ---
+
+test generic_reduce() -> (result: TestResult) {
+    let m: [[f64; 2]; 2] = [[1.0, 2.0], [3.0, 4.0]];
+    let tr: bool = trace_g(m) == 5.0;
+    let s: bool = sum_g(m) == 10.0;
+    let mean: bool = mean_g(m) == 2.5;
+    let mm: bool = min_g(m) == 1.0 && max_g(m) == 4.0;
+    let f2: bool = frobenius2_g(m) == 30.0;
+    let fr: bool = approx(frobenius_g(m), 5.477225575051661, 0.000000000001, 0.0);
+    return from_assertion(equals_bool(true, tr && s && mean && mm && f2 && fr, 2031));
+}
+
+test generic_build() -> (result: TestResult) {
+    let a: [[f64; 2]; 2] = [[1.0, 2.0], [3.0, 4.0]];
+    let b: [[f64; 2]; 2] = [[5.0, 6.0], [7.0, 8.0]];
+    let seed2: [f64; 2] = [0.0, 0.0];
+    let seed22: [[f64; 2]; 2] = [[0.0, 0.0], [0.0, 0.0]];
+    let x: [f64; 2] = [5.0, 6.0];
+    let mv: [f64; 2] = matvec_into(a, x, seed2);
+    let mm: [[f64; 2]; 2] = matmul_into(a, b, seed22);
+    let tp: [[f64; 2]; 2] = transpose_into(a, seed22);
+    let dg: [f64; 2] = diag_into(a, seed2);
+    let v: bool = mv[0] == 17.0 && mv[1] == 39.0;
+    let p: bool = mm[0][0] == 19.0 && mm[0][1] == 22.0 && mm[1][0] == 43.0 && mm[1][1] == 50.0;
+    let t: bool = tp[0][1] == 3.0 && tp[1][0] == 2.0;
+    let d: bool = dg[0] == 1.0 && dg[1] == 4.0;
+    return from_assertion(equals_bool(true, v && p && t && d, 2032));
+}
+
+// --- conversions: exactness boundary at 2^53, round-trip, ordering ---
+
+test int_float_exact_small() -> (result: TestResult) {
+    let fwd: bool = (42 as f64) == 42.0;
+    let back: i64 = ((42 as f64) as i64);
+    let neg: bool = ((-7 as f64) as i64) == -7;
+    return from_assertion(equals_bool(true, fwd && back == 42 && neg, 2033));
+}
+
+test inexact_boundary_at_two_to_53() -> (result: TestResult) {
+    // 2^53 is exactly representable; 2^53 + 1 rounds back to 2^53.
+    // This pins the exact/inexact conversion boundary in-language.
+    let exact: bool = (9007199254740992 as f64) == 9007199254740992.0;
+    let rounds: bool = (9007199254740993 as f64) == 9007199254740992.0;
+    return from_assertion(equals_bool(true, exact && rounds, 2034));
+}
+
+test conversion_round_trip_property() -> (result: TestResult) {
+    let x: i64 = (replay(33, 5, 2000001) as i64) - 1000000;
+    let rt: i64 = ((x as f64) as i64);
+    return from_assertion(equals_i64(x, rt, 2035));
+}
+
+test conversion_preserves_order_property() -> (result: TestResult) {
+    let a: i64 = (replay(33, 6, 2000001) as i64) - 1000000;
+    let b: i64 = (replay(33, 7, 2000001) as i64) - 1000000;
+    let fwd: bool = (a < b) == ((a as f64) < (b as f64));
+    let fwd2: bool = (a == b) == ((a as f64) == (b as f64));
+    return from_assertion(equals_bool(true, fwd && fwd2, 2036));
+}
