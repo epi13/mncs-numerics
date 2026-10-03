@@ -1,0 +1,43 @@
+{
+  "capabilities": [
+    {
+      "contract": "numeric-primitives",
+      "fingerprint_sources": [
+        "src/numerics/"
+      ],
+      "kind": "mncs-library",
+      "stability": "experimental",
+      "version": "1"
+    },
+    {
+      "contract": "numeric-algorithms",
+      "fingerprint_sources": [
+        "src/numerics/"
+      ],
+      "kind": "mncs-library",
+      "stability": "experimental",
+      "version": "1"
+    }
+  ],
+  "dependencies": [
+    {
+      "contract": "mncs-language.source-profile",
+      "envelope": {
+        "op": "compatible-minor",
+        "version": "0.16"
+      },
+      "evidence_refs": [
+        "scripts/run_tests.py"
+      ],
+      "required": true
+    }
+  ],
+  "entry": [
+    "python3 scripts/run_tests.py"
+  ],
+  "purpose": "Foundational numerical computing in MNCS, built to be depended upon — and built in a way that pressures the language into revealing what it cannot yet express.",
+  "repository": "mncs-numerics",
+  "schema_version": "mncs.project-view/1",
+  "source_identity": "sha256:a3a7bbfc5a3358ee62d330c7e060b00e3de743080335938ed067b59d9e433dde",
+  "structure": {}
+}

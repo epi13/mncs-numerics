@@ -1,6 +1,20 @@
 # mncs-numerics
 
 <!-- MNCS:generated:begin -->
+## Project entry
+
+Foundational numerical computing in MNCS, built to be depended upon — and built in a way that pressures the language into revealing what it cannot yet express.
+
+```bash
+python3 scripts/run_tests.py
+```
+
+Declared capabilities (declarations do not establish execution health):
+
+- `numeric-algorithms/1` — mncs-library (experimental)
+- `numeric-primitives/1` — mncs-library (experimental)
+
+Semantic sources and ownership: `.mncs/projections.json`.
 <!-- MNCS:generated:end -->
 
 Foundational numerical computing in MNCS, built to be depended upon —
