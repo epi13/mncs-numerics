@@ -1,5 +1,8 @@
 # mncs-numerics
 
+<!-- MNCS:generated:begin -->
+<!-- MNCS:generated:end -->
+
 Foundational numerical computing in MNCS, built to be depended upon —
 and built in a way that pressures the language into revealing what it
 cannot yet express.

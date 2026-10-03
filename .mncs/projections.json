@@ -1,0 +1,142 @@
+{
+ "schema_version": "mncs.projection-inventory/1",
+ "projections": [
+  {
+   "schema_version": "mncs.semantic-projection/1",
+   "id": "mncs-numerics:overview",
+   "owner": "mncs-numerics:project-state",
+   "template": "human.repository-overview",
+   "inputs": [
+    ".mncs/project-state.json",
+    ".mncs/project.json"
+   ],
+   "subjects": [
+    {
+     "subject": "mncs-numerics:purpose",
+     "slot": "purpose",
+     "path": ".mncs/project-state.json",
+     "select": "/purpose"
+    },
+    {
+     "subject": "mncs-numerics:entry",
+     "slot": "entry",
+     "path": ".mncs/project-state.json",
+     "select": "/entry"
+    },
+    {
+     "subject": "mncs-numerics:capabilities",
+     "slot": "capabilities",
+     "path": ".mncs/project.json",
+     "select": "/contracts/provides"
+    }
+   ],
+   "output": "README.md",
+   "output_kind": "region",
+   "renderer": {
+    "identity": "human.repository-overview",
+    "version": "1",
+    "schema_version": "mncs.semantic-state/1"
+   },
+   "provider_capability": "mncs-doc:documentation-projection",
+   "render_argv": [
+    "semantic-project",
+    "--state",
+    "{semantic}",
+    "--route",
+    "human.repository-overview",
+    "--output",
+    "{artifact}/rendered.md",
+    "--provenance-out",
+    "{artifact}/receipt.json"
+   ],
+   "policy": "ambient-safe",
+   "manual_edit_policy": "protected",
+   "verification": {
+    "required": false
+   },
+   "validation": {
+    "format": "markdown"
+   },
+   "admit": {
+    "sources": 3,
+    "template_present": true,
+    "create_allowed": false
+   },
+   "bootstrap_digest": "sha256:fead2a8515455e7b45ab3b3e3e500edef9b2683598d9afc6095149eb4e888b4c"
+  },
+  {
+   "schema_version": "mncs.semantic-projection/1",
+   "id": "mncs-numerics:project-view",
+   "owner": "mncs-numerics:project-state",
+   "template": "machine.project-view",
+   "inputs": [
+    ".mncs/project-state.json",
+    ".mncs/project.json"
+   ],
+   "subjects": [
+    {
+     "subject": "mncs-numerics:purpose",
+     "slot": "purpose",
+     "path": ".mncs/project-state.json",
+     "select": "/purpose"
+    },
+    {
+     "subject": "mncs-numerics:entry",
+     "slot": "entry",
+     "path": ".mncs/project-state.json",
+     "select": "/entry"
+    },
+    {
+     "subject": "mncs-numerics:capabilities",
+     "slot": "capabilities",
+     "path": ".mncs/project.json",
+     "select": "/contracts/provides"
+    },
+    {
+     "subject": "mncs-numerics:repository",
+     "slot": "repository",
+     "path": ".mncs/project.json",
+     "select": "/repository"
+    },
+    {
+     "subject": "mncs-numerics:dependencies",
+     "slot": "dependencies",
+     "path": ".mncs/project.json",
+     "select": "/contracts/consumes"
+    }
+   ],
+   "output": ".mncs/project-view.json",
+   "output_kind": "whole-file",
+   "renderer": {
+    "identity": "machine.project-view",
+    "version": "1",
+    "schema_version": "mncs.semantic-state/1"
+   },
+   "provider_capability": "mncs-doc:documentation-projection",
+   "render_argv": [
+    "semantic-project",
+    "--state",
+    "{semantic}",
+    "--route",
+    "machine.project-view",
+    "--output",
+    "{artifact}/rendered.md",
+    "--provenance-out",
+    "{artifact}/receipt.json"
+   ],
+   "policy": "ambient-safe",
+   "manual_edit_policy": "protected",
+   "verification": {
+    "required": false
+   },
+   "validation": {
+    "format": "json",
+    "schema_ref": {
+     "repository": "MNCS-Commons",
+     "path": "schemas/project-view-1.schema.json",
+     "identity": "mncs.project-view/1"
+    }
+   }
+  }
+ ]
+}
